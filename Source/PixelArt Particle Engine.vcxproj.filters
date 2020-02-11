@@ -8,9 +8,6 @@
     <Filter Include="Sources\Basics">
       <UniqueIdentifier>{972e0632-4e71-447c-90a7-0dbf617e37e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Headers">
-      <UniqueIdentifier>{e01bbabe-2abc-4037-9ac4-34553e29e662}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Sources\Modules">
       <UniqueIdentifier>{70b9e762-c8f9-4a7f-b322-7a917106660a}</UniqueIdentifier>
     </Filter>
@@ -31,6 +28,12 @@
     <ClCompile Include="log.cpp">
       <Filter>Sources\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleRender.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -43,6 +46,12 @@
       <Filter>Sources\Basics</Filter>
     </ClInclude>
     <ClInclude Include="ModuleWindow.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRender.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleInput.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,8 @@
 
 // Include all Modules
 #include "ModuleWindow.h"
+#include "ModuleRender.h"
+#include "ModuleInput.h"
 
 using namespace std;
 
@@ -9,9 +11,15 @@ Application::Application()
 {
 	// Create all modules
 	window = new ModuleWindow();
+	render = new ModuleRender();
+	input = new ModuleInput();
 
 	// Add all modules to application
 	AddModule(window);
+	AddModule(input);
+
+	//Render module last
+	AddModule(render);
 }
 
 Application::~Application()

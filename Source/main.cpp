@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 			{
 				main_return = EXIT_SUCCESS;
 			}
-			else
+			//else
 				//ERROR
 
 			state = MAIN_EXIT;

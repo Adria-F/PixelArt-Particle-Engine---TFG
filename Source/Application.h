@@ -14,6 +14,8 @@
 // Predefine all Modules
 class Module;
 class ModuleWindow;
+class ModuleRender;
+class ModuleInput;
 
 class Application
 {
@@ -21,6 +23,8 @@ public:
 
 	//Declare All Module pointers
 	ModuleWindow*		window = nullptr;
+	ModuleRender*		render = nullptr;
+	ModuleInput*		input = nullptr;
 
 private:
 

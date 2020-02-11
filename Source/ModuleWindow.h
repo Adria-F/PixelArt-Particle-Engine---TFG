@@ -2,7 +2,6 @@
 #define __MODULEWINDOW_H__
 
 #include "Module.h"
-#include "SDL/include/SDL.h"
 
 class ModuleWindow : public Module
 {

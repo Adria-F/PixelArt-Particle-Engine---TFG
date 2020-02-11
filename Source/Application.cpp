@@ -1,16 +1,17 @@
 #include "Application.h"
 
 // Include all Modules
+#include "ModuleWindow.h"
 
 using namespace std;
 
 Application::Application()
 {
 	// Create all modules
-
+	window = new ModuleWindow();
 
 	// Add all modules to application
-
+	AddModule(window);
 }
 
 Application::~Application()

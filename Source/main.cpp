@@ -2,10 +2,9 @@
 #include "Application.h"
 #include "Globals.h"
 
-using namespace std;
-
-// To avoid having the black console
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#include "SDL/include/SDL.h"
+#pragma comment( lib, "SDL/libx86/SDL2.lib" )
+#pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
 enum main_states
 {

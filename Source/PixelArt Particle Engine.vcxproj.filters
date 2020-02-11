@@ -14,6 +14,9 @@
     <Filter Include="Sources\Modules">
       <UniqueIdentifier>{70b9e762-c8f9-4a7f-b322-7a917106660a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools">
+      <UniqueIdentifier>{6744d76e-33b9-4644-a6ca-4a5f35e739bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,6 +24,12 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Sources\Basics</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +41,9 @@
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Sources\Basics</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

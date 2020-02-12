@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
+#include "ModuleGUI.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -135,6 +136,7 @@ update_state ModuleRender::PostUpdate()
 	base_plane.Render();*/
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	App->gui->Draw();
 
 	SDL_GL_SwapWindow(App->window->window);
 

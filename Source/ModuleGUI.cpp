@@ -52,9 +52,9 @@ update_state ModuleGUI::PreUpdate()
 	//Draw Central Docking Window
 	ImGui::SetNextWindowPos({ 0,0 });
 	ImGui::SetNextWindowSize({ (float)App->window->width, (float)App->window->height });
-	ImGui::SetNextWindowBgAlpha(0.0f);
+	//ImGui::SetNextWindowBgAlpha(0.0f);
 
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDocking;
 	window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 

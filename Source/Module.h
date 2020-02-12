@@ -2,7 +2,6 @@
 #define __MODULE_H__
 
 #include "Globals.h"
-#include "SDL/include/SDL.h"
 
 class Module
 {

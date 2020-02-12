@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#define MAX_LIGHTS 8
+
 class ModuleRender : public Module
 {
 public:
@@ -14,6 +16,8 @@ public:
 	update_state PreUpdate();
 	update_state PostUpdate();
 	bool CleanUp();
+
+	void OnResize(int width, int height);
 
 public:
 	

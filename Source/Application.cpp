@@ -5,6 +5,7 @@
 #include "ModuleRender.h"
 #include "ModuleInput.h"
 #include "ModuleGUI.h"
+#include "ModuleCamera.h"
 
 using namespace std;
 
@@ -15,11 +16,13 @@ Application::Application()
 	render = new ModuleRender();
 	input = new ModuleInput();
 	gui = new ModuleGUI();
+	camera = new ModuleCamera();
 
 	// Add all modules to application
 	AddModule(window);
 	AddModule(input);
-	AddModule(gui);
+	//AddModule(gui);
+	AddModule(camera);
 
 	//Render module last
 	AddModule(render);

@@ -2,6 +2,10 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleGUI.h"
+#include "ModuleCamera.h"
+
+//TMP
+#include "Primitive.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -50,6 +54,8 @@ bool ModuleRender::Init()
 		//Initialize Projection Matrix. Specify which matrix is the current matrix
 		glMatrixMode(GL_PROJECTION);//Applies subsequent matrix operations to the projection matrix stack. (screen position)
 		glLoadIdentity();
+		
+		glLoadMatrixf(App->camera->getProjectionMatrix());
 
 		//Check for error
 		GLenum error = glGetError();
@@ -90,7 +96,7 @@ bool ModuleRender::Init()
 			ret = false;
 		}
 
-		/*GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 
 		/*lights[0].ref = GL_LIGHT0;
@@ -110,6 +116,8 @@ bool ModuleRender::Init()
 		
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
+
+		//glGenFramebuffers(1, &frameBuffer);
 	}
 
 	return ret;
@@ -118,6 +126,8 @@ bool ModuleRender::Init()
 update_state ModuleRender::PreUpdate()
 {
 	//Render lights
+	/*for (uint i = 0; i < MAX_LIGHTS; ++i)
+		lights[i].Render();*/
 
 	return UPDATE_CONTINUE;
 }
@@ -130,13 +140,19 @@ update_state ModuleRender::PostUpdate()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	//Load Camera matrix
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(App->camera->getViewMatrix());
+
 	//Base Plane
-	/*MPlane base_plane(0, 1, 0, 0);
+	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
-	base_plane.Render();*/
+	base_plane.Render();
+
+	//Draw Scene
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	App->gui->Draw();
+	//App->gui->Draw(); // Draw GUI
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -150,4 +166,17 @@ bool ModuleRender::CleanUp()
 	SDL_GL_DeleteContext(context);
 
 	return true;
+}
+
+void ModuleRender::OnResize(int width, int height)
+{
+	glViewport(0, 0, width, height);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glLoadMatrixf(App->camera->getProjectionMatrix());
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }

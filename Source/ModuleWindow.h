@@ -13,6 +13,8 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	void OnResize(int width, int height);
+
 public:
 
 	SDL_Window* window = nullptr;

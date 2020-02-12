@@ -17,6 +17,7 @@ class ModuleWindow;
 class ModuleRender;
 class ModuleInput;
 class ModuleGUI;
+class ModuleCamera;
 
 class Application
 {
@@ -27,6 +28,7 @@ public:
 	ModuleRender*		render = nullptr;
 	ModuleInput*		input = nullptr;
 	ModuleGUI*			gui = nullptr;
+	ModuleCamera*		camera = nullptr;
 
 private:
 

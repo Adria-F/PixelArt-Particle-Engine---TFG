@@ -100,3 +100,9 @@ bool ModuleWindow::CleanUp()
 	SDL_Quit();
 	return true;
 }
+
+void ModuleWindow::OnResize(int width, int height)
+{
+	this->width = width;
+	this->height = height;
+}

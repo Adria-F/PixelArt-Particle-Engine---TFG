@@ -8,6 +8,9 @@
 #include <windows.h>
 #include <stdio.h>
 
+#include "MathGeoLib/MathGeoLib.h"
+#include "SDL/include/SDL.h"
+
 typedef unsigned int uint;
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);

@@ -1,5 +1,8 @@
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
+#include "ModuleCamera.h"
+#include "ModuleRender.h"
 
 ModuleInput::ModuleInput(bool start_enabled): Module(start_enabled)
 {
@@ -102,6 +105,17 @@ update_state ModuleInput::PreUpdate()
 		case SDL_QUIT:
 			quit = true;
 			break;
+
+		case SDL_WINDOWEVENT:
+		{
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED)
+			{
+				App->window->OnResize(event.window.data1, event.window.data2);
+				App->camera->OnResize(event.window.data1, event.window.data2);
+				App->render->OnResize(event.window.data1, event.window.data2);
+			}
+			break;
+		}
 		}
 	}
 

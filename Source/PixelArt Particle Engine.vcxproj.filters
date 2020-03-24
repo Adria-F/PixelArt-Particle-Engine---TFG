@@ -20,6 +20,9 @@
     <Filter Include="Sources\Tools\MathGeoLib">
       <UniqueIdentifier>{9c7fec78-3f3e-47b6-9706-d2064c5b7881}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Utilities">
+      <UniqueIdentifier>{ff967fe6-6500-438a-bf87-4bfc4f4f30d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -154,12 +157,13 @@
     <ClCompile Include="MathGeoLib\Geometry\TriangleMesh.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -379,11 +383,12 @@
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
     <ClInclude Include="Primitive.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Color.h">
-      <Filter>Sources</Filter>
+      <Filter>Sources\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

@@ -171,6 +171,7 @@
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -247,6 +248,7 @@
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl" />

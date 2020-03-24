@@ -35,6 +35,10 @@ void Primitive::generateBuffer()
 	glGenBuffers(1, (GLuint*)&(my_id));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+	glEnableVertexAttribArray(0);
+	
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
@@ -167,26 +171,16 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 
 	generateBuffer();
 
-	/*GameObject* newGameObject = new GameObject();
-	newGameObject->name = "Box";
-	App->scene_intro->addGameObject(newGameObject);
-
-	newGameObject->AddComponent(TRANSFORMATION);
-	ComponentMesh* mesh =(ComponentMesh*)newGameObject->AddComponent(MESH);
-	ResourceMesh* newResource = (ResourceMesh*) App->resources->AddResource(R_MESH);
-	mesh->RUID = newResource->GetUID();
-
-	newResource->num_indices=36;
-	newResource->num_vertices = 8;
-	newResource->indices = indices;
-	newResource->vertices = vertices;
-
-	glGenBuffers(1, (GLuint*)&(newResource->id_indices));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newResource->id_indices);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newResource->num_indices, &indices[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-*/
 	type = PrimitiveTypes::Primitive_Cube;
+}
+
+void MCube::Render() const
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, &shape[0]);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 // SPHERE ============================================

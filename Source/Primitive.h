@@ -61,6 +61,7 @@ class MCube : public Primitive
 public :
 	MCube();
 	MCube(float sizeX, float sizeY, float sizeZ, vec center);
+	void Render() const;
 public:
 	vec size;
 };

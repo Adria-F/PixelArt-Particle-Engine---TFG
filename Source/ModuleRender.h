@@ -5,6 +5,8 @@
 
 #define MAX_LIGHTS 8
 
+class Shader;
+
 class ModuleRender : public Module
 {
 public:
@@ -24,6 +26,8 @@ public:
 	GLuint frameBuffer = 0;
 
 	SDL_GLContext context;
+
+	Shader* defaultShader = nullptr;
 };
 
 #endif // !__MODULERENDER_H__

@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleGUI.h"
 #include "ModuleCamera.h"
+#include "Shader.h"
 
 //TMP
 #include "Primitive.h"
@@ -118,6 +119,9 @@ bool ModuleRender::Init()
 		glEnable(GL_TEXTURE_2D);
 
 		//glGenFramebuffers(1, &frameBuffer);
+
+		//Create Shader program
+		defaultShader = new Shader("Shaders/default.vs", "Shaders/default.fs");
 	}
 
 	return ret;
@@ -144,10 +148,17 @@ update_state ModuleRender::PostUpdate()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(App->camera->getViewMatrix());
 
+	//Activate shader
+	//defaultShader->Use();
+
 	//Base Plane
 	MPlane base_plane(0, 1, 0, 0);
 	base_plane.axis = true;
 	base_plane.Render();
+
+	//Test Cube
+	MCube cube(0.5f, 0.5f, 0.5f, { 0.0f,0.5f,0.0f });
+	//cube.Render();
 
 	//Draw Scene
 

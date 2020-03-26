@@ -251,6 +251,8 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Application\Shaders\default.fs" />
+    <None Include="..\Application\Shaders\default.vs" />
     <None Include="MathGeoLib\Math\Matrix.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

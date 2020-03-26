@@ -19,7 +19,7 @@ Primitive::Primitive() :  color(White), wire(false), axis(false), type(Primitive
 
 Primitive::~Primitive()
 {
-	glDeleteBuffers(1, &my_id);
+	//glDeleteBuffers(1, &my_id);
 	shape.clear();
 	indices.clear();
 }
@@ -32,8 +32,8 @@ PrimitiveTypes Primitive::GetType() const
 
 void Primitive::generateBuffer()
 {
-	glGenBuffers(1, (GLuint*)&(my_id));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
+	//glGenBuffers(1, (GLuint*)&(my_id));
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * indices.size(), &indices[0], GL_STATIC_DRAW);
 	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
@@ -85,7 +85,7 @@ void Primitive::Render() const
 	//Draw shape
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, &shape[0]);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -176,11 +176,11 @@ MCube::MCube(float sizeX, float sizeY, float sizeZ, vec center) : Primitive(), s
 
 void MCube::Render() const
 {
-	glEnableClientState(GL_VERTEX_ARRAY);
+	/*glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, &shape[0]);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 }
 
 // SPHERE ============================================
@@ -384,59 +384,47 @@ MPlane::MPlane() : Primitive(), normal(0, 1, 0), constant(1)
 MPlane::MPlane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
+	int index = 0;
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		shape.push_back(i); shape.push_back(y); shape.push_back(-d);
+		shape.push_back(i); shape.push_back(y); shape.push_back(d);
+		shape.push_back(-d); shape.push_back(y); shape.push_back(i);
+		shape.push_back(d); shape.push_back(y); shape.push_back(i);
+		
+		indices.push_back(index++);
+		indices.push_back(index++);
+		indices.push_back(index++);
+		indices.push_back(index++);
+	}
+
+	unsigned int VBO, EBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), &shape[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void MPlane::Render() const
 {
-	//TEMP -----------------------------------------------
-	if (axis == true)
-	{
-		// Draw Axis Grid
-		glLineWidth(2.0f);
-
-		glBegin(GL_LINES);
-
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-		glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
-
-		glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-		glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-		glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
-
-		glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-		glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-		glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
-
-		glEnd();
-
-		glLineWidth(1.0f);
-	}
-
-	glColor3f(color.r, color.g, color.b);
-	//----------------------------------------------------
-
 	glLineWidth(1.0f);
-	glBegin(GL_LINES);
-
-	float d = 200.0f;
-	for (float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
-
-	glEnd();
+	glBindVertexArray(VAO);
+	glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 MArrow::MArrow() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)

@@ -23,6 +23,9 @@
     <Filter Include="Sources\Utilities">
       <UniqueIdentifier>{ff967fe6-6500-438a-bf87-4bfc4f4f30d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Shaders">
+      <UniqueIdentifier>{30daaaad-206a-4a91-8174-9faa5abe9cef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -163,7 +166,9 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Shader.cpp">
+      <Filter>Sources\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -388,11 +393,19 @@
     <ClInclude Include="Color.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Shader.h">
+      <Filter>Sources\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">
       <Filter>Sources\Tools\MathGeoLib</Filter>
+    </None>
+    <None Include="..\Application\Shaders\default.fs">
+      <Filter>Sources\Shaders</Filter>
+    </None>
+    <None Include="..\Application\Shaders\default.vs">
+      <Filter>Sources\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

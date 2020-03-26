@@ -9,12 +9,12 @@
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
 {
 	//Read vertex and fragment shaders files
-	const char* vShaderCode = getShaderCode(vertexShaderPath);
-	const char* fShaderCode = getShaderCode(fragmentShaderPath);
+	std::string vShaderCode = getShaderCode(vertexShaderPath);
+	std::string fShaderCode = getShaderCode(fragmentShaderPath);
 
 	//Compile both shaders
-	uint vertexShader = compileShader(vShaderCode, GL_VERTEX_SHADER);
-	uint fragmentShader = compileShader(fShaderCode, GL_FRAGMENT_SHADER);
+	uint vertexShader = compileShader(vShaderCode.c_str(), GL_VERTEX_SHADER);
+	uint fragmentShader = compileShader(fShaderCode.c_str(), GL_FRAGMENT_SHADER);
 
 	//Create program
 	programID = glCreateProgram();
@@ -45,6 +45,11 @@ Shader::~Shader()
 void Shader::Use()
 {
 	glUseProgram(programID);
+}
+
+void Shader::sendMat4(const char* name, float* value) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(programID, name), 1, GL_FALSE, value);
 }
 
 const char* Shader::getShaderCode(const char* shaderPath)

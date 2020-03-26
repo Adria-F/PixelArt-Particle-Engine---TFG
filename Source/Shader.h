@@ -11,6 +11,8 @@ public:
 
 	void Use();
 
+	void sendMat4(const char* name, float* value) const;
+
 private:
 
 	const char* getShaderCode(const char* shaderPath);

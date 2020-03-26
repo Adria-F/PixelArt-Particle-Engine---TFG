@@ -28,6 +28,8 @@ public:
 	SDL_GLContext context;
 
 	Shader* defaultShader = nullptr;
+
+	uint VAO = 0;
 };
 
 #endif // !__MODULERENDER_H__

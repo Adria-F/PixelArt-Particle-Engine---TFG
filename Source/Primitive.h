@@ -47,7 +47,7 @@ public:
 	vector<float> shape;
 	vector<uint> indices;
 
-	uint my_id = 0;
+	uint VAO = 0;
 
 protected:
 	

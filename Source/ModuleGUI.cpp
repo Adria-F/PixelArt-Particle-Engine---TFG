@@ -3,7 +3,7 @@
 
 #include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
-#include "ImGui\imgui_impl_opengl2.h"
+#include "ImGui\imgui_impl_opengl3.h"
 
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
@@ -27,7 +27,7 @@ bool ModuleGUI::Init()
 	io.IniFilename = "Settings/imgui.ini";
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->render->context);
-	ImGui_ImplOpenGL2_Init();
+	ImGui_ImplOpenGL3_Init();
 
 	//Add all panels
 
@@ -45,7 +45,7 @@ bool ModuleGUI::Start()
 
 update_state ModuleGUI::PreUpdate()
 {
-	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
@@ -72,6 +72,12 @@ update_state ModuleGUI::PreUpdate()
 
 update_state ModuleGUI::Update()
 {
+	ImGui::Begin("Scene");
+
+	ImGui::Image((ImTextureID)App->render->texture, { 960,540 }, { 0,1 }, { 1,0 });
+
+	ImGui::End();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -83,7 +89,7 @@ update_state ModuleGUI::PostUpdate()
 bool ModuleGUI::CleanUp()
 {
 	ImGui_ImplSDL2_Shutdown();
-	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
 
 	return true;
@@ -94,5 +100,5 @@ void ModuleGUI::Draw()
 	ImGui::End();
 
 	ImGui::Render();
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

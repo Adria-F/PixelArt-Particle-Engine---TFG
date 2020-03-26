@@ -21,7 +21,7 @@ Application::Application()
 	// Add all modules to application
 	AddModule(window);
 	AddModule(input);
-	//AddModule(gui);
+	AddModule(gui);
 	AddModule(camera);
 
 	//Render module last

@@ -52,12 +52,6 @@ bool ModuleRender::Init()
 		if (SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
-		//Initialize Projection Matrix. Specify which matrix is the current matrix
-		glMatrixMode(GL_PROJECTION);//Applies subsequent matrix operations to the projection matrix stack. (screen position)
-		glLoadIdentity();
-		
-		glLoadMatrixf(App->camera->getProjectionMatrix());
-
 		//Check for error
 		GLenum error = glGetError();
 		if (error != GL_NO_ERROR)
@@ -65,10 +59,6 @@ bool ModuleRender::Init()
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-
-		//Initialize Modelview Matrix.Specify which matrix is the current matrix(camera position)
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
 
 		//Check for error
 		error = glGetError();
@@ -118,7 +108,8 @@ bool ModuleRender::Init()
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 
-		//glGenFramebuffers(1, &frameBuffer);
+		//Generate frame buffer
+		generateFrameBuffer(960, 540);
 
 		//Create Shader program
 		defaultShader = new Shader("Shaders/default.vs", "Shaders/default.fs");
@@ -191,6 +182,7 @@ update_state ModuleRender::PostUpdate()
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
 	//Test Cube
 	//MCube cube(0.5f, 0.5f, 0.5f, { 0.0f,0.5f,0.0f });
@@ -198,8 +190,9 @@ update_state ModuleRender::PostUpdate()
 
 	//Draw Scene
 
+	//glUseProgram(0); //Close any shader
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	//App->gui->Draw(); // Draw GUI
+	App->gui->Draw(); // Draw GUI
 
 	SDL_GL_SwapWindow(App->window->window);
 
@@ -226,4 +219,33 @@ void ModuleRender::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+void ModuleRender::generateFrameBuffer(int width, int height)
+{
+	glGenFramebuffers(1, &frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Error while creating framebuffer");
+	}
+
+	glViewport(0, 0, width, height);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

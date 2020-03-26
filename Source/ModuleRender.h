@@ -20,10 +20,12 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+	void generateFrameBuffer(int width, int height);
 
 public:
 	
 	GLuint frameBuffer = 0;
+	GLuint texture = 0;
 
 	SDL_GLContext context;
 

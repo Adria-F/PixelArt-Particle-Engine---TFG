@@ -58,9 +58,6 @@
     <ClCompile Include="ImGui\imgui_draw.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_opengl2.cpp">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
@@ -169,6 +166,9 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_opengl3.cpp">
+      <Filter>Sources\Tools\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -196,9 +196,6 @@
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
-      <Filter>Sources\Tools\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_opengl2.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_sdl.h">
@@ -395,6 +392,9 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Sources\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_opengl3.h">
+      <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

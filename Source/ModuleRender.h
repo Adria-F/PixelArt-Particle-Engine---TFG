@@ -19,6 +19,8 @@ public:
 	update_state PostUpdate();
 	bool CleanUp();
 
+	uint generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices);
+
 	void OnResize(int width, int height);
 	void generateFrameBuffer(int width, int height);
 

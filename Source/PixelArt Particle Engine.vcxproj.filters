@@ -169,6 +169,7 @@
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -396,6 +397,7 @@
     <ClInclude Include="ImGui\imgui_impl_opengl3.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

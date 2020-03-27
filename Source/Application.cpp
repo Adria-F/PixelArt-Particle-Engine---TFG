@@ -7,6 +7,8 @@
 #include "ModuleGUI.h"
 #include "ModuleCamera.h"
 
+#include "ModuleParticles.h"
+
 using namespace std;
 
 Application::Application()
@@ -18,11 +20,15 @@ Application::Application()
 	gui = new ModuleGUI();
 	camera = new ModuleCamera();
 
+	particles = new ModuleParticles();
+
 	// Add all modules to application
 	AddModule(window);
 	AddModule(input);
 	AddModule(gui);
 	AddModule(camera);
+
+	AddModule(particles);
 
 	//Render module last
 	AddModule(render);

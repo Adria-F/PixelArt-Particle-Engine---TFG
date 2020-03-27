@@ -19,6 +19,8 @@ class ModuleInput;
 class ModuleGUI;
 class ModuleCamera;
 
+class ModuleParticles;
+
 class Application
 {
 public:
@@ -29,6 +31,8 @@ public:
 	ModuleInput*		input = nullptr;
 	ModuleGUI*			gui = nullptr;
 	ModuleCamera*		camera = nullptr;
+
+	ModuleParticles*	particles = nullptr;
 
 private:
 

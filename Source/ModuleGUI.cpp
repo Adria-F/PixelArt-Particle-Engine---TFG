@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "ModuleGUI.h"
 
-#include "ImGui\imgui.h"
 #include "ImGui\imgui_impl_sdl.h"
 #include "ImGui\imgui_impl_opengl3.h"
 
@@ -43,7 +42,7 @@ bool ModuleGUI::Start()
 	return true;
 }
 
-update_state ModuleGUI::PreUpdate()
+update_state ModuleGUI::PreUpdate(float dt)
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -70,7 +69,7 @@ update_state ModuleGUI::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-update_state ModuleGUI::Update()
+update_state ModuleGUI::Update(float dt)
 {
 	ImGui::Begin("Scene");
 
@@ -81,7 +80,7 @@ update_state ModuleGUI::Update()
 	return UPDATE_CONTINUE;
 }
 
-update_state ModuleGUI::PostUpdate()
+update_state ModuleGUI::PostUpdate(float dt)
 {
 	return UPDATE_CONTINUE;
 }

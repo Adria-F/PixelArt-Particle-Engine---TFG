@@ -15,8 +15,8 @@ public:
 	~ModuleRender();
 
 	bool Init();
-	update_state PreUpdate();
-	update_state PostUpdate();
+	update_state PreUpdate(float dt);
+	update_state PostUpdate(float dt);
 	bool CleanUp();
 
 	uint generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices);

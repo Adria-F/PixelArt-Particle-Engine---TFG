@@ -12,13 +12,18 @@ public:
 	Particle() {}
 	~Particle() {}
 
-	void Update();
+	void LookCamera();
+	void Update(float dt);
 	void Draw();
 
 public:
 
 	//TODO: Particle data structure
-	float3 position = { 0.0f,0.0f,0.0f };
+	vec position = vec::zero;
+	Quat rotation = Quat::identity;
+	vec scale = vec::one;
+
+	bool billboard = true;
 };
 
 class ParticleEmitter
@@ -26,21 +31,32 @@ class ParticleEmitter
 public:
 
 	ParticleEmitter(Particle* templateParticle=nullptr):templateParticle(templateParticle)
-	{}
+	{
+		lastEmit = frequency;
+	}
 	~ParticleEmitter();
 
-	void UpdateParticles();
+	void Play();
+	void Pause();
+	void Stop();
+
+	void UpdateParticles(float dt);
 	void DrawParticles();
 
 public:
 
 	//TODO: Particle emitter data structure
-	float3 position = { 0.0f,0.0f,0.0f };
-	float frequency = 0.0f;
+	vec position = { 0.0f,0.0f,0.0f };
+	float frequency = 1.0f;
+
+private:
 
 	Particle* templateParticle = nullptr;
-
 	std::vector<Particle*> particles;
+
+	float lastEmit = 0.0f;
+	bool playing = true;
+	bool restarted = false;
 };
 
 class ModuleParticles : public Module
@@ -50,9 +66,12 @@ public:
 	~ModuleParticles();
 
 	bool Start();
-	update_state Update();
+	update_state Update(float dt);
 	bool CleanUp();
 
+	void Play();
+	void Pause();
+	void Stop();
 	void DrawParticles();
 
 private:

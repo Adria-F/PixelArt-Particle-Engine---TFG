@@ -10,6 +10,13 @@
 
 #include "MathGeoLib/MathGeoLib.h"
 #include "SDL/include/SDL.h"
+#include "ImGui/imgui.h"
+
+#include "Glew/include/glew.h"
+#include "SDL\include\SDL_opengl.h"
+
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
 typedef unsigned int uint;
 
@@ -37,6 +44,19 @@ void log(const char file[], int line, const char* format, ...);
 	    }                            \
                               \
 }
+
+#define START_RNG_SEED() startRNGSeed();
+void startRNGSeed();
+
+//Float between 0 and 1
+#define GET_RANDOM() getRandom();
+float getRandom();
+
+#define GET_RANDOM_BETWEEN(min, max) getRandomBetween(min, max);
+int getRandomBetween(int min, int max);
+
+#define GENERATE_UID() generateUID()
+uint generateUID();
 
 #define DEGTORAD 0.0174532925199432957f
 #define RADTODEG 57.295779513082320876f

@@ -37,9 +37,6 @@
     <ClCompile Include="ModuleWindow.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleRender.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
@@ -157,19 +154,30 @@
     <ClCompile Include="MathGeoLib\Geometry\TriangleMesh.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Sources\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleParticles.cpp" />
+    <ClCompile Include="ModuleParticles.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="RNG.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Sources\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Sources\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Sources\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -388,16 +396,21 @@
     <ClInclude Include="Primitive.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_opengl3.h">
+      <Filter>Sources\Tools\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleParticles.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_opengl3.h">
-      <Filter>Sources\Tools\ImGui</Filter>
+    <ClInclude Include="Timer.h">
+      <Filter>Sources\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleParticles.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

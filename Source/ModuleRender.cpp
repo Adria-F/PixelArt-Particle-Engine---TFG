@@ -108,7 +108,7 @@ bool ModuleRender::Init()
 		
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 
 		//Generate frame buffer
 		generateFrameBuffer(960, 540);
@@ -120,7 +120,7 @@ bool ModuleRender::Init()
 	return ret;
 }
 
-update_state ModuleRender::PreUpdate()
+update_state ModuleRender::PreUpdate(float dt)
 {
 	//Render lights
 	/*for (uint i = 0; i < MAX_LIGHTS; ++i)
@@ -129,7 +129,7 @@ update_state ModuleRender::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-update_state ModuleRender::PostUpdate()
+update_state ModuleRender::PostUpdate(float dt)
 {
 	//Draw Scene
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);

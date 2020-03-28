@@ -46,7 +46,7 @@ bool Application::Init()
 {
 	bool ret = true;
 	// Initialize everything needed
-
+	START_RNG_SEED(); //TO be able to use RNG in any file without worrying about initializing the seed
 
 	// Initialize all modules
 	for (list<Module*>::iterator module = modules.begin(); module != modules.end() && ret == true; ++module)
@@ -60,27 +60,37 @@ bool Application::Init()
 		ret = (*module)->Start();
 	}
 
+	timer.Start();
+
 	return ret;
+}
+
+void Application::PrepareUpdate()
+{
+	dt = (float)timer.ReadTime() / 1000.0f;
+
+	timer.Start();
 }
 
 update_state Application::Update()
 {
 	update_state ret = UPDATE_CONTINUE;
+	PrepareUpdate();
 
 	// PreUpdate all modules
 	for (list<Module*>::iterator module = modules.begin(); module != modules.end() && ret == UPDATE_CONTINUE; ++module)
 	{
-		ret = (*module)->PreUpdate();
+		ret = (*module)->PreUpdate(dt);
 	}
 	// Update all modules
 	for (list<Module*>::iterator module = modules.begin(); module != modules.end() && ret == UPDATE_CONTINUE; ++module)
 	{
-		ret = (*module)->Update();
+		ret = (*module)->Update(dt);
 	}
 	// PostUpdate all modules
 	for (list<Module*>::iterator module = modules.begin(); module != modules.end() && ret == UPDATE_CONTINUE; ++module)
 	{
-		ret = (*module)->PostUpdate();
+		ret = (*module)->PostUpdate(dt);
 	}
 
 	return ret;

@@ -47,6 +47,11 @@ void Shader::Use()
 	glUseProgram(programID);
 }
 
+void Shader::sendColor(const char * name, float4 value) const
+{
+	glUniform4fv(glGetUniformLocation(programID, name), 1, value.ptr());
+}
+
 void Shader::sendMat4(const char* name, float* value) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(programID, name), 1, GL_FALSE, value);

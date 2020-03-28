@@ -49,9 +49,9 @@ update_state ModuleParticles::Update(float dt)
 
 	ImGui::End();
 
-	for (int i = 0; i < emitters.size(); ++i)
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
-		emitters[i]->UpdateParticles(dt);
+		(*it_e)->UpdateParticles(dt);
 	}
 
 	return update_state::UPDATE_CONTINUE;
@@ -66,33 +66,33 @@ bool ModuleParticles::CleanUp()
 
 void ModuleParticles::Play()
 {
-	for (int i = 0; i < emitters.size(); ++i)
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
-		emitters[i]->Play();
+		(*it_e)->Play();
 	}
 }
 
 void ModuleParticles::Pause()
 {
-	for (int i = 0; i < emitters.size(); ++i)
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
-		emitters[i]->Pause();
+		(*it_e)->Pause();
 	}
 }
 
 void ModuleParticles::Stop()
 {
-	for (int i = 0; i < emitters.size(); ++i)
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
-		emitters[i]->Stop();
+		(*it_e)->Stop();
 	}
 }
 
 void ModuleParticles::DrawParticles()
 {
-	for (int i = 0; i < emitters.size(); ++i)
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
-		emitters[i]->DrawParticles();
+		(*it_e)->DrawParticles();
 	}
 }
 
@@ -102,9 +102,9 @@ ParticleEmitter::~ParticleEmitter()
 {
 	RELEASE(templateParticle);
 
-	for (int i = 0; i < particles.size(); ++i)
+	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		RELEASE(particles[i]);
+		RELEASE((*it_p));
 	}
 	particles.clear();
 }
@@ -133,15 +133,16 @@ void ParticleEmitter::Stop()
 	restarted = true;
 
 	//Delete all particles
-	for (int i = 0; i < particles.size(); ++i)
+	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		RELEASE(particles[i]);
+		RELEASE((*it_p));
 	}
 	particles.clear();
 }
 
 void ParticleEmitter::UpdateParticles(float dt)
 {
+	frequency = 0.25f;
 	if (playing)
 	{
 		lastEmit += dt;
@@ -149,24 +150,50 @@ void ParticleEmitter::UpdateParticles(float dt)
 		if (lastEmit >= frequency)
 		{
 			lastEmit = 0.0f;
-			particles.push_back(new Particle());
+			Particle* part = new Particle();
+			part->direction = randomDirectionInCone(3.0f, 5.0f);
+			particles.push_back(part);
 		}
 	}
 
-	for (int i = 0; i < particles.size(); ++i)
+	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		particles[i]->LookCamera();
+		(*it_p)->LookCamera();
 		if (playing)
-			particles[i]->Update(dt);
+			(*it_p)->Update(dt);
+	}
+
+	//Check particles to destroy before drawing
+	std::list<Particle*>::iterator it_p = particles.begin();
+	while(it_p != particles.end())
+	{
+		if ((*it_p)->toDestroy)
+		{
+			RELEASE((*it_p));
+			it_p = particles.erase(it_p);
+		}
+		else
+			it_p++;
 	}
 }
 
 void ParticleEmitter::DrawParticles()
 {
-	for (int i = 0; i < particles.size(); ++i)
+	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		particles[i]->Draw();
+		(*it_p)->Draw();
 	}
+}
+
+vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
+{
+	float angle = 2.0*PI * GET_RANDOM();
+	float x = Cos(angle)*radius;
+	float z = Sin(angle)*radius;
+
+	vec point = vec(x, height, z);
+
+	return point.Normalized();
 }
 
 // ----------------------------- PARTICLE ----------------------------------
@@ -189,7 +216,14 @@ void Particle::LookCamera()
 
 void Particle::Update(float dt)
 {
-	position.y += 2.0f*dt;
+	timeAlife += dt;
+
+	if (timeAlife >= lifeTime)
+		toDestroy = true;
+
+	position += direction * speed*dt;
+
+	color.w -= (1.0f / lifeTime) * dt;
 }
 
 void Particle::Draw()
@@ -199,6 +233,9 @@ void Particle::Draw()
 	matrix.Set(float4x4::FromTRS(position, rotation, scale));
 	matrix.Transpose();
 	App->render->defaultShader->sendMat4("model", (float*)matrix.v);
+	
+	color = float4(1.0f, 0.5f, 0.0f, color.w);
+	App->render->defaultShader->sendColor("objectColor", color);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

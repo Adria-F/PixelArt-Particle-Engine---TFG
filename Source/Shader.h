@@ -11,6 +11,7 @@ public:
 
 	void Use();
 
+	void sendColor(const char* name, float4 value) const;
 	void sendMat4(const char* name, float* value) const;
 
 private:

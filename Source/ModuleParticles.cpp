@@ -98,6 +98,16 @@ void ModuleParticles::DrawParticles()
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
+ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(templateParticle)
+{
+	//TODO: Particle Emitter MUST receive a template particle
+	if (templateParticle == nullptr)
+	{
+		this->templateParticle = new Particle();
+	}
+	lastEmit = frequency;
+}
+
 ParticleEmitter::~ParticleEmitter()
 {
 	RELEASE(templateParticle);
@@ -150,7 +160,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 		if (lastEmit >= frequency)
 		{
 			lastEmit = 0.0f;
-			Particle* part = new Particle();
+			Particle* part = new Particle(templateParticle);
 			part->direction = randomDirectionInCone(3.0f, 5.0f);
 			particles.push_back(part);
 		}
@@ -197,6 +207,23 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 }
 
 // ----------------------------- PARTICLE ----------------------------------
+
+Particle::Particle(Particle* templateParticle)
+{
+	//TODO: Particle data structure
+	position = templateParticle->position;
+	rotation = templateParticle->rotation;
+	scale = templateParticle->scale;
+
+	color = templateParticle->color;
+
+	direction = templateParticle->direction;
+	speed = templateParticle->speed;
+
+	lifeTime = templateParticle->lifeTime;
+
+	billboard = templateParticle->billboard;
+}
 
 void Particle::LookCamera()
 {

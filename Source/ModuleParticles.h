@@ -10,6 +10,7 @@ class Particle
 public:
 
 	Particle() {}
+	Particle(Particle* templateParticle);
 	~Particle() {}
 
 	void LookCamera();
@@ -43,10 +44,7 @@ class ParticleEmitter
 {
 public:
 
-	ParticleEmitter(Particle* templateParticle=nullptr):templateParticle(templateParticle)
-	{
-		lastEmit = frequency;
-	}
+	ParticleEmitter(Particle* templateParticle = nullptr);
 	~ParticleEmitter();
 
 	void Play();

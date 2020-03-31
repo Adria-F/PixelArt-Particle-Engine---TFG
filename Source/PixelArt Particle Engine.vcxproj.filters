@@ -26,8 +26,14 @@
     <Filter Include="Sources\Shaders">
       <UniqueIdentifier>{30daaaad-206a-4a91-8174-9faa5abe9cef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Modules\Panels">
+    <Filter Include="Sources\Panels">
       <UniqueIdentifier>{3be834cf-baaf-42c2-85a6-7368ac23a7c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Nodes">
+      <UniqueIdentifier>{89592f2c-db9e-4383-98e0-74bab631d9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Nodes\Particles">
+      <UniqueIdentifier>{421eed01-e388-4c1a-9bd3-86580bbfd367}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +187,18 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="PanelScene.cpp" />
+    <ClCompile Include="PanelScene.cpp">
+      <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseColor.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMovement.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTransform.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -416,9 +433,23 @@
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Panel.h">
-      <Filter>Sources\Modules\Panels</Filter>
+      <Filter>Sources\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="PanelScene.h" />
+    <ClInclude Include="PanelScene.h">
+      <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleData.h">
+      <Filter>Sources\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseColor.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMovement.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTransform.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

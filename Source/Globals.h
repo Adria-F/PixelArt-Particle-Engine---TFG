@@ -69,4 +69,9 @@ enum update_state
 	UPDATE_ERROR
 };
 
+//Particle Data Order
+#define BASE_TRANSFORM	1u
+#define BASE_MOVEMENT	2u
+#define BASE_COLOR		3u
+
 #endif // !__GLOBALS_H__

@@ -4,6 +4,12 @@
 #include "Shader.h"
 #include "ModuleCamera.h"
 
+//Include all particle data nodes
+#include "ParticleData.h"
+#include "BaseTransform.h"
+#include "BaseMovement.h"
+#include "BaseColor.h"
+
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled)
 {
 }
@@ -162,14 +168,13 @@ void ParticleEmitter::UpdateParticles(float dt)
 		{
 			lastEmit = 0.0f;
 			Particle* part = new Particle(templateParticle);
-			part->direction = randomDirectionInCone(3.0f, 5.0f);
+			((BaseMovement*)part->data[BASE_MOVEMENT])->direction = randomDirectionInCone(3.0f, 5.0f);
 			particles.push_back(part);
 		}
 	}
 
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		(*it_p)->LookCamera();
 		if (playing)
 			(*it_p)->Update(dt);
 	}
@@ -209,37 +214,30 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 
 // ----------------------------- PARTICLE ----------------------------------
 
-Particle::Particle(Particle* templateParticle)
+Particle::Particle()
 {
-	//TODO: Particle data structure
-	position = templateParticle->position;
-	rotation = templateParticle->rotation;
-	scale = templateParticle->scale;
-
-	color = templateParticle->color;
-
-	direction = templateParticle->direction;
-	speed = templateParticle->speed;
-
-	lifeTime = templateParticle->lifeTime;
-
-	billboard = templateParticle->billboard;
+	data[BASE_TRANSFORM] = new BaseTransform(this);
+	data[BASE_MOVEMENT] = new BaseMovement(this);
+	data[BASE_COLOR] = new BaseColor(this);
 }
 
-void Particle::LookCamera()
+Particle::Particle(Particle* templateParticle)
 {
-	if (!billboard)
-		return;
+	for (std::unordered_map<uint, ParticleData*>::iterator it_d = templateParticle->data.begin(); it_d != templateParticle->data.end(); ++it_d)
+	{
+		data[(*it_d).first] = (*it_d).second->Copy(this);
+	}
 
-	vec cameraPos = App->camera->position;
-	//caluclate direction to look
-	vec dir = cameraPos - position;
-	
-	//caluclate the new rotation matrix
-	float3x3 rotMat = float3x3::LookAt(vec(0.0f,0.0f,1.0f), dir.Normalized(), vec(0.0f,1.0f,0.0f), vec(0.0f, 1.0f, 0.0f));
+	lifeTime = templateParticle->lifeTime;
+}
 
-	//set new rotation quaternion
-	rotation = rotMat.ToQuat();
+Particle::~Particle()
+{
+	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	{
+		RELEASE((*it_d).second);
+	}
+	data.clear();
 }
 
 void Particle::Update(float dt)
@@ -249,21 +247,18 @@ void Particle::Update(float dt)
 	if (timeAlife >= lifeTime)
 		toDestroy = true;
 
-	position += direction * speed*dt;
-
-	color.w -= (1.0f / lifeTime) * dt;
+	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	{
+		(*it_d).second->Execute(dt);
+	}
 }
 
 void Particle::Draw()
 {
-	//TODO: Access shader here?
-	float4x4 matrix;
-	matrix.Set(float4x4::FromTRS(position, rotation, scale));
-	matrix.Transpose();
-	App->render->defaultShader->sendMat4("model", (float*)matrix.v);
-	
-	color = float4(1.0f, 0.5f, 0.0f, color.w);
-	App->render->defaultShader->sendColor("objectColor", color);
+	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	{
+		(*it_d).second->PrepareRender();
+	}
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

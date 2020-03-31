@@ -126,6 +126,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BaseColor.cpp" />
+    <ClCompile Include="BaseMovement.cpp" />
+    <ClCompile Include="BaseTransform.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
@@ -179,6 +182,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BaseColor.h" />
+    <ClInclude Include="BaseMovement.h" />
+    <ClInclude Include="BaseTransform.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -254,6 +260,7 @@
     <ClInclude Include="ModuleParticles.h" />
     <ClInclude Include="Panel.h" />
     <ClInclude Include="PanelScene.h" />
+    <ClInclude Include="ParticleData.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Timer.h" />

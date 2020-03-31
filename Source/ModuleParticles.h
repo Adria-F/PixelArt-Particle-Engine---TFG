@@ -4,34 +4,27 @@
 #include "Module.h"
 #include "Globals.h"
 #include <list>
+#include <unordered_map>
+
+class ParticleData;
+class EmitterData;
 
 class Particle
 {
 public:
 
-	Particle() {}
+	Particle();
 	Particle(Particle* templateParticle);
-	~Particle() {}
+	~Particle();
 
-	void LookCamera();
 	void Update(float dt);
 	void Draw();
 
 public:
 
-	//TODO: Particle data structure
-	vec position = vec::zero;
-	Quat rotation = Quat::identity;
-	vec scale = vec::one;
-
-	float4 color = float4::one;
-
-	vec direction = vec::unitY;
-	float speed = 2.0f;
+	std::unordered_map<uint, ParticleData*> data;
 
 	float lifeTime = 5.0f;
-
-	bool billboard = true;
 
 	bool toDestroy = false;
 

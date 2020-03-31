@@ -3,9 +3,12 @@
 
 #include "Module.h"
 
+class Panel;
+
 class ModuleGUI : public Module
 {
 public:
+
 	ModuleGUI(bool start_enabled = true);
 	~ModuleGUI();
 
@@ -17,6 +20,10 @@ public:
 	bool CleanUp();
 
 	void Draw();
+
+public:
+
+	std::list<Panel*> panels;
 };
 
 #endif // !__MODULEGUI_H__

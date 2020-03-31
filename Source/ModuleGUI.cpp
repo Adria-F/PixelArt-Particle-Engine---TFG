@@ -8,7 +8,7 @@
 #include "ModuleRender.h"
 
 // Include all panels
-
+#include "PanelScene.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
 {
@@ -21,14 +21,19 @@ ModuleGUI::~ModuleGUI()
 bool ModuleGUI::Init()
 {
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.IniFilename = "Settings/imgui.ini";
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoDecoration = false;
 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->render->context);
 	ImGui_ImplOpenGL3_Init();
 
 	//Add all panels
+	panels.push_back(new PanelScene("Scene"));
 
 	return true;
 }
@@ -71,12 +76,7 @@ update_state ModuleGUI::PreUpdate(float dt)
 
 update_state ModuleGUI::Update(float dt)
 {
-	ImGui::Begin("Scene");
-
-	ImGui::Image((ImTextureID)App->render->texture, { 960,540 }, { 0,1 }, { 1,0 });
-
-	ImGui::End();
-
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -91,13 +91,35 @@ bool ModuleGUI::CleanUp()
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
 
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
+	{
+		RELEASE((*it_p));
+	}
+	panels.clear();
+
 	return true;
 }
 
 void ModuleGUI::Draw()
 {
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
+	{
+		if ((*it_p)->IsActive())
+		{
+			(*it_p)->DrawPanel();
+		}
+	}
+
 	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		SDL_GL_MakeCurrent(App->window->window, App->render->context);
+	}
 }

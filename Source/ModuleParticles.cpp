@@ -38,6 +38,7 @@ bool ModuleParticles::Start()
 
 update_state ModuleParticles::Update(float dt)
 {
+	//TEMP: Debug
 	ImGui::Begin("Particles");
 
 	if (ImGui::Button("Play"))

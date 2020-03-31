@@ -26,6 +26,9 @@
     <Filter Include="Sources\Shaders">
       <UniqueIdentifier>{30daaaad-206a-4a91-8174-9faa5abe9cef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\Panels">
+      <UniqueIdentifier>{3be834cf-baaf-42c2-85a6-7368ac23a7c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -178,6 +181,7 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="PanelScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -411,6 +415,10 @@
     <ClInclude Include="Timer.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Panel.h">
+      <Filter>Sources\Modules\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

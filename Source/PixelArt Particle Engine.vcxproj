@@ -171,6 +171,7 @@
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
+    <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -251,6 +252,8 @@
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleParticles.h" />
+    <ClInclude Include="Panel.h" />
+    <ClInclude Include="PanelScene.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Timer.h" />

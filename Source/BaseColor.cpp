@@ -4,7 +4,7 @@
 #include "ModuleRender.h"
 #include "Shader.h"
 
-BaseColor::BaseColor(Particle * particle) : ParticleData(particle)
+BaseColor::BaseColor(Particle* particle) : ParticleData(particle)
 {
 	color = White;
 }

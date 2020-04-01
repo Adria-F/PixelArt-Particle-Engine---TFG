@@ -3,6 +3,11 @@
 #include "ModuleParticles.h"
 #include "BaseTransform.h"
 
+BaseMovement::BaseMovement(Particle* particle) : ParticleData(particle)
+{
+	
+}
+
 void BaseMovement::Execute(float dt)
 {
 	//Change Base Transform
@@ -16,5 +21,23 @@ ParticleData* BaseMovement::Copy(Particle* particle) const
 	ret->direction = direction;
 	ret->speed = speed;
 
+	ret->randomizeSpeed = randomizeSpeed;
+
+	ret->randSpeed1 = randSpeed1;
+	ret->randSpeed2 = randSpeed2;
+
+	if (randomizeSpeed)
+		ret->RandomizeSpeed();
+
 	return ret;
+}
+
+void BaseMovement::SetRandomSpeed(bool random)
+{
+	randomizeSpeed = random;
+}
+
+void BaseMovement::RandomizeSpeed()
+{
+	speed = Lerp(randSpeed1, randSpeed2, GET_RANDOM());
 }

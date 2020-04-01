@@ -175,6 +175,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
+		(*it_p)->baseTransform->LookCamera();
 		if (playing)
 			(*it_p)->Update(dt);
 	}

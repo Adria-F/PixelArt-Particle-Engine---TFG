@@ -41,7 +41,7 @@ public:
 
 	float lifeTime = 5.0f;
 
-	float randLifeTime1 = 5.0f;
+	float randLifeTime1 = 3.0f;
 	float randLifeTime2 = 5.0f;
 
 	bool toDestroy = false;

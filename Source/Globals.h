@@ -70,8 +70,6 @@ enum update_state
 };
 
 //Particle Data Order
-#define BASE_TRANSFORM	1u
-#define BASE_MOVEMENT	2u
-#define BASE_COLOR		3u
+#define MAX_PARTICLE_DATA 10
 
 #endif // !__GLOBALS_H__

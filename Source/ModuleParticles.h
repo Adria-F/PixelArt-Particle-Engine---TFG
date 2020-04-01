@@ -9,6 +9,10 @@
 class ParticleData;
 class EmitterData;
 
+class BaseTransform;
+class BaseMovement;
+class BaseColor;
+
 class Particle
 {
 public:
@@ -22,7 +26,16 @@ public:
 
 public:
 
-	std::unordered_map<uint, ParticleData*> data;
+	union
+	{
+		struct
+		{
+			BaseTransform* baseTransform;
+			BaseMovement* baseMovement;		
+			BaseColor* baseColor;
+		};
+		ParticleData* data[MAX_PARTICLE_DATA];
+	};
 
 	float lifeTime = 5.0f;
 

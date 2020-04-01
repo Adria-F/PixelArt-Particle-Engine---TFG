@@ -168,7 +168,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 		{
 			lastEmit = 0.0f;
 			Particle* part = new Particle(templateParticle);
-			((BaseMovement*)part->data[BASE_MOVEMENT])->direction = randomDirectionInCone(3.0f, 5.0f);
+			part->baseMovement->direction = randomDirectionInCone(3.0f, 5.0f);
 			particles.push_back(part);
 		}
 	}
@@ -216,16 +216,20 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 
 Particle::Particle()
 {
-	data[BASE_TRANSFORM] = new BaseTransform(this);
-	data[BASE_MOVEMENT] = new BaseMovement(this);
-	data[BASE_COLOR] = new BaseColor(this);
+	baseTransform = new BaseTransform(this);
+	baseMovement = new BaseMovement(this);
+	baseColor = new BaseColor(this);
 }
 
 Particle::Particle(Particle* templateParticle)
 {
-	for (std::unordered_map<uint, ParticleData*>::iterator it_d = templateParticle->data.begin(); it_d != templateParticle->data.end(); ++it_d)
+	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
-		data[(*it_d).first] = (*it_d).second->Copy(this);
+		data[i] = nullptr;
+		if (templateParticle->data[i] != nullptr)
+		{
+			data[i] = templateParticle->data[i]->Copy(this);
+		}
 	}
 
 	lifeTime = templateParticle->lifeTime;
@@ -233,11 +237,10 @@ Particle::Particle(Particle* templateParticle)
 
 Particle::~Particle()
 {
-	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
-		RELEASE((*it_d).second);
+		RELEASE(data[i]);
 	}
-	data.clear();
 }
 
 void Particle::Update(float dt)
@@ -247,17 +250,19 @@ void Particle::Update(float dt)
 	if (timeAlife >= lifeTime)
 		toDestroy = true;
 
-	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
-		(*it_d).second->Execute(dt);
+		if (data[i] != nullptr)
+			data[i]->Execute(dt);
 	}
 }
 
 void Particle::Draw()
 {
-	for (std::unordered_map<uint, ParticleData*>::iterator it_d = data.begin(); it_d != data.end(); ++it_d)
+	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
-		(*it_d).second->PrepareRender();
+		if (data[i] != nullptr)
+			data[i]->PrepareRender();
 	}
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

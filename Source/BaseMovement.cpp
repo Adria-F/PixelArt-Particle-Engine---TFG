@@ -6,7 +6,7 @@
 void BaseMovement::Execute(float dt)
 {
 	//Change Base Transform
-	((BaseTransform*)particle->data[BASE_TRANSFORM])->position += direction * speed*dt;
+	particle->baseTransform->position += direction * speed*dt;
 }
 
 ParticleData* BaseMovement::Copy(Particle* particle) const

@@ -9,7 +9,7 @@ Color White = Color(1.0f, 1.0f, 1.0f);
 Color lightGray = Color(0.5f, 0.5f, 0.5f);
 Color Gray = Color(0.3f, 0.3f, 0.3f);
 Color Yellow = Color(1.0f, 0.9f, 0.0f);
-Color Orange = Color(1.7f, 0.7f, 0.1f);
+Color Orange = Color(1.0f, 0.5f, 0.0f);
 
 Gradient::Gradient(vec baseColor)
 {

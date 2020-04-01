@@ -45,14 +45,14 @@ void log(const char file[], int line, const char* format, ...);
                               \
 }
 
-#define START_RNG_SEED() startRNGSeed();
+#define START_RNG_SEED() startRNGSeed()
 void startRNGSeed();
 
 //Float between 0 and 1
-#define GET_RANDOM() getRandom();
+#define GET_RANDOM() getRandom()
 float getRandom();
 
-#define GET_RANDOM_BETWEEN(min, max) getRandomBetween(min, max);
+#define GET_RANDOM_BETWEEN(min, max) getRandomBetween(min, max)
 int getRandomBetween(int min, int max);
 
 #define GENERATE_UID() generateUID()

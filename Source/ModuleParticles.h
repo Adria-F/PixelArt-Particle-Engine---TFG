@@ -24,6 +24,8 @@ public:
 	void Update(float dt);
 	void Draw();
 
+	void SetRandomLifeTime(bool random);
+
 public:
 
 	union
@@ -39,11 +41,15 @@ public:
 
 	float lifeTime = 5.0f;
 
+	float randLifeTime1 = 5.0f;
+	float randLifeTime2 = 5.0f;
+
 	bool toDestroy = false;
 
 private:
 
 	float timeAlife = 0.0f;
+	bool randomizeLifeTime = false;
 };
 
 class ParticleEmitter

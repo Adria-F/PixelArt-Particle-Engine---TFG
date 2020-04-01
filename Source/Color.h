@@ -20,6 +20,12 @@ struct Color
 		this->a = a;
 	}
 
+	float4 Get() const
+	{
+
+		return float4({ rgb, a });
+	}
+
 	float* operator & ()
 	{
 		return (float*)this;

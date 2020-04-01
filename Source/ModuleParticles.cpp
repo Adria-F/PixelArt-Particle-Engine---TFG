@@ -216,6 +216,11 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 
 Particle::Particle()
 {
+	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	{
+		data[i] = nullptr;
+	}
+
 	baseTransform = new BaseTransform(this);
 	baseMovement = new BaseMovement(this);
 	baseColor = new BaseColor(this);
@@ -233,6 +238,14 @@ Particle::Particle(Particle* templateParticle)
 	}
 
 	lifeTime = templateParticle->lifeTime;
+	randLifeTime1 = templateParticle->randLifeTime1;
+	randLifeTime2 = templateParticle->randLifeTime2;
+	randomizeLifeTime = templateParticle->randomizeLifeTime;
+
+	if (randomizeLifeTime)
+	{
+		lifeTime = Lerp(randLifeTime1, randLifeTime2, GET_RANDOM());
+	}
 }
 
 Particle::~Particle()
@@ -266,4 +279,9 @@ void Particle::Draw()
 	}
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void Particle::SetRandomLifeTime(bool random)
+{
+	randomizeLifeTime = random;
 }

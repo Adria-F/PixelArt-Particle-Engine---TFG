@@ -1,21 +1,22 @@
-
 #pragma once
+
+#include "Globals.h"
+#include <map>
 
 struct Color
 {
-	float r, g, b, a;
+	vec rgb;
+	float a;
 	
-	Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f)
+	Color() : rgb({ 0.0f,0.0f,0.0f }), a(0.0f)
 	{}
 
-	Color(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a)
+	Color(float r, float g, float b, float a = 1.0f) : rgb({ r,g,b }), a(a)
 	{}
 
 	void Set(float r, float g, float b, float a = 1.0f)
 	{
-		this->r = r;
-		this->g = g;
-		this->b = b;
+		this->rgb = vec(r, g, b);
 		this->a = a;
 	}
 
@@ -34,3 +35,16 @@ extern Color Gray;
 extern Color lightGray;
 extern Color Yellow;
 extern Color Orange;
+
+struct Gradient
+{
+	Gradient() : Gradient(White.rgb) {}
+	Gradient(vec baseColor);
+
+	void SetColor(vec color, float percent);
+	void SetAlpha(float alpha, float percent);
+	Color GetColor(float percent);
+
+	std::map<float, vec> colorList;
+	std::map<float, float> alphaList;
+};

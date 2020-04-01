@@ -77,7 +77,7 @@ void Primitive::Render() const
 		glLineWidth(1.0f);
 	}
 
-	glColor3f(color.r, color.g, color.b);
+	//glColor3f(color.r, color.g, color.b);
 
 	glPushMatrix();
 	glMultMatrixf((float*)transform.Transposed().v);
@@ -363,7 +363,7 @@ void MLine::Render() const
 {
 	glLineWidth(2.0f);
 
-	glColor3f(color.r, color.g, color.b);
+	//glColor3f(color.r, color.g, color.b);
 	glBegin(GL_LINES);
 
 	glVertex3f(origin.x, origin.y, origin.z);

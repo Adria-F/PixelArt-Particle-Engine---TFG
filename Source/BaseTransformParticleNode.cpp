@@ -1,24 +1,28 @@
 #include "Application.h"
-#include "BaseTransform.h"
+#include "BaseTransformParticleNode.h"
 
 #include "ModuleRender.h"
 #include "Shader.h"
 #include "ModuleCamera.h"
+#include "ModuleParticles.h"
+#include "BaseTransformEmitterNode.h"
 
-BaseTransform::BaseTransform(Particle* particle) : ParticleData(particle)
+BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : ParticleData(particle)
 {
 	
 }
 
-void BaseTransform::PrepareRender()
+void BaseTransformParticleNode::PrepareRender()
 {
 	float4x4 matrix;
 	matrix.Set(float4x4::FromTRS(position, rotation, scale));
-	matrix.Transpose();
-	App->render->defaultShader->sendMat4("model", (float*)matrix.v);
+
+	matrix = particle->emitter->baseTransform->matrix*matrix;
+
+	App->render->defaultShader->sendMat4("model", (float*)matrix.Transposed().v);
 }
 
-void BaseTransform::LookCamera()
+void BaseTransformParticleNode::LookCamera()
 {
 	if (!billboard)
 		return;
@@ -51,9 +55,9 @@ void BaseTransform::LookCamera()
 	}
 }
 
-ParticleData* BaseTransform::Copy(Particle* particle) const
+ParticleData* BaseTransformParticleNode::Copy(Particle* particle) const
 {
-	BaseTransform* ret = new BaseTransform(particle);
+	BaseTransformParticleNode* ret = new BaseTransformParticleNode(particle);
 
 	ret->position = position;
 	ret->rotation = rotation;
@@ -79,23 +83,23 @@ ParticleData* BaseTransform::Copy(Particle* particle) const
 	return ret;
 }
 
-void BaseTransform::SetRandomScale(bool random)
+void BaseTransformParticleNode::SetRandomScale(bool random)
 {
 	randomizeScale = random;
 }
 
-void BaseTransform::SetRandomRotation(bool random)
+void BaseTransformParticleNode::SetRandomRotation(bool random)
 {
 	randomizeRotation = random;
 }
 
-void BaseTransform::RandomizeScale()
+void BaseTransformParticleNode::RandomizeScale()
 {
 	scale.x = Lerp(randScaleX1, randScaleX2, GET_RANDOM());
 	scale.y = Lerp(randScaleY1, randScaleY2, GET_RANDOM());
 }
 
-void BaseTransform::RandomizeRotation()
+void BaseTransformParticleNode::RandomizeRotation()
 {
 	angleZ = Lerp(randRotation1, randRotation2, GET_RANDOM());
 

@@ -35,6 +35,9 @@
     <Filter Include="Sources\Nodes\Particles">
       <UniqueIdentifier>{421eed01-e388-4c1a-9bd3-86580bbfd367}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Nodes\Emitters">
+      <UniqueIdentifier>{9c9fb1ff-94e3-4eca-8e87-6c5105e95d68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -190,14 +193,20 @@
     <ClCompile Include="PanelScene.cpp">
       <Filter>Sources\Panels</Filter>
     </ClCompile>
-    <ClCompile Include="BaseColor.cpp">
+    <ClCompile Include="BaseTransformParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="BaseMovement.cpp">
+    <ClCompile Include="BaseMovementParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="BaseTransform.cpp">
+    <ClCompile Include="BaseColorParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseTransformEmitterNode.cpp">
+      <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -441,14 +450,23 @@
     <ClInclude Include="ParticleData.h">
       <Filter>Sources\Nodes</Filter>
     </ClInclude>
-    <ClInclude Include="BaseColor.h">
+    <ClInclude Include="BaseTransformParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="BaseMovement.h">
+    <ClInclude Include="BaseMovementParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="BaseTransform.h">
+    <ClInclude Include="BaseColorParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterData.h">
+      <Filter>Sources\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTransformEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

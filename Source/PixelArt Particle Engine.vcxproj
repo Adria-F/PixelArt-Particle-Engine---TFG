@@ -126,10 +126,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BaseColor.cpp" />
-    <ClCompile Include="BaseMovement.cpp" />
-    <ClCompile Include="BaseTransform.cpp" />
+    <ClCompile Include="BaseColorParticleNode.cpp" />
+    <ClCompile Include="BaseMovementParticleNode.cpp" />
+    <ClCompile Include="BaseTransformEmitterNode.cpp" />
+    <ClCompile Include="BaseTransformParticleNode.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ColorParticleNode.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -182,10 +184,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="BaseColor.h" />
-    <ClInclude Include="BaseMovement.h" />
-    <ClInclude Include="BaseTransform.h" />
+    <ClInclude Include="BaseColorParticleNode.h" />
+    <ClInclude Include="BaseMovementParticleNode.h" />
+    <ClInclude Include="BaseTransformEmitterNode.h" />
+    <ClInclude Include="BaseTransformParticleNode.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="ColorParticleNode.h" />
+    <ClInclude Include="EmitterData.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

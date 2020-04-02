@@ -69,6 +69,21 @@ void Application::PrepareUpdate()
 {
 	dt = (float)timer.ReadTime() / 1000.0f;
 
+	if (dt > 0.0f)
+	{
+		if (FPS_COUNT >= 1000)
+		{
+			TOTAL_FPS = AVG_FPS;
+			FPS_COUNT = 1;
+		}
+		TOTAL_FPS += 1.0 / dt;
+		FPS_COUNT++;
+		AVG_FPS = TOTAL_FPS / FPS_COUNT;
+
+		std::string title = "Application Name | FPS:" + std::to_string(AVG_FPS);
+		SDL_SetWindowTitle(App->window->window, title.c_str());
+	}
+
 	timer.Start();
 }
 

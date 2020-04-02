@@ -36,6 +36,10 @@ private:
 	Timer timer;
 	float dt;
 
+	double TOTAL_FPS = 0.0;
+	float AVG_FPS = 0.0f;
+	int FPS_COUNT = 0;
+
 public:
 
 	Application();

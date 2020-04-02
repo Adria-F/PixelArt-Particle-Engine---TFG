@@ -6,9 +6,12 @@
 
 //Include all particle data nodes
 #include "ParticleData.h"
-#include "BaseTransform.h"
-#include "BaseMovement.h"
-#include "BaseColor.h"
+#include "BaseTransformParticleNode.h"
+#include "BaseMovementParticleNode.h"
+#include "BaseColorParticleNode.h"
+#include "BaseTransformEmitterNode.h"
+
+#include "ColorParticleNode.h"
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled)
 {
@@ -107,10 +110,17 @@ void ModuleParticles::DrawParticles()
 
 ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(templateParticle)
 {
+	for (int i = 0; i < MAX_EMITTER_DATA; ++i)
+	{
+		data[i] = nullptr;
+	}
+
+	baseTransform = new BaseTransformEmitterNode(this);
+
 	//TODO: Particle Emitter MUST receive a template particle
 	if (templateParticle == nullptr)
 	{
-		this->templateParticle = new Particle();
+		this->templateParticle = new Particle(this);
 	}
 	lastEmit = frequency;
 }
@@ -167,7 +177,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 		if (lastEmit >= frequency)
 		{
 			lastEmit = 0.0f;
-			Particle* part = new Particle(templateParticle);
+			Particle* part = new Particle(this, templateParticle);
 			part->baseMovement->direction = randomDirectionInCone(3.0f, 5.0f);
 			particles.push_back(part);
 		}
@@ -215,19 +225,19 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 
 // ----------------------------- PARTICLE ----------------------------------
 
-Particle::Particle()
+Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 {
 	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
 		data[i] = nullptr;
 	}
 
-	baseTransform = new BaseTransform(this);
-	baseMovement = new BaseMovement(this);
-	baseColor = new BaseColor(this);
+	baseTransform = new BaseTransformParticleNode(this);
+	baseMovement = new BaseMovementParticleNode(this);
+	baseColor = new BaseColorParticleNode(this);
 }
 
-Particle::Particle(Particle* templateParticle)
+Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
 {
 	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
 	{
@@ -259,9 +269,9 @@ Particle::~Particle()
 
 void Particle::Update(float dt)
 {
-	timeAlife += dt;
+	timeAlive += dt;
 
-	if (timeAlife >= lifeTime)
+	if (timeAlive >= lifeTime)
 		toDestroy = true;
 
 	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
@@ -285,4 +295,9 @@ void Particle::Draw()
 void Particle::SetRandomLifeTime(bool random)
 {
 	randomizeLifeTime = random;
+}
+
+float Particle::GetLifePercent() const
+{
+	return timeAlive/lifeTime;
 }

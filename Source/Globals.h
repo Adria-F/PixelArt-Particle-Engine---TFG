@@ -71,5 +71,6 @@ enum update_state
 
 //Particle Data Order
 #define MAX_PARTICLE_DATA 10
+#define MAX_EMITTER_DATA 10
 
 #endif // !__GLOBALS_H__

@@ -65,7 +65,7 @@ bool ModuleWindow::Init()
 		}
 
 		window = SDL_CreateWindow("Application Name", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
-
+		
 		if (window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());

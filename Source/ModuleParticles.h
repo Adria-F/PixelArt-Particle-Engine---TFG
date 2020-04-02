@@ -6,25 +6,32 @@
 #include <list>
 #include <unordered_map>
 
+class Particle;
+class ParticleEmitter;
+
 class ParticleData;
 class EmitterData;
 
-class BaseTransform;
-class BaseMovement;
-class BaseColor;
+class BaseTransformParticleNode;
+class BaseMovementParticleNode;
+class BaseColorParticleNode;
+class BaseTransformEmitterNode;
+
+class ColorParticleNode;
 
 class Particle
 {
 public:
 
-	Particle();
-	Particle(Particle* templateParticle);
+	Particle(ParticleEmitter* emitter);
+	Particle(ParticleEmitter* emitter, Particle* templateParticle);
 	~Particle();
 
 	void Update(float dt);
 	void Draw();
 
 	void SetRandomLifeTime(bool random);
+	float GetLifePercent() const;
 
 public:
 
@@ -32,12 +39,16 @@ public:
 	{
 		struct
 		{
-			BaseTransform* baseTransform;
-			BaseMovement* baseMovement;		
-			BaseColor* baseColor;
+			BaseTransformParticleNode* baseTransform;
+			BaseMovementParticleNode* baseMovement;		
+			BaseColorParticleNode* baseColor;
+
+			ColorParticleNode* color;
 		};
 		ParticleData* data[MAX_PARTICLE_DATA];
 	};
+
+	ParticleEmitter* emitter = nullptr;
 
 	float lifeTime = 5.0f;
 
@@ -48,7 +59,7 @@ public:
 
 private:
 
-	float timeAlife = 0.0f;
+	float timeAlive = 0.0f;
 	bool randomizeLifeTime = false;
 };
 
@@ -70,8 +81,15 @@ public:
 
 public:
 
-	//TODO: Particle emitter data structure
-	vec position = { 0.0f,0.0f,0.0f };
+	union
+	{
+		struct
+		{
+			BaseTransformEmitterNode* baseTransform;
+		};
+		EmitterData* data[MAX_PARTICLE_DATA];
+	};
+
 	float frequency = 1.0f;
 
 private:

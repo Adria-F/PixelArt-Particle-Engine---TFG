@@ -1,14 +1,14 @@
-#ifndef __PARTICLE_BASEMOVEMENT_H__
-#define __PARTICLE_BASEMOVEMENT_H__
+#ifndef __BASEMOVEMENT_PARTICLENODE_H__
+#define __BASEMOVEMENT_PARTICLENODE_H__
 
 #include "ParticleData.h"
 
-class BaseMovement : public ParticleData
+class BaseMovementParticleNode : public ParticleData
 {
 public:
 
-	BaseMovement(Particle* particle);
-	~BaseMovement() {}
+	BaseMovementParticleNode(Particle* particle);
+	~BaseMovementParticleNode() {}
 
 	void Execute(float dt);
 
@@ -30,4 +30,4 @@ private:
 	bool randomizeSpeed = false;
 };
 
-#endif // !__PARTICLE_BASEMOVEMENT_H__
+#endif // !__BASEMOVEMENT_PARTICLENODE_H__

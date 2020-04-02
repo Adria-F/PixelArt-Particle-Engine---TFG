@@ -1,15 +1,15 @@
-#ifndef __PARTICLE_BASECOLOR_H__
-#define __PARTICLE_BASECOLOR_H__
+#ifndef __BASECOLOR_PARTICLENODE_H__
+#define __BASECOLOR_PARTICLENODE_H__
 
 #include "ParticleData.h"
 #include "Color.h"
 
-class BaseColor : public ParticleData
+class BaseColorParticleNode : public ParticleData
 {
 public:
 
-	BaseColor(Particle* particle);
-	~BaseColor() {}
+	BaseColorParticleNode(Particle* particle);
+	~BaseColorParticleNode() {}
 
 	void PrepareRender();
 
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif // !__PARTICLE_BASECOLOR_H__
+#endif // !__BASECOLOR_PARTICLENODE_H__

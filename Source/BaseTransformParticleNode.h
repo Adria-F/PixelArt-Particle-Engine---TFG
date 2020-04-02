@@ -1,14 +1,14 @@
-#ifndef __PARTICLE_BASETRANSFORM_H__
-#define __PARTICLE_BASETRANSFORM_H__
+#ifndef __BASETRANSFORM_PARTICLENODE_H__
+#define __BASETRANSFORM_PARTICLENODE_H__
 
 #include "ParticleData.h"
 
-class BaseTransform : public ParticleData
+class BaseTransformParticleNode : public ParticleData
 {
 public:
 
-	BaseTransform(Particle* particle);
-	~BaseTransform() {}
+	BaseTransformParticleNode(Particle* particle);
+	~BaseTransformParticleNode() {}
 
 	void PrepareRender();
 	
@@ -47,4 +47,4 @@ private:
 	bool randomizeRotation = false;
 };
 
-#endif // !__PARTICLE_BASETRANSFORM_H__
+#endif // !__BASETRANSFORM_PARTICLENODE_H__

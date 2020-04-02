@@ -6,18 +6,25 @@
 #include <list>
 #include <unordered_map>
 
+// Particle ------------------
 class Particle;
-class ParticleEmitter;
-
 class ParticleData;
-class EmitterData;
 
 class BaseTransformParticleNode;
 class BaseMovementParticleNode;
 class BaseColorParticleNode;
-class BaseTransformEmitterNode;
 
 class ColorParticleNode;
+class SpeedParticleNode;
+class MakeGlobalParticleNode;
+
+//Emitter ---------------------
+class ParticleEmitter;
+class EmitterData;
+
+class BaseTransformEmitterNode;
+
+class EmissionEmitterNode;
 
 class Particle
 {
@@ -39,11 +46,14 @@ public:
 	{
 		struct
 		{
+			ColorParticleNode* color;
+			SpeedParticleNode* speed;
+			MakeGlobalParticleNode* makeGlobal;
+
+			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
 			BaseMovementParticleNode* baseMovement;		
-			BaseColorParticleNode* baseColor;
-
-			ColorParticleNode* color;
+			BaseColorParticleNode* baseColor;		
 		};
 		ParticleData* data[MAX_PARTICLE_DATA];
 	};
@@ -74,9 +84,11 @@ public:
 	void Pause();
 	void Stop();
 
+	void Update(float dt);
 	void UpdateParticles(float dt);
 	void DrawParticles();
 
+	void SpawnParticle();
 	vec randomDirectionInCone(float radius, float height) const;
 
 public:
@@ -85,12 +97,14 @@ public:
 	{
 		struct
 		{
+			EmissionEmitterNode* emission;
+
 			BaseTransformEmitterNode* baseTransform;
 		};
 		EmitterData* data[MAX_PARTICLE_DATA];
 	};
 
-	float frequency = 1.0f;
+	float frequency = 0.25f;
 
 private:
 

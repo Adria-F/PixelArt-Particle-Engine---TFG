@@ -6,10 +6,15 @@
 #include "ModuleCamera.h"
 #include "ModuleParticles.h"
 #include "BaseTransformEmitterNode.h"
+#include "MakeGlobalParticleNode.h"
 
 BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : ParticleData(particle)
 {
-	
+	//At the point we construct the base nodes, all the other must be already constructed and added
+	if (particle->makeGlobal != nullptr && particle->makeGlobal->active)
+	{
+		position = particle->emitter->baseTransform->position; //If its global, take emitter position to manage it on its own
+	}
 }
 
 void BaseTransformParticleNode::PrepareRender()
@@ -17,7 +22,8 @@ void BaseTransformParticleNode::PrepareRender()
 	float4x4 matrix;
 	matrix.Set(float4x4::FromTRS(position, rotation, scale));
 
-	matrix = particle->emitter->baseTransform->matrix*matrix;
+	if (particle->makeGlobal == nullptr || !particle->makeGlobal->active) //Ignore emitter transform if make global node is active
+		matrix = particle->emitter->baseTransform->matrix*matrix;
 
 	App->render->defaultShader->sendMat4("model", (float*)matrix.Transposed().v);
 }

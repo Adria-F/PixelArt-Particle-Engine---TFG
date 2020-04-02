@@ -9,9 +9,16 @@
 #include "BaseTransformParticleNode.h"
 #include "BaseMovementParticleNode.h"
 #include "BaseColorParticleNode.h"
-#include "BaseTransformEmitterNode.h"
 
 #include "ColorParticleNode.h"
+#include "SpeedParticleNode.h"
+#include "MakeGlobalParticleNode.h"
+
+//Include all emitter data nodes
+#include "EmitterData.h"
+#include "BaseTransformEmitterNode.h"
+
+#include "EmissionEmitterNode.h"
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled)
 {
@@ -61,6 +68,7 @@ update_state ModuleParticles::Update(float dt)
 
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
+		(*it_e)->Update(dt);
 		(*it_e)->UpdateParticles(dt);
 	}
 
@@ -123,6 +131,8 @@ ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(t
 		this->templateParticle = new Particle(this);
 	}
 	lastEmit = frequency;
+	
+	Play();
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -146,6 +156,11 @@ void ParticleEmitter::Play()
 		lastEmit = frequency;
 	}
 	
+	if ((playing || restarted) && emission != nullptr)
+	{
+		emission->Play();
+	}
+
 	playing = true;
 }
 
@@ -167,22 +182,29 @@ void ParticleEmitter::Stop()
 	particles.clear();
 }
 
-void ParticleEmitter::UpdateParticles(float dt)
+void ParticleEmitter::Update(float dt)
 {
-	frequency = 0.25f;
 	if (playing)
 	{
-		lastEmit += dt;
-
-		if (lastEmit >= frequency)
+		if (emission != nullptr)
 		{
-			lastEmit = 0.0f;
-			Particle* part = new Particle(this, templateParticle);
-			part->baseMovement->direction = randomDirectionInCone(3.0f, 5.0f);
-			particles.push_back(part);
+			emission->Execute(dt);
+		}
+		else
+		{
+			lastEmit += dt;
+
+			if (lastEmit >= frequency)
+			{
+				lastEmit = 0.0f;
+				SpawnParticle();
+			}
 		}
 	}
+}
 
+void ParticleEmitter::UpdateParticles(float dt)
+{
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
 		(*it_p)->baseTransform->LookCamera();
@@ -210,6 +232,13 @@ void ParticleEmitter::DrawParticles()
 	{
 		(*it_p)->Draw();
 	}
+}
+
+void ParticleEmitter::SpawnParticle()
+{
+	Particle* part = new Particle(this, templateParticle);
+	part->baseMovement->direction = randomDirectionInCone(3.0f, 5.0f); //TODO: Get direction from shape node
+	particles.push_back(part);
 }
 
 vec ParticleEmitter::randomDirectionInCone(float radius, float height) const

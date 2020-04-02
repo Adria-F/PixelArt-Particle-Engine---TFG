@@ -208,6 +208,13 @@
     <ClCompile Include="BaseTransformEmitterNode.cpp">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
+    <ClCompile Include="MakeGlobalParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="EmissionEmitterNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -468,6 +475,13 @@
     <ClInclude Include="BaseTransformEmitterNode.h">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
+    <ClInclude Include="MakeGlobalParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="SpeedParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="EmissionEmitterNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

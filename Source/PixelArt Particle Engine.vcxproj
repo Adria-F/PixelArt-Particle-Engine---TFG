@@ -178,6 +178,7 @@
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
+    <ClCompile Include="PanelDebugControl.cpp" />
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RNG.cpp" />
@@ -269,6 +270,7 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleParticles.h" />
     <ClInclude Include="Panel.h" />
+    <ClInclude Include="PanelDebugControl.h" />
     <ClInclude Include="PanelScene.h" />
     <ClInclude Include="ParticleData.h" />
     <ClInclude Include="Primitive.h" />

@@ -9,6 +9,7 @@
 
 // Include all panels
 #include "PanelScene.h"
+#include "PanelDebugControl.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
 {
@@ -21,7 +22,7 @@ ModuleGUI::~ModuleGUI()
 bool ModuleGUI::Init()
 {
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	io.IniFilename = "Settings/imgui.ini";
@@ -34,6 +35,7 @@ bool ModuleGUI::Init()
 
 	//Add all panels
 	panels.push_back(new PanelScene("Scene"));
+	panels.push_back(new PanelDebugControl("Debug Control"));
 
 	return true;
 }
@@ -41,7 +43,7 @@ bool ModuleGUI::Init()
 bool ModuleGUI::Start()
 {
 	//Set Default Style
-
+	
 	//Load GUI textures
 
 	return true;
@@ -75,8 +77,8 @@ update_state ModuleGUI::PreUpdate(float dt)
 }
 
 update_state ModuleGUI::Update(float dt)
-{
-	
+{	
+
 	return UPDATE_CONTINUE;
 }
 
@@ -122,4 +124,21 @@ void ModuleGUI::Draw()
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(App->window->window, App->render->context);
 	}
+}
+
+void ModuleGUI::handleInput(SDL_Event * event)
+{
+	ImGui_ImplSDL2_ProcessEvent(event);
+}
+
+bool ModuleGUI::UsingMouse() const
+{
+	ImGuiIO& io = ImGui::GetIO();
+	return io.WantCaptureMouse && !mouseOnScene;
+}
+
+bool ModuleGUI::UsingKeyboard() const
+{
+	ImGuiIO& io = ImGui::GetIO();
+	return io.WantTextInput && !mouseOnScene;
 }

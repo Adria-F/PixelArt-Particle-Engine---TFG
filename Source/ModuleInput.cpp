@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
+#include "ModuleGUI.h"
 
 ModuleInput::ModuleInput(bool start_enabled): Module(start_enabled)
 {
@@ -88,6 +89,7 @@ update_state ModuleInput::PreUpdate(float dt)
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
+		App->gui->handleInput(&event);
 		switch (event.type)
 		{
 		case SDL_MOUSEWHEEL:
@@ -136,12 +138,18 @@ bool ModuleInput::CleanUp()
 
 KEY_STATE ModuleInput::GetKey(int id) const
 {
-	return keyboard[id];
+	if (App->gui->UsingKeyboard())
+		return KEY_IDLE;
+	else
+		return keyboard[id];
 }
 
 KEY_STATE ModuleInput::GetMouseButton(int id) const
 {
-	return mouse_buttons[id];
+	if (App->gui->UsingMouse())
+		return KEY_IDLE;
+	else
+		return mouse_buttons[id];
 }
 
 int ModuleInput::GetMouseX() const

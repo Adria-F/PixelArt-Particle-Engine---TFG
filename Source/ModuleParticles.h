@@ -91,6 +91,8 @@ public:
 	void SpawnParticle();
 	vec randomDirectionInCone(float radius, float height) const;
 
+	Particle* GetTemplate() const;
+
 public:
 
 	union
@@ -130,6 +132,8 @@ public:
 	void Pause();
 	void Stop();
 	void DrawParticles();
+
+	ParticleEmitter* GetEmitter(int index) const;
 
 private:
 

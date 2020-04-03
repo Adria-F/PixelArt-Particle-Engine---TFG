@@ -54,18 +54,6 @@ bool ModuleParticles::Start()
 
 update_state ModuleParticles::Update(float dt)
 {
-	//TEMP: Debug
-	ImGui::Begin("Particles");
-
-	if (ImGui::Button("Play"))
-		Play();
-	if (ImGui::Button("Pause"))
-		Pause();
-	if (ImGui::Button("Stop"))
-		Stop();
-
-	ImGui::End();
-
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->Update(dt);
@@ -112,6 +100,16 @@ void ModuleParticles::DrawParticles()
 	{
 		(*it_e)->DrawParticles();
 	}
+}
+
+ParticleEmitter* ModuleParticles::GetEmitter(int index) const
+{
+	if (index < emitters.size())
+	{
+		return std::next(emitters.front(), index);
+	}
+
+	return nullptr;
 }
 
 // ---------------------- PARTICLE EMITTER --------------------------
@@ -252,6 +250,11 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 	return point.Normalized();
 }
 
+Particle* ParticleEmitter::GetTemplate() const
+{
+	return templateParticle;
+}
+
 // ----------------------------- PARTICLE ----------------------------------
 
 Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
@@ -264,6 +267,9 @@ Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 	baseTransform = new BaseTransformParticleNode(this);
 	baseMovement = new BaseMovementParticleNode(this);
 	baseColor = new BaseColorParticleNode(this);
+
+	makeGlobal = new MakeGlobalParticleNode(this);
+	makeGlobal->active = false;
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)

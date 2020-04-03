@@ -65,7 +65,6 @@ ParticleData* BaseTransformParticleNode::Copy(Particle* particle) const
 {
 	BaseTransformParticleNode* ret = new BaseTransformParticleNode(particle);
 
-	ret->position = position;
 	ret->rotation = rotation;
 	ret->scale = scale;
 

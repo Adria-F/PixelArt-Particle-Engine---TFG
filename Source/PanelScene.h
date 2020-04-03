@@ -1,5 +1,5 @@
-#ifndef __PANELSCENE_H__
-#define __PANELSCENE_H__
+#ifndef __PANEL_SCENE_H__
+#define __PANEL_SCENE_H__
 
 #include "Panel.h"
 
@@ -13,4 +13,4 @@ public:
 	void DrawContent();
 };
 
-#endif // !__PANELSCENE_H__
+#endif // !__PANEL_SCENE_H__

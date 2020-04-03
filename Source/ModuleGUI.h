@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+union SDL_Event;
 class Panel;
 
 class ModuleGUI : public Module
@@ -21,9 +22,16 @@ public:
 
 	void Draw();
 
+	void handleInput(SDL_Event* event);
+
+	bool UsingMouse() const;
+	bool UsingKeyboard() const;
+
 public:
 
 	std::list<Panel*> panels;
+
+	bool mouseOnScene = false;
 };
 
 #endif // !__MODULEGUI_H__

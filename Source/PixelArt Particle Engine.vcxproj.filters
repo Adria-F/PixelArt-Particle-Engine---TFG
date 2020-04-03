@@ -214,7 +214,10 @@
     <ClCompile Include="SpeedParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="EmissionEmitterNode.cpp" />
+    <ClCompile Include="EmissionEmitterNode.cpp">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelDebugControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -481,7 +484,10 @@
     <ClInclude Include="SpeedParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="EmissionEmitterNode.h" />
+    <ClInclude Include="EmissionEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelDebugControl.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

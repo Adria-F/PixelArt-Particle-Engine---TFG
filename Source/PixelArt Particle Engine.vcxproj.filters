@@ -217,7 +217,9 @@
     <ClCompile Include="EmissionEmitterNode.cpp">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
-    <ClCompile Include="PanelDebugControl.cpp" />
+    <ClCompile Include="PanelDebugControl.cpp">
+      <Filter>Sources\Panels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -487,7 +489,9 @@
     <ClInclude Include="EmissionEmitterNode.h">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
-    <ClInclude Include="PanelDebugControl.h" />
+    <ClInclude Include="PanelDebugControl.h">
+      <Filter>Sources\Panels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

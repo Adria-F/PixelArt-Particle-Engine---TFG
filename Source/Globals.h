@@ -69,6 +69,9 @@ enum update_state
 	UPDATE_ERROR
 };
 
+#define WINDOW_WIDTH 960
+#define WINDOW_HEIGHT 540
+
 //Particle Data Order
 #define MAX_PARTICLE_DATA 10
 #define MAX_EMITTER_DATA 10

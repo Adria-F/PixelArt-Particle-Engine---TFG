@@ -92,6 +92,7 @@ public:
 	vec randomDirectionInCone(float radius, float height) const;
 
 	Particle* GetTemplate() const;
+	int GetParticleCount() const;
 
 public:
 

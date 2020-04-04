@@ -242,8 +242,8 @@ void ParticleEmitter::SpawnParticle()
 vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 {
 	float angle = 2.0*PI * GET_RANDOM();
-	float x = Cos(angle)*radius;
-	float z = Sin(angle)*radius;
+	float x = Cos(angle)* radius*GET_RANDOM();
+	float z = Sin(angle)* radius*GET_RANDOM();
 
 	vec point = vec(x, height, z);
 
@@ -253,6 +253,11 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 Particle* ParticleEmitter::GetTemplate() const
 {
 	return templateParticle;
+}
+
+int ParticleEmitter::GetParticleCount() const
+{
+	return particles.size();
 }
 
 // ----------------------------- PARTICLE ----------------------------------

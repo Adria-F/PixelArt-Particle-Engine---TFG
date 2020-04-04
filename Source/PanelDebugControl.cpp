@@ -50,4 +50,8 @@ void PanelDebugControl::DrawContent()
 	}
 
 	ImGui::Checkbox("Make Global", &particle->makeGlobal->active);
+
+	ImGui::DragFloat("Particle Lifetime", &particle->lifeTime);
+
+	ImGui::Text("Particle Count: %d", emitter->GetParticleCount());
 }

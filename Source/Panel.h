@@ -15,14 +15,25 @@ public:
 
 	void DrawPanel()
 	{
+		SetFlags();
 		ImGui::Begin(name.c_str(), &active, flags);
+
+		//Check for resize
+		ImVec2 wSize = ImGui::GetWindowSize();
+		if (wSize.x != size.x || wSize.y != size.y)
+		{
+			size = { wSize.x, wSize.y };
+			OnResize();
+		}
 
 		DrawContent();
 
 		ImGui::End();
 	}
 
+	virtual void SetFlags() {}
 	virtual void DrawContent() {}
+	virtual void OnResize() {}
 
 	const char* GetName() { return name.c_str(); }
 	float2 GetSize() { return size; }
@@ -33,7 +44,7 @@ protected:
 
 	std::string name;
 
-	float2 position;
+	//float2 position;
 	float2 size;
 
 	bool active = true;

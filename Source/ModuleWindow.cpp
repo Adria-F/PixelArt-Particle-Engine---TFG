@@ -23,14 +23,14 @@ bool ModuleWindow::Init()
 	}
 	else
 	{
-		SDL_DisplayMode desktopSize;
+		/*SDL_DisplayMode desktopSize;
 		SDL_GetDesktopDisplayMode(0, &desktopSize);
 		width = desktopSize.w;
-		height = desktopSize.h;
+		height = desktopSize.h;*/
 
 		//TMP
-		width = 960;
-		height = 540;
+		width = WINDOW_WIDTH;
+		height = WINDOW_HEIGHT;
 		resizable = true;
 
 		//Create window

@@ -114,7 +114,7 @@ bool ModuleRender::Init()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		//Generate frame buffer
-		generateFrameBuffer(960, 540);
+		generateFrameBuffer(App->window->width, App->window->height);
 
 		//Create Shader program
 		defaultShader = new Shader("Shaders/default.vs", "Shaders/default.fs");
@@ -151,15 +151,9 @@ update_state ModuleRender::PostUpdate(float dt)
 	//base_plane.Render();
 	//base_plane.axis = true;
 
+	//Draw Scene
 	App->particles->DrawParticles();
 
-	//Test Cube
-	//MCube cube(0.5f, 0.5f, 0.5f, { 0.0f,0.5f,0.0f });
-	//cube.Render();
-
-	//Draw Scene
-
-	//glUseProgram(0); //Close any shader
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw(); // Draw GUI
 
@@ -207,19 +201,14 @@ uint ModuleRender::generateVAO(uint verticesSize, float* vertices, uint indicesS
 
 void ModuleRender::OnResize(int width, int height)
 {
-	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glLoadMatrixf(App->camera->getProjectionMatrix());
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	generateFrameBuffer(width, height);
 }
 
 void ModuleRender::generateFrameBuffer(int width, int height)
 {
+	glDeleteFramebuffers(1, &frameBuffer);
+	glDeleteTextures(1, &texture);
+
 	glGenFramebuffers(1, &frameBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 

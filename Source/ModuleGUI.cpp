@@ -10,6 +10,7 @@
 // Include all panels
 #include "PanelScene.h"
 #include "PanelDebugControl.h"
+#include "PanelNodeCanvas.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
 {
@@ -36,6 +37,7 @@ bool ModuleGUI::Init()
 	//Add all panels
 	panels.push_back(new PanelScene("Scene"));
 	panels.push_back(new PanelDebugControl("Debug Control"));
+	panels.push_back(new PanelNodeCanvas("Node Canvas"));
 
 	return true;
 }

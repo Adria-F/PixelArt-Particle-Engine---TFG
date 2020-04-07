@@ -4,8 +4,9 @@
 #include "Shader.h"
 #include "ModuleCamera.h"
 
+#include "EntityData.h"
+
 //Include all particle data nodes
-#include "ParticleData.h"
 #include "BaseTransformParticleNode.h"
 #include "BaseMovementParticleNode.h"
 #include "BaseColorParticleNode.h"
@@ -15,7 +16,6 @@
 #include "MakeGlobalParticleNode.h"
 
 //Include all emitter data nodes
-#include "EmitterData.h"
 #include "BaseTransformEmitterNode.h"
 
 #include "EmissionEmitterNode.h"
@@ -116,7 +116,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(templateParticle)
 {
-	for (int i = 0; i < MAX_EMITTER_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		data[i] = nullptr;
 	}
@@ -264,7 +264,7 @@ int ParticleEmitter::GetParticleCount() const
 
 Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 {
-	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		data[i] = nullptr;
 	}
@@ -279,7 +279,7 @@ Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
 {
-	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		data[i] = nullptr;
 		if (templateParticle->data[i] != nullptr)
@@ -301,7 +301,7 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 
 Particle::~Particle()
 {
-	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		RELEASE(data[i]);
 	}
@@ -314,7 +314,7 @@ void Particle::Update(float dt)
 	if (timeAlive >= lifeTime)
 		toDestroy = true;
 
-	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		if (data[i] != nullptr)
 			data[i]->Execute(dt);
@@ -323,7 +323,7 @@ void Particle::Update(float dt)
 
 void Particle::Draw()
 {
-	for (int i = 0; i < MAX_PARTICLE_DATA; ++i)
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		if (data[i] != nullptr)
 			data[i]->PrepareRender();

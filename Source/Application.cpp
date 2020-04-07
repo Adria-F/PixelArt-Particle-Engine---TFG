@@ -8,6 +8,7 @@
 #include "ModuleCamera.h"
 
 #include "ModuleParticles.h"
+#include "ModuleNodeCanvas.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ Application::Application()
 	camera = new ModuleCamera();
 
 	particles = new ModuleParticles();
+	nodeCanvas = new ModuleNodeCanvas();
 
 	// Add all modules to application
 	AddModule(window);
@@ -29,6 +31,7 @@ Application::Application()
 	AddModule(camera);
 
 	AddModule(particles);
+	AddModule(nodeCanvas);
 
 	//Render module last
 	AddModule(render);

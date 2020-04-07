@@ -3,7 +3,7 @@
 #include "ModuleParticles.h"
 #include "BaseTransformParticleNode.h"
 
-BaseMovementParticleNode::BaseMovementParticleNode(Particle* particle) : ParticleData(particle)
+BaseMovementParticleNode::BaseMovementParticleNode(Particle* particle) : EntityData(particle)
 {
 	
 }
@@ -14,7 +14,7 @@ void BaseMovementParticleNode::Execute(float dt)
 	particle->baseTransform->position += direction * speed*dt;
 }
 
-ParticleData* BaseMovementParticleNode::Copy(Particle* particle) const
+EntityData* BaseMovementParticleNode::Copy(Particle* particle) const
 {
 	BaseMovementParticleNode* ret = new BaseMovementParticleNode(particle);
 

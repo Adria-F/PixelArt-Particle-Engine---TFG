@@ -6,9 +6,6 @@
 #include "Shader.h"
 #include "ModuleParticles.h"
 
-//TMP
-#include "Primitive.h"
-
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
@@ -145,11 +142,6 @@ update_state ModuleRender::PostUpdate(float dt)
 	//Send Uniforms
 	defaultShader->sendMat4("projection", App->camera->getProjectionMatrix());
 	defaultShader->sendMat4("view", App->camera->getViewMatrix());
-
-	//Base Plane
-	//MPlane base_plane(0, 0, 0, 100);
-	//base_plane.Render();
-	//base_plane.axis = true;
 
 	//Draw Scene
 	App->particles->DrawParticles();

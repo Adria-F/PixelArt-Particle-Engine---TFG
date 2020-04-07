@@ -1,16 +1,16 @@
 #ifndef __MAKEGLOBAL_PARTICLENODE_H__
 #define __MAKEGLOBAL_PARTICLENODE_H__
 
-#include "ParticleData.h"
+#include "EntityData.h"
 
-class MakeGlobalParticleNode : public ParticleData
+class MakeGlobalParticleNode : public EntityData
 {
 public:
 
 	MakeGlobalParticleNode(Particle* particle);
 	~MakeGlobalParticleNode() {}
 
-	ParticleData* Copy(Particle* particle) const;
+	EntityData* Copy(Particle* particle) const;
 
 public:
 

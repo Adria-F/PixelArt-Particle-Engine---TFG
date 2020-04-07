@@ -1,10 +1,10 @@
 #include "MakeGlobalParticleNode.h"
 
-MakeGlobalParticleNode::MakeGlobalParticleNode(Particle* particle): ParticleData(particle)
+MakeGlobalParticleNode::MakeGlobalParticleNode(Particle* particle): EntityData(particle)
 {
 }
 
-ParticleData* MakeGlobalParticleNode::Copy(Particle* particle) const
+EntityData* MakeGlobalParticleNode::Copy(Particle* particle) const
 {
 	MakeGlobalParticleNode* ret = new MakeGlobalParticleNode(particle);
 

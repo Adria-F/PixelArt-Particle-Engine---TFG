@@ -1,9 +1,9 @@
 #ifndef __EMISSION_EMITTERNODE_H__
 #define __EMISSION_EMITTERNODE_H__
 
-#include "EmitterData.h"
+#include "EntityData.h"
 
-class EmissionEmitterNode : public EmitterData
+class EmissionEmitterNode : public EntityData
 {
 public:
 

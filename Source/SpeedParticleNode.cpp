@@ -3,7 +3,7 @@
 #include "ModuleParticles.h"
 #include "BaseMovementParticleNode.h"
 
-SpeedParticleNode::SpeedParticleNode(Particle* particle): ParticleData(particle)
+SpeedParticleNode::SpeedParticleNode(Particle* particle): EntityData(particle)
 {
 }
 
@@ -12,7 +12,7 @@ void SpeedParticleNode::Execute(float dt)
 	particle->baseMovement->speed = speed;
 }
 
-ParticleData* SpeedParticleNode::Copy(Particle* particle) const
+EntityData* SpeedParticleNode::Copy(Particle* particle) const
 {
 	SpeedParticleNode* ret = new SpeedParticleNode(particle);
 

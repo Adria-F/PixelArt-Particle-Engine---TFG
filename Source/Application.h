@@ -15,6 +15,7 @@ class ModuleGUI;
 class ModuleCamera;
 
 class ModuleParticles;
+class ModuleNodeCanvas;
 
 class Application
 {
@@ -28,6 +29,7 @@ public:
 	ModuleCamera*		camera = nullptr;
 
 	ModuleParticles*	particles = nullptr;
+	ModuleNodeCanvas*	nodeCanvas = nullptr;
 
 private:
 

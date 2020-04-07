@@ -1,6 +1,6 @@
 #include "BaseTransformEmitterNode.h"
 
-BaseTransformEmitterNode::BaseTransformEmitterNode(ParticleEmitter* emitter): EmitterData(emitter)
+BaseTransformEmitterNode::BaseTransformEmitterNode(ParticleEmitter* emitter): EntityData(emitter)
 {
 	CalculateMatrix();
 }

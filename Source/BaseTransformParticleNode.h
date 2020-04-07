@@ -1,9 +1,9 @@
 #ifndef __BASETRANSFORM_PARTICLENODE_H__
 #define __BASETRANSFORM_PARTICLENODE_H__
 
-#include "ParticleData.h"
+#include "EntityData.h"
 
-class BaseTransformParticleNode : public ParticleData
+class BaseTransformParticleNode : public EntityData
 {
 public:
 
@@ -13,7 +13,7 @@ public:
 	void PrepareRender();
 	
 	void LookCamera();
-	ParticleData* Copy(Particle* particle) const;
+	EntityData* Copy(Particle* particle) const;
 
 	void SetRandomScale(bool random);
 	void SetRandomRotation(bool random);

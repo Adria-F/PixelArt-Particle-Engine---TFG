@@ -73,7 +73,11 @@ enum update_state
 #define WINDOW_HEIGHT 540
 
 //Particle Data Order
-#define MAX_PARTICLE_DATA 10
-#define MAX_EMITTER_DATA 10
+#define MAX_ENTITY_DATA 10
+
+#define GRAPH_NODE_WINDOW_PADDING 10.0f
+#define GRAPH_LINK_RADIUS 5.0f
+#define STANDARD_NODE_WIDTH 150
+#define STANDARD_NODE_HEIGHT 95
 
 #endif // !__GLOBALS_H__

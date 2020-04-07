@@ -166,9 +166,6 @@
     <ClCompile Include="MathGeoLib\Geometry\TriangleMesh.cpp">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClCompile>
@@ -219,6 +216,15 @@
     </ClCompile>
     <ClCompile Include="PanelDebugControl.cpp">
       <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelNodeCanvas.cpp">
+      <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="CanvasNode.cpp">
+      <Filter>Sources\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleNodeCanvas.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -435,9 +441,6 @@
     <ClInclude Include="MathGeoLib\Geometry\TriangleMesh.h">
       <Filter>Sources\Tools\MathGeoLib</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_opengl3.h">
       <Filter>Sources\Tools\ImGui</Filter>
     </ClInclude>
@@ -459,9 +462,6 @@
     <ClInclude Include="PanelScene.h">
       <Filter>Sources\Panels</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleData.h">
-      <Filter>Sources\Nodes</Filter>
-    </ClInclude>
     <ClInclude Include="BaseTransformParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
@@ -470,9 +470,6 @@
     </ClInclude>
     <ClInclude Include="BaseColorParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="EmitterData.h">
-      <Filter>Sources\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="ColorParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
@@ -491,6 +488,18 @@
     </ClInclude>
     <ClInclude Include="PanelDebugControl.h">
       <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityData.h">
+      <Filter>Sources\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelNodeCanvas.h">
+      <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasNode.h">
+      <Filter>Sources\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleNodeCanvas.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

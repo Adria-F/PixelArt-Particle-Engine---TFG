@@ -1,9 +1,9 @@
 #ifndef __SPEED_PARTICLENODE_H__
 #define __SPEED_PARTICLENODE_H__
 
-#include "ParticleData.h"
+#include "EntityData.h"
 
-class SpeedParticleNode : public ParticleData
+class SpeedParticleNode : public EntityData
 {
 public:
 
@@ -12,7 +12,7 @@ public:
 
 	void Execute(float dt);
 
-	ParticleData* Copy(Particle* particle) const;
+	EntityData* Copy(Particle* particle) const;
 
 public:
 

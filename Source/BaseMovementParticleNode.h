@@ -1,9 +1,9 @@
 #ifndef __BASEMOVEMENT_PARTICLENODE_H__
 #define __BASEMOVEMENT_PARTICLENODE_H__
 
-#include "ParticleData.h"
+#include "EntityData.h"
 
-class BaseMovementParticleNode : public ParticleData
+class BaseMovementParticleNode : public EntityData
 {
 public:
 
@@ -12,7 +12,7 @@ public:
 
 	void Execute(float dt);
 
-	ParticleData* Copy(Particle* particle) const;
+	EntityData* Copy(Particle* particle) const;
 
 	void SetRandomSpeed(bool random);
 	void RandomizeSpeed();

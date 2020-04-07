@@ -1,9 +1,9 @@
 #ifndef __BASETRANSFORM_EMITTERNODE_H__
 #define __BASETRANSFORM_EMITTERNODE_H__
 
-#include "EmitterData.h"
+#include "EntityData.h"
 
-class BaseTransformEmitterNode : public EmitterData
+class BaseTransformEmitterNode : public EntityData
 {
 public:
 

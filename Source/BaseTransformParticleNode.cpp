@@ -8,7 +8,7 @@
 #include "BaseTransformEmitterNode.h"
 #include "MakeGlobalParticleNode.h"
 
-BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : ParticleData(particle)
+BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : EntityData(particle)
 {
 	//At the point we construct the base nodes, all the other must be already constructed and added
 	if (particle->makeGlobal != nullptr && particle->makeGlobal->active)
@@ -61,7 +61,7 @@ void BaseTransformParticleNode::LookCamera()
 	}
 }
 
-ParticleData* BaseTransformParticleNode::Copy(Particle* particle) const
+EntityData* BaseTransformParticleNode::Copy(Particle* particle) const
 {
 	BaseTransformParticleNode* ret = new BaseTransformParticleNode(particle);
 

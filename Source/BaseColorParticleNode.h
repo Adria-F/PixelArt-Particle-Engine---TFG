@@ -1,10 +1,10 @@
 #ifndef __BASECOLOR_PARTICLENODE_H__
 #define __BASECOLOR_PARTICLENODE_H__
 
-#include "ParticleData.h"
+#include "EntityData.h"
 #include "Color.h"
 
-class BaseColorParticleNode : public ParticleData
+class BaseColorParticleNode : public EntityData
 {
 public:
 
@@ -13,7 +13,7 @@ public:
 
 	void PrepareRender();
 
-	ParticleData* Copy(Particle* particle) const;
+	EntityData* Copy(Particle* particle) const;
 
 	void SetRandom(bool random);
 	void Randomize();

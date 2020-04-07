@@ -4,7 +4,7 @@
 #include "ModuleRender.h"
 #include "Shader.h"
 
-BaseColorParticleNode::BaseColorParticleNode(Particle* particle) : ParticleData(particle)
+BaseColorParticleNode::BaseColorParticleNode(Particle* particle) : EntityData(particle)
 {
 	color = White;
 }
@@ -14,7 +14,7 @@ void BaseColorParticleNode::PrepareRender()
 	App->render->defaultShader->sendColor("objectColor", color.Get());
 }
 
-ParticleData* BaseColorParticleNode::Copy(Particle* particle) const
+EntityData* BaseColorParticleNode::Copy(Particle* particle) const
 {
 	BaseColorParticleNode* ret = new BaseColorParticleNode(particle);
 

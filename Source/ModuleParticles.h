@@ -6,9 +6,10 @@
 #include <list>
 #include <unordered_map>
 
+class EntityData;
+
 // Particle ------------------
 class Particle;
-class ParticleData;
 
 class BaseTransformParticleNode;
 class BaseMovementParticleNode;
@@ -20,7 +21,6 @@ class MakeGlobalParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
-class EmitterData;
 
 class BaseTransformEmitterNode;
 
@@ -55,7 +55,7 @@ public:
 			BaseMovementParticleNode* baseMovement;		
 			BaseColorParticleNode* baseColor;		
 		};
-		ParticleData* data[MAX_PARTICLE_DATA];
+		EntityData* data[MAX_ENTITY_DATA];
 	};
 
 	ParticleEmitter* emitter = nullptr;
@@ -102,9 +102,10 @@ public:
 		{
 			EmissionEmitterNode* emission;
 
+			//Base nodes last as other nodes can modify their information
 			BaseTransformEmitterNode* baseTransform;
 		};
-		EmitterData* data[MAX_PARTICLE_DATA];
+		EntityData* data[MAX_ENTITY_DATA];
 	};
 
 	float frequency = 0.25f;

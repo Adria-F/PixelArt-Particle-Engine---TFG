@@ -3,7 +3,7 @@
 #include "ModuleParticles.h"
 #include "BaseColorParticleNode.h"
 
-ColorParticleNode::ColorParticleNode(Particle* particle): ParticleData(particle)
+ColorParticleNode::ColorParticleNode(Particle* particle): EntityData(particle)
 {
 }
 
@@ -19,7 +19,7 @@ void ColorParticleNode::Execute(float dt)
 	}
 }
 
-ParticleData* ColorParticleNode::Copy(Particle* particle) const
+EntityData* ColorParticleNode::Copy(Particle* particle) const
 {
 	ColorParticleNode* ret = new ColorParticleNode(particle);
 

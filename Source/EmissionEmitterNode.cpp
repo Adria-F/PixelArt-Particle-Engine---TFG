@@ -2,7 +2,7 @@
 
 #include "ModuleParticles.h"
 
-EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter): EmitterData(emitter)
+EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter): EntityData(emitter)
 {
 	lastEmit = frequency;
 }

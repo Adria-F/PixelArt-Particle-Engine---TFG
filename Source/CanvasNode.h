@@ -9,11 +9,13 @@ class CanvasNode
 public:
 
 	CanvasNode() {}
-	CanvasNode(const char* name, ImVec2 position, ImVec2 size = { STANDARD_NODE_HEIGHT, STANDARD_NODE_HEIGHT }) : name(name), position(position), size(size)
-	{}
+	CanvasNode(const char* name, float2 position, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT }) : name(name), position(position), size(size)
+	{
+		UID = GENERATE_UID();
+	}
 	~CanvasNode() {}
 
-	bool Draw(bool hovered = false, bool selected = false);
+	bool Draw(float2 offset, bool hovered = false, bool selected = false);
 
 	virtual void DisplayConfig() {}
 
@@ -23,10 +25,16 @@ public:
 public:
 
 	std::string name;
+	uint UID;
 
-	ImVec2 position;
-	ImVec2 size;
+	float2 position;
+	float2 size;
 	std::list<uint> outputs; //Index of nodes connected to the output
+
+	float2 gridPosition;
+	float2 clickOffset;
+
+	bool toDelete = false;
 };
 
 #endif // !__CANVASNODE_H__

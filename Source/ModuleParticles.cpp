@@ -220,7 +220,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 			it_p = particles.erase(it_p);
 		}
 		else
-			it_p++;
+			++it_p;
 	}
 }
 

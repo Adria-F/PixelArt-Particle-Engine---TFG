@@ -25,7 +25,7 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::PushItemWidth(120.0f);
 
-	ImVec2 offset = { ImGui::GetCursorScreenPos().x + scrolling.x, ImGui::GetCursorScreenPos().y + scrolling.y };
+	float2 offset = { ImGui::GetCursorScreenPos().x + scrolling.x, ImGui::GetCursorScreenPos().y + scrolling.y };
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	// Display grid
 	if (showGrid)
@@ -46,21 +46,28 @@ void PanelNodeCanvas::DrawContent()
 
 	//Draw content
 	CanvasNode* newHoveredNode = nullptr;
+	CanvasNode* newSelectedNode = nullptr;
 	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n)
 	{
-		if ((*it_n)->Draw(hoveredNode == (*it_n), selectedNode == (*it_n)))
+		if ((*it_n)->Draw(offset, hoveredNode == (*it_n), selectedNode == (*it_n)))
 		{
 			newHoveredNode = (*it_n);
 			if (ImGui::IsMouseClicked(0))
 			{
-				selectedNode = (*it_n);
+				newSelectedNode = (*it_n);
 			}
 		}
 	}
 	hoveredNode = newHoveredNode;
+	if (newSelectedNode && newSelectedNode != selectedNode)
+	{
+		//Move the selected node to the end of the list to draw it in front
+		App->nodeCanvas->nodes.remove(newSelectedNode);
+		App->nodeCanvas->nodes.push_back(newSelectedNode);
+		selectedNode = newSelectedNode;
+	}
 
 	//Click to add nodes
-	static ImVec2 pos = { 0,0 };
 	if (!ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
@@ -70,7 +77,6 @@ void PanelNodeCanvas::DrawContent()
 		else if (ImGui::IsMouseClicked(1))
 		{
 			ImGui::OpenPopup("##addNode");
-			pos = ImGui::GetMousePos();
 		}
 	}
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
@@ -78,7 +84,8 @@ void PanelNodeCanvas::DrawContent()
 	{
 		if (ImGui::Selectable("Add Node"))
 		{
-			CanvasNode* node = new CanvasNode("Test", pos);
+			float2 pos = { ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+			CanvasNode* node = new CanvasNode("Test", pos-offset);
 			App->nodeCanvas->nodes.push_back(node);
 		}
 

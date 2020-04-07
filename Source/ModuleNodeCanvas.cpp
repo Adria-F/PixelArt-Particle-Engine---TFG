@@ -1,5 +1,7 @@
 #include "ModuleNodeCanvas.h"
 
+#include "CanvasNode.h"
+
 ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 {
 }
@@ -10,7 +12,17 @@ ModuleNodeCanvas::~ModuleNodeCanvas()
 
 update_state ModuleNodeCanvas::Update(float dt)
 {
-
+	std::list<CanvasNode*>::iterator it_n = nodes.begin();
+	while (it_n != nodes.end())
+	{
+		if ((*it_n)->toDelete)
+		{
+			RELEASE((*it_n));
+			it_n = nodes.erase(it_n);
+		}
+		else
+			++it_n;
+	}
 
 	return UPDATE_CONTINUE;
 }

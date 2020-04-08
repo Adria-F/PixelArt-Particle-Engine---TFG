@@ -133,6 +133,28 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
+void ModuleGUI::AddFont(float fontPercent)
+{
+	ImGuiIO &io = ImGui::GetIO();
+	ImFontConfig config;
+	config.SizePixels = fontPercent*DEFAULT_FONT_SIZE;
+	config.OversampleH = config.OversampleV = 1;
+	config.PixelSnapH = true;
+	ImFont *font = io.Fonts->AddFontDefault(&config);
+	
+	fonts.insert(std::pair<int, ImFont*>(fontPercent *100, font));
+}
+
+ImFont* ModuleGUI::GetFont(int fontPercent)
+{
+	if (fonts.find(fontPercent) != fonts.end())
+	{
+		return fonts.at(fontPercent);
+	}
+
+	return nullptr;
+}
+
 bool ModuleGUI::UsingMouse() const
 {
 	ImGuiIO& io = ImGui::GetIO();

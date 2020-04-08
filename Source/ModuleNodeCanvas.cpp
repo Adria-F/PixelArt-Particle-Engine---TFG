@@ -1,6 +1,8 @@
+#include "Application.h"
 #include "ModuleNodeCanvas.h"
 
 #include "CanvasNode.h"
+#include "ModuleGUI.h"
 
 ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 {
@@ -8,6 +10,16 @@ ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 
 ModuleNodeCanvas::~ModuleNodeCanvas()
 {
+}
+
+bool ModuleNodeCanvas::Start()
+{
+	for (float i = MIN_ZOOM; i <= MAX_ZOOM; i += ZOOM_STEPS)
+	{
+		App->gui->AddFont(i);
+	}
+
+	return true;
 }
 
 update_state ModuleNodeCanvas::Update(float dt)

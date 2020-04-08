@@ -3,7 +3,7 @@
 
 #include "ModuleInput.h"
 
-bool CanvasNode::Draw(float2 offset, bool hovered, bool selected)
+bool CanvasNode::Draw(float2 offset, float zoom, bool hovered, bool selected)
 {
 	bool isHovered = false;
 
@@ -27,10 +27,11 @@ bool CanvasNode::Draw(float2 offset, bool hovered, bool selected)
 		thickness = 2.0f;
 	}
 
-	gridPosition = position + offset;
+	gridPosition = position*zoom + offset;
+	float2 scaledSize = size * zoom;
 
-	draw_list->AddRectFilled({ gridPosition.x, gridPosition.y }, { gridPosition.x + size.x, gridPosition.y + size.y }, backgroundColor, 4.0f);
-	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + size.x, gridPosition.y + size.y }, borderColor, 4.0f, 15, thickness);
+	draw_list->AddRectFilled({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, backgroundColor, 4.0f);
+	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, borderColor, 4.0f, 15, thickness);
 
 	ImGui::SetCursorScreenPos({ gridPosition.x + GRAPH_NODE_WINDOW_PADDING, gridPosition.y + GRAPH_NODE_WINDOW_PADDING });
 	ImGui::BeginGroup();
@@ -38,7 +39,7 @@ bool CanvasNode::Draw(float2 offset, bool hovered, bool selected)
 
 	//Node selection & linking
 	ImGui::SetCursorScreenPos({ gridPosition.x, gridPosition.y });
-	ImGui::InvisibleButton("node", { size.x, size.y });
+	ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
 	if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/)
 	{
 		isHovered = true;

@@ -13,6 +13,7 @@ public:
 	ModuleNodeCanvas(bool start_enabled = true);
 	~ModuleNodeCanvas();
 
+	bool Start();
 	update_state Update(float dt);
 	bool CleanUp();
 

@@ -4,6 +4,7 @@
 #include "Panel.h"
 
 class CanvasNode;
+class ImFont;
 
 class PanelNodeCanvas : public Panel
 {
@@ -15,10 +16,12 @@ public:
 	void SetFlags();
 	void DrawContent();
 
-public:
+private:
 
-	ImVec2 scrolling = { 0.0f,0.0f };
+	float2 scrolling = { 0.0f,0.0f };
 	bool showGrid = true;
+
+	float zoom = 1.0f;
 
 	CanvasNode* hoveredNode = nullptr;
 	CanvasNode* selectedNode = nullptr;

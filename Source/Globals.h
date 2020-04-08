@@ -72,6 +72,11 @@ enum update_state
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
+#define DEFAULT_FONT_SIZE 15.0f
+#define MAX_ZOOM 3.0f
+#define MIN_ZOOM 0.5f
+#define ZOOM_STEPS 0.1f
+
 //Particle Data Order
 #define MAX_ENTITY_DATA 10
 

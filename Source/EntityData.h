@@ -14,7 +14,7 @@ public:
 	{}
 	EntityData(ParticleEmitter* emitter) : emitter(emitter)
 	{}
-	~EntityData() {}
+	virtual ~EntityData() {}
 
 	virtual void Execute(float dt) {}
 	virtual void PrepareRender() {}

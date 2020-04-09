@@ -2,18 +2,24 @@
 #define __COLORPARTICLE_NODE_H__
 
 #include "EntityData.h"
+#include "CanvasNode.h"
 #include "Color.h"
 
-class ColorParticleNode : public EntityData
+class ColorParticleNode : public EntityData, public CanvasNode
 {
 public:
 
-	ColorParticleNode(Particle* particle);
+	ColorParticleNode(Particle* particle, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
 	~ColorParticleNode() {}
 
+	//Entity Data
 	void Execute(float dt);
 
 	EntityData* Copy(Particle* particle) const;
+
+	//Canvas Node
+	void DrawInputs();
+	void DrawOutputs();
 
 public:
 

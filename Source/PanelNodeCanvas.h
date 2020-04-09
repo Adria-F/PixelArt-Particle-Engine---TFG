@@ -16,6 +16,8 @@ public:
 	void SetFlags();
 	void DrawContent();
 
+	void DrawNodeList(float2 spawnPos, int zoom);
+
 private:
 
 	float2 scrolling = { 0.0f,0.0f };
@@ -25,6 +27,8 @@ private:
 
 	CanvasNode* hoveredNode = nullptr;
 	CanvasNode* selectedNode = nullptr;
+
+	char node_filter[64];
 };
 
 #endif // !__PANEL_NODECANVAS_H__

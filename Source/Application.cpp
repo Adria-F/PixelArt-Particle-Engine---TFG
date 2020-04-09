@@ -66,7 +66,7 @@ bool Application::Init()
 	timer.Start();
 
 	//TMP
-	SDL_GL_SetSwapInterval(0);
+	//SDL_GL_SetSwapInterval(0);
 
 	return ret;
 }

@@ -26,7 +26,7 @@ void PanelDebugControl::DrawContent()
 	if (ImGui::Button("Stop"))
 		App->particles->Stop();
 
-	ParticleEmitter* emitter = App->particles->GetEmitter(0);
+	/*ParticleEmitter* emitter = App->particles->GetEmitter(0);
 	Particle* particle = emitter->GetTemplate();
 
 	
@@ -49,9 +49,7 @@ void PanelDebugControl::DrawContent()
 		particle->baseColor->color.a = col.w;
 	}
 
-	ImGui::Checkbox("Make Global", &particle->makeGlobal->active);
-
 	ImGui::DragFloat("Particle Lifetime", &particle->lifeTime);
 
-	ImGui::Text("Particle Count: %d", emitter->GetParticleCount());
+	ImGui::Text("Particle Count: %d", emitter->GetParticleCount());*/
 }

@@ -13,7 +13,7 @@ public:
 	{
 		UID = GENERATE_UID();
 	}
-	~CanvasNode() {}
+	virtual ~CanvasNode() {}
 
 	void Draw(float2 offset, float zoom, bool hovered = false, bool selected = false);
 	bool Logic(float2 offset, float zoom, bool selected = false);

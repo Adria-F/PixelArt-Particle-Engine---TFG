@@ -42,6 +42,9 @@ void CanvasNode::Draw(float2 offset, float zoom, bool hovered, bool selected)
 	if (scaledFont != nullptr)
 		ImGui::PopFont();
 
+	DrawInputs();
+	DrawOutputs();
+
 	ImGui::EndGroup();
 }
 

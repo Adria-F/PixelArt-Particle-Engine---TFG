@@ -2,12 +2,13 @@
 #define __SPEED_PARTICLENODE_H__
 
 #include "EntityData.h"
+#include "CanvasNode.h"
 
-class SpeedParticleNode : public EntityData
+class SpeedParticleNode : public EntityData, public CanvasNode
 {
 public:
 
-	SpeedParticleNode(Particle* particle);
+	SpeedParticleNode(Particle* particle, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
 	~SpeedParticleNode() {}
 
 	void Execute(float dt);

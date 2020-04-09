@@ -47,8 +47,6 @@ bool ModuleParticles::Start()
 	//As it is the only shape we are drawing, we can left it binded
 	glBindVertexArray(rectangleVAO);
 
-	emitters.push_back(new ParticleEmitter());
-
 	return true;
 }
 
@@ -114,7 +112,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
-ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(templateParticle)
+ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): CanvasNode(name, position, size)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -122,15 +120,7 @@ ParticleEmitter::ParticleEmitter(Particle* templateParticle) :templateParticle(t
 	}
 
 	baseTransform = new BaseTransformEmitterNode(this);
-
-	//TODO: Particle Emitter MUST receive a template particle
-	if (templateParticle == nullptr)
-	{
-		this->templateParticle = new Particle(this);
-	}
 	lastEmit = frequency;
-	
-	Play();
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -182,7 +172,7 @@ void ParticleEmitter::Stop()
 
 void ParticleEmitter::Update(float dt)
 {
-	if (playing)
+	if (playing && templateParticle != nullptr)
 	{
 		if (emission != nullptr)
 		{
@@ -262,6 +252,18 @@ int ParticleEmitter::GetParticleCount() const
 
 // ----------------------------- PARTICLE ----------------------------------
 
+Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(name, position, size)
+{
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	{
+		data[i] = nullptr;
+	}
+
+	baseTransform = new BaseTransformParticleNode(this);
+	baseMovement = new BaseMovementParticleNode(this);
+	baseColor = new BaseColorParticleNode(this);
+}
+
 Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
@@ -272,9 +274,6 @@ Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 	baseTransform = new BaseTransformParticleNode(this);
 	baseMovement = new BaseMovementParticleNode(this);
 	baseColor = new BaseColorParticleNode(this);
-
-	makeGlobal = new MakeGlobalParticleNode(this);
-	makeGlobal->active = false;
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
@@ -340,4 +339,12 @@ void Particle::SetRandomLifeTime(bool random)
 float Particle::GetLifePercent() const
 {
 	return timeAlive/lifeTime;
+}
+
+void Particle::DrawInputs()
+{
+}
+
+void Particle::DrawOutputs()
+{
 }

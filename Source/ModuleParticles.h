@@ -6,6 +6,8 @@
 #include <list>
 #include <unordered_map>
 
+#include "CanvasNode.h"
+
 class EntityData;
 
 // Particle ------------------
@@ -26,10 +28,11 @@ class BaseTransformEmitterNode;
 
 class EmissionEmitterNode;
 
-class Particle
+class Particle: public CanvasNode
 {
 public:
 
+	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
 	Particle(ParticleEmitter* emitter);
 	Particle(ParticleEmitter* emitter, Particle* templateParticle);
 	~Particle();
@@ -39,6 +42,10 @@ public:
 
 	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
+
+	//Canvas Node
+	void DrawInputs();
+	void DrawOutputs();
 
 public:
 
@@ -73,11 +80,11 @@ private:
 	bool randomizeLifeTime = false;
 };
 
-class ParticleEmitter
+class ParticleEmitter: public CanvasNode
 {
 public:
 
-	ParticleEmitter(Particle* templateParticle = nullptr);
+	ParticleEmitter(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
 	~ParticleEmitter();
 
 	void Play();
@@ -93,6 +100,10 @@ public:
 
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
+
+	//Canvas Node
+	void DrawInputs() {}
+	void DrawOutputs() {}
 
 public:
 

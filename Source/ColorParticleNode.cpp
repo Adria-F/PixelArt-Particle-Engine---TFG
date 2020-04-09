@@ -3,7 +3,7 @@
 #include "ModuleParticles.h"
 #include "BaseColorParticleNode.h"
 
-ColorParticleNode::ColorParticleNode(Particle* particle): EntityData(particle)
+ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, position, size)
 {
 }
 
@@ -21,7 +21,7 @@ void ColorParticleNode::Execute(float dt)
 
 EntityData* ColorParticleNode::Copy(Particle* particle) const
 {
-	ColorParticleNode* ret = new ColorParticleNode(particle);
+	ColorParticleNode* ret = new ColorParticleNode(particle, name.c_str(), position, size);
 
 	ret->fixColor = fixColor;
 	ret->overLifetimeColor = overLifetimeColor;
@@ -29,4 +29,12 @@ EntityData* ColorParticleNode::Copy(Particle* particle) const
 	ret->overLifetime = overLifetime;
 
 	return ret;
+}
+
+void ColorParticleNode::DrawInputs()
+{
+}
+
+void ColorParticleNode::DrawOutputs()
+{
 }

@@ -2,12 +2,13 @@
 #define __EMISSION_EMITTERNODE_H__
 
 #include "EntityData.h"
+#include "CanvasNode.h"
 
-class EmissionEmitterNode : public EntityData
+class EmissionEmitterNode : public EntityData, public CanvasNode
 {
 public:
 
-	EmissionEmitterNode(ParticleEmitter* emitter);
+	EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
 	~EmissionEmitterNode() {}
 
 	void Execute(float dt);

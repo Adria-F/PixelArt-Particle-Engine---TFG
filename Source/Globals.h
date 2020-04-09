@@ -72,7 +72,8 @@ enum update_state
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
-#define DEFAULT_FONT_SIZE 15.0f
+#define DEFAULT_FONT_SIZE 13.0f
+#define CANVAS_FONT_SIZE 24.0f
 #define MAX_ZOOM 3.0f
 #define MIN_ZOOM 0.5f
 #define ZOOM_STEPS 0.1f

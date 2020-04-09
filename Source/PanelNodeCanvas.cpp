@@ -23,7 +23,7 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 55, 200));
 
 	ImVec2 cursorPos = ImGui::GetCursorPos();
-	ImGui::Text("Zoom x %.1f", zoom);
+	ImGui::Text("Zoom x %.1f", zoom/100.0f);
 	ImGui::SetCursorPos(cursorPos);
 
 	ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
@@ -33,19 +33,15 @@ void PanelNodeCanvas::DrawContent()
 	float wheelDelta = ImGui::GetIO().MouseWheel;
 	if (wheelDelta != 0.0f) //There is scroll
 	{
-		float newZoom = zoom + wheelDelta * ZOOM_STEPS;
-		newZoom = Clamp(newZoom, MIN_ZOOM, MAX_ZOOM);
+		int newZoom = zoom + wheelDelta * 100 * ZOOM_STEPS;
+		newZoom = Clamp(newZoom, (int)(MIN_ZOOM*100), (int)(MAX_ZOOM*100));
 		float2 mousePos = { ImGui::GetMousePos().x- ImGui::GetWindowPos().x, ImGui::GetMousePos().y- ImGui::GetWindowPos().y };
 		float2 gridPoint = mousePos - scrolling;
-		gridPoint *= newZoom/zoom;
+		gridPoint *= (float)newZoom/(float)zoom;
 		scrolling = mousePos - gridPoint;
 		
 		zoom = newZoom;
 	}
-
-	ImFont* scaledFont = App->gui->GetFont(zoom*100);
-	if (scaledFont != nullptr)
-		ImGui::PushFont(scaledFont);
 
 	float2 offset = { ImGui::GetCursorScreenPos().x + scrolling.x, ImGui::GetCursorScreenPos().y + scrolling.y };
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -53,7 +49,7 @@ void PanelNodeCanvas::DrawContent()
 	if (showGrid)
 	{
 		ImU32 GRID_COLOR = IM_COL32(200, 200, 200, 40);
-		float GRID_SZ = 64.0f*zoom;
+		float GRID_SZ = 64.0f*(zoom/100.0f);
 		ImVec2 win_pos = ImGui::GetCursorScreenPos();
 		ImVec2 canvas_sz = ImGui::GetWindowSize();
 		for (float x = fmodf(scrolling.x, GRID_SZ); x < canvas_sz.x; x += GRID_SZ)
@@ -79,9 +75,13 @@ void PanelNodeCanvas::DrawContent()
 	//Draw content
 	CanvasNode* newHoveredNode = nullptr;
 	CanvasNode* newSelectedNode = nullptr;
-	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n)
+	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n) //Draw in ascending order
 	{
-		if ((*it_n)->Draw(offset, zoom, hoveredNode == (*it_n), selectedNode == (*it_n)))
+		(*it_n)->Draw(offset, zoom, hoveredNode == (*it_n), selectedNode == (*it_n));
+	}
+	for (std::list<CanvasNode*>::reverse_iterator it_n = App->nodeCanvas->nodes.rbegin(); it_n != App->nodeCanvas->nodes.rend(); ++it_n) //Calculate interaction logic in reverse (because ImGui takes first drawn as top)
+	{
+		if ((*it_n)->Logic(offset, zoom,selectedNode == (*it_n)) && newHoveredNode == nullptr)
 		{
 			newHoveredNode = (*it_n);
 			if (ImGui::IsMouseClicked(0))
@@ -100,6 +100,7 @@ void PanelNodeCanvas::DrawContent()
 	}
 
 	//Click to add nodes
+	static float2 mousePos = { 0.0f,0.0f };
 	if (!ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
@@ -108,6 +109,7 @@ void PanelNodeCanvas::DrawContent()
 		}
 		else if (ImGui::IsMouseClicked(1))
 		{
+			mousePos = { ImGui::GetMousePos().x, ImGui::GetMousePos().y }; //Store mousePosition at that moment
 			ImGui::OpenPopup("##addNode");
 		}
 	}
@@ -116,17 +118,13 @@ void PanelNodeCanvas::DrawContent()
 	{
 		if (ImGui::Selectable("Add Node"))
 		{
-			float2 pos = { ImGui::GetMousePos().x, ImGui::GetMousePos().y };
-			CanvasNode* node = new CanvasNode("Test", pos-offset);
+			CanvasNode* node = new CanvasNode("Test", (mousePos-offset)/(zoom/100.0f));
 			App->nodeCanvas->nodes.push_back(node);
 		}
 
 		ImGui::EndPopup();
 	}
 	ImGui::PopStyleVar();
-
-	if(scaledFont != nullptr)
-		ImGui::PopFont();
 
 	ImGui::PopItemWidth();
 	ImGui::EndChild();

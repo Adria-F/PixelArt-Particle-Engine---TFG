@@ -25,8 +25,8 @@ public:
 	void Draw();
 
 	void handleInput(SDL_Event* event);
-	void AddFont(float fontPercent);
-	ImFont* GetFont(int fontPercent);
+	void AddFont(int fontPercent);
+	ImFont* GetFont(int fontPercent) const;
 
 	bool UsingMouse() const;
 	bool UsingKeyboard() const;
@@ -39,6 +39,7 @@ public:
 
 private:
 
+	ImFont* defaultFont;
 	std::map<int, ImFont*> fonts;
 };
 

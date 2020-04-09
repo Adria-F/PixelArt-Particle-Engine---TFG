@@ -14,7 +14,8 @@ ModuleNodeCanvas::~ModuleNodeCanvas()
 
 bool ModuleNodeCanvas::Start()
 {
-	for (float i = MIN_ZOOM; i <= MAX_ZOOM; i += ZOOM_STEPS)
+	//Create fonts for canvas zooming
+	for (float i = MIN_ZOOM*100; i <= MAX_ZOOM*100; i += ZOOM_STEPS*100)
 	{
 		App->gui->AddFont(i);
 	}

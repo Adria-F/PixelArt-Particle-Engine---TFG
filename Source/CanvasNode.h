@@ -15,7 +15,8 @@ public:
 	}
 	~CanvasNode() {}
 
-	bool Draw(float2 offset, float zoom, bool hovered = false, bool selected = false);
+	void Draw(float2 offset, float zoom, bool hovered = false, bool selected = false);
+	bool Logic(float2 offset, float zoom, bool selected = false);
 
 	virtual void DisplayConfig() {}
 

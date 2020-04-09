@@ -21,7 +21,7 @@ private:
 	float2 scrolling = { 0.0f,0.0f };
 	bool showGrid = true;
 
-	float zoom = 1.0f;
+	int zoom = 100;
 
 	CanvasNode* hoveredNode = nullptr;
 	CanvasNode* selectedNode = nullptr;

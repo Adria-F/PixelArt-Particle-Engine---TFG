@@ -78,6 +78,9 @@ enum update_state
 #define MIN_ZOOM 0.5f
 #define ZOOM_STEPS 0.1f
 
+#define CONNECTION_OUTLINE_THICKNESS 2.0f
+#define CONNECTIONTRIANGLE_SIZE 12.0f
+
 //Particle Data Order
 #define MAX_ENTITY_DATA 10
 

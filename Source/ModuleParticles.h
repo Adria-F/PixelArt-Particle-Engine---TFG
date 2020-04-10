@@ -33,7 +33,6 @@ class Particle: public CanvasNode
 public:
 
 	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
-	Particle(ParticleEmitter* emitter);
 	Particle(ParticleEmitter* emitter, Particle* templateParticle);
 	~Particle();
 
@@ -43,9 +42,7 @@ public:
 	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
 
-	//Canvas Node
-	void DrawInputs();
-	void DrawOutputs();
+	void OnConnection(CanvasNode* node);
 
 public:
 
@@ -66,6 +63,9 @@ public:
 	};
 
 	ParticleEmitter* emitter = nullptr;
+
+	//Connections
+	NodeConnection* particleOut = nullptr;
 
 	float lifeTime = 5.0f;
 
@@ -101,9 +101,7 @@ public:
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
 
-	//Canvas Node
-	void DrawInputs() {}
-	void DrawOutputs() {}
+	void OnConnection(CanvasNode* node);
 
 public:
 
@@ -120,6 +118,9 @@ public:
 	};
 
 	float frequency = 0.25f;
+
+	//Connections
+	NodeConnection* particleIn = nullptr;
 
 private:
 
@@ -146,6 +147,7 @@ public:
 	void Stop();
 	void DrawParticles();
 
+	void AddEmitter(ParticleEmitter* emitter);
 	ParticleEmitter* GetEmitter(int index) const;
 
 private:

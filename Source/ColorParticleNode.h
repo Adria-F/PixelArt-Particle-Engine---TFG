@@ -17,10 +17,6 @@ public:
 
 	EntityData* Copy(Particle* particle) const;
 
-	//Canvas Node
-	void DrawInputs();
-	void DrawOutputs();
-
 public:
 
 	Color fixColor;

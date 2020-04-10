@@ -1,6 +1,6 @@
 #include "MakeGlobalParticleNode.h"
 
-MakeGlobalParticleNode::MakeGlobalParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, position, size)
+MakeGlobalParticleNode::MakeGlobalParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_MAKEGLOBAL, position, size)
 {
 }
 

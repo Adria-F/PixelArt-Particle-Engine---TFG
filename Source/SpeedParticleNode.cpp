@@ -3,7 +3,7 @@
 #include "ModuleParticles.h"
 #include "BaseMovementParticleNode.h"
 
-SpeedParticleNode::SpeedParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, position, size)
+SpeedParticleNode::SpeedParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_SPEED, position, size)
 {
 }
 

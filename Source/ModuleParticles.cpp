@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "Shader.h"
 #include "ModuleCamera.h"
+#include "ModuleNodeCanvas.h"
 
 #include "EntityData.h"
 
@@ -100,6 +101,11 @@ void ModuleParticles::DrawParticles()
 	}
 }
 
+void ModuleParticles::AddEmitter(ParticleEmitter* emitter)
+{
+	emitters.push_back(emitter);
+}
+
 ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 {
 	if (index < emitters.size())
@@ -112,7 +118,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
-ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): CanvasNode(name, position, size)
+ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): CanvasNode(name, EMITTER, position, size)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -121,6 +127,12 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size)
 
 	baseTransform = new BaseTransformEmitterNode(this);
 	lastEmit = frequency;
+
+	particleIn = new NodeConnection(this, NODE_INPUT, { size.x - GRAPH_NODE_WINDOW_PADDING * 0.25f, size.y/2.0f }, TRIANGLE, ImGuiDir_Left);
+	connections.push_back(particleIn);
+
+	//TMP
+	Play();
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -250,21 +262,17 @@ int ParticleEmitter::GetParticleCount() const
 	return particles.size();
 }
 
-// ----------------------------- PARTICLE ----------------------------------
-
-Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(name, position, size)
+void ParticleEmitter::OnConnection(CanvasNode* node)
 {
-	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	if (node->type == PARTICLE)
 	{
-		data[i] = nullptr;
+		templateParticle = (Particle*)node;
 	}
-
-	baseTransform = new BaseTransformParticleNode(this);
-	baseMovement = new BaseMovementParticleNode(this);
-	baseColor = new BaseColorParticleNode(this);
 }
 
-Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
+// ----------------------------- PARTICLE ----------------------------------
+
+Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(name, PARTICLE, position, size)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -274,6 +282,9 @@ Particle::Particle(ParticleEmitter* emitter): emitter(emitter)
 	baseTransform = new BaseTransformParticleNode(this);
 	baseMovement = new BaseMovementParticleNode(this);
 	baseColor = new BaseColorParticleNode(this);
+
+	particleOut = new NodeConnection(this, NODE_OUTPUT, { 0.0f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
+	connections.push_back(particleOut);
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
@@ -341,10 +352,10 @@ float Particle::GetLifePercent() const
 	return timeAlive/lifeTime;
 }
 
-void Particle::DrawInputs()
+void Particle::OnConnection(CanvasNode* node)
 {
-}
-
-void Particle::DrawOutputs()
-{
+	if (node->type == EMITTER)
+	{
+		emitter = (ParticleEmitter*)node;
+	}
 }

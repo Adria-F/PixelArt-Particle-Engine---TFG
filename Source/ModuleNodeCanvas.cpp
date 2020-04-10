@@ -40,6 +40,23 @@ update_state ModuleNodeCanvas::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+update_state ModuleNodeCanvas::PostUpdate(float dt)
+{
+	if (connectionEnded)
+	{
+		connectionEnded = false;
+		if (connectionCallback != nullptr && connecting != nullptr)
+		{
+			connectionCallback->SetConnection(connecting);
+			connecting->SetConnection(connectionCallback);
+		}
+		connecting = nullptr;
+		connectionCallback = nullptr;
+	}
+
+	return UPDATE_CONTINUE;
+}
+
 bool ModuleNodeCanvas::CleanUp()
 {
 	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
@@ -49,4 +66,19 @@ bool ModuleNodeCanvas::CleanUp()
 	nodes.clear();
 
 	return true;
+}
+
+void ModuleNodeCanvas::StopConnection()
+{
+	connectionEnded = true;
+}
+
+void ModuleNodeCanvas::StartConnection(NodeConnection* connection)
+{
+	connecting = connection;
+}
+
+void ModuleNodeCanvas::RequestConnection(NodeConnection* node)
+{
+	connectionCallback = node;
 }

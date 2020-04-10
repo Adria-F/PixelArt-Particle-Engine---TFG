@@ -186,6 +186,7 @@ void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
 			break;
 		case 1: //Emitter
 			node = new ParticleEmitter(nodes[choice].c_str(), spawnPos, { textSize,45 });
+			App->particles->AddEmitter((ParticleEmitter*)node);
 			break;
 		case 2: //Color
 			node = new ColorParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });

@@ -3,8 +3,9 @@
 
 #include "ModuleInput.h"
 #include "ModuleGUI.h"
+#include "ModuleNodeCanvas.h"
 
-void CanvasNode::Draw(float2 offset, float zoom, bool hovered, bool selected)
+void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
@@ -42,15 +43,27 @@ void CanvasNode::Draw(float2 offset, float zoom, bool hovered, bool selected)
 	if (scaledFont != nullptr)
 		ImGui::PopFont();
 
-	DrawInputs();
-	DrawOutputs();
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		(*it_c)->Draw(zoom);
+	}
 
 	ImGui::EndGroup();
 }
 
-bool CanvasNode::Logic(float2 offset, float zoom, bool selected)
+bool CanvasNode::Logic(float2 offset, int zoom, bool selected)
 {
 	bool isHovered = false;
+
+	bool hoveringConnection = false;
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		if ((*it_c)->Logic(zoom))
+		{
+			hoveringConnection = true;
+			break; //We can be hovering only one at once (they must not overlap)
+		}
+	}
 
 	ImGui::PushID(UID);
 	float2 scaledSize = size * (zoom / 100.0f);
@@ -59,7 +72,7 @@ bool CanvasNode::Logic(float2 offset, float zoom, bool selected)
 	ImGui::SetCursorScreenPos({ gridPosition.x, gridPosition.y });
 	ImGui::BeginGroup();
 	ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
-	if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/)
+	if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection)
 	{
 		isHovered = true;
 
@@ -88,11 +101,17 @@ bool CanvasNode::Logic(float2 offset, float zoom, bool selected)
 	}
 
 	//Dragging
+	static bool dragging = false;
 	if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
 	{
 		clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
+		dragging = true;
 	}
-	if (selected && ImGui::IsMouseDragging(0))
+	if (dragging && ImGui::IsMouseReleased(0))
+	{
+		dragging = false;
+	}
+	if (selected && dragging && ImGui::IsMouseDragging(0))
 	{
 		position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
 		position /= (zoom / 100.0f);
@@ -102,4 +121,117 @@ bool CanvasNode::Logic(float2 offset, float zoom, bool selected)
 	ImGui::PopID();
 
 	return isHovered;
+}
+
+NodeConnection::NodeConnection(CanvasNode* node, connectionType type, float2 position, shapeType shape, ImGuiDir_ direction): node(node), type(type), localPosition(position), shape(shape), direction(direction)
+{
+}
+
+void NodeConnection::Draw(int zoom)
+{
+	gridPosition = node->gridPosition + localPosition * (zoom / 100.0f);
+	switch (shape)
+	{
+	case TRIANGLE:		
+		DrawTriangle(zoom / 100.0f);
+		break;
+	case CIRCLE:
+		break;
+	}
+
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+	if (connecting)
+	{
+		ImU32 color = IM_COL32(200, 200, 100, 255);
+		ImVec2 pointA = { gridPosition.x, gridPosition.y };
+		ImVec2 pointB = ImGui::GetMousePos();
+
+		draw_list->AddLine(pointA, pointB, color, 3.0f);
+	}
+	if (connected != nullptr && type == NODE_OUTPUT)
+	{
+		ImU32 color = IM_COL32(200, 200, 100, 255);
+		ImVec2 pointA = { gridPosition.x, gridPosition.y };
+		ImVec2 pointB = { connected->gridPosition.x, connected->gridPosition.y };
+
+		draw_list->AddLine(pointA, pointB, color, 3.0f);
+	}
+}
+
+bool NodeConnection::Logic(int zoom)
+{
+	ImGui::SetCursorScreenPos({ gridPosition.x - CONNECTIONTRIANGLE_SIZE / 2.0f, gridPosition.y - CONNECTIONTRIANGLE_SIZE / 2.0f });
+	ImGui::InvisibleButton("##particleIN", { CONNECTIONTRIANGLE_SIZE, CONNECTIONTRIANGLE_SIZE });
+
+	if (ImGui::IsItemHovered())
+	{
+		if (ImGui::IsMouseDown(0))
+			state = CLICKED;
+		else
+			state = HOVERED;
+	}
+	else
+		state = IDLE;
+
+	if (ImGui::IsItemClicked(0))
+	{
+		connecting = true;
+		App->nodeCanvas->StartConnection(this);
+	}
+
+	if (ImGui::IsMouseReleased(0))
+	{
+		if (connecting)
+		{
+			connecting = false;
+			App->nodeCanvas->StopConnection();
+		}
+		else if (ImGui::IsItemHovered())
+		{
+			App->nodeCanvas->RequestConnection(this);
+		}
+	}
+
+	return (state == HOVERED || state == CLICKED);
+}
+
+void NodeConnection::DrawTriangle(float scale)
+{
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+	ImVec2 pointA = { gridPosition.x + ((direction == ImGuiDir_Left) ? -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : ((direction == ImGuiDir_Right) ? (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : 0.0f)), gridPosition.y + ((direction == ImGuiDir_Up) ? -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : ((direction == ImGuiDir_Down) ? (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : 0.0f)) };
+	ImVec2 pointB = { gridPosition.x + ((direction == ImGuiDir_Left || direction == ImGuiDir_Down) ? (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f), gridPosition.y + ((direction == ImGuiDir_Left || direction == ImGuiDir_Up) ? (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f) };
+	ImVec2 pointC = { gridPosition.x + ((direction == ImGuiDir_Left || direction == ImGuiDir_Up) ? (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f), gridPosition.y + ((direction == ImGuiDir_Left || direction == ImGuiDir_Down) ? -(CONNECTIONTRIANGLE_SIZE*scale) / 2.0f : (CONNECTIONTRIANGLE_SIZE*scale) / 2.0f) };
+
+	float thickness = CONNECTION_OUTLINE_THICKNESS * scale;
+
+	ImU32 fillColor = IM_COL32(100, 100, 105, 255);
+	ImU32 outlineColor = IM_COL32(200, 200, 205, 255);
+	switch (state)
+	{
+	case HOVERED:
+		outlineColor = IM_COL32(255, 255, 75, 255);
+		break;
+	case CLICKED:
+		outlineColor = IM_COL32(255, 255, 75, 255);
+		thickness *= 2.0f;
+		break;
+	case CONNECTED:
+		fillColor = IM_COL32(200, 200, 100, 255);
+		break;
+	}
+
+	if (connecting || connected != nullptr)
+	{
+		fillColor = IM_COL32(200, 200, 100, 255);
+	}
+
+	draw_list->AddTriangleFilled(pointA, pointB, pointC, fillColor);
+	draw_list->AddTriangle(pointA, pointB, pointC, outlineColor, thickness);
+}
+
+void NodeConnection::SetConnection(NodeConnection* node)
+{
+	connected = node;
+	this->node->OnConnection(node->node);
 }

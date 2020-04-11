@@ -10,8 +10,7 @@ enum connectionState
 {
 	IDLE,
 	HOVERED,
-	CLICKED,
-	CONNECTED
+	CLICKED
 };
 
 enum connectionType
@@ -31,6 +30,7 @@ class NodeConnection
 public:
 
 	NodeConnection(CanvasNode* node, connectionType type, float2 position, shapeType shape, ImGuiDir_ direction = ImGuiDir_Down);
+	~NodeConnection();
 
 	void Draw(int zoom);
 	bool Logic(int zoom);
@@ -38,6 +38,7 @@ public:
 	void DrawTriangle(float scale);
 
 	void SetConnection(NodeConnection* node);
+	void Disconnect();
 
 public:
 
@@ -50,21 +51,24 @@ public:
 	float2 localPosition;
 	float2 gridPosition;
 
+	NodeConnection* connected = nullptr;
+
 private:
 
 	connectionState state;
 	bool connecting = false;
-	NodeConnection* connected = nullptr;
 };
 
 enum nodeType
 {
 	PARTICLE,
-	EMITTER,
 	PARTICLE_COLOR,
 	PARTICLE_SPEED,
 	PARTICLE_MAKEGLOBAL,
-	EMITTER_EMISSION
+	MAX_PARTICLE_NODE,
+	EMITTER,
+	EMITTER_EMISSION,
+	MAX_EMITTER_NODE
 };
 
 class CanvasNode
@@ -76,12 +80,13 @@ public:
 	{
 		UID = GENERATE_UID();
 	}
-	virtual ~CanvasNode() {}
+	virtual ~CanvasNode();
 
 	void Draw(float2 offset, int zoom, bool hovered = false, bool selected = false);
 	bool Logic(float2 offset, int zoom, bool selected = false);
 
-	virtual void OnConnection(CanvasNode* node) {}
+	virtual bool OnConnection(CanvasNode* node) { return false; }
+	virtual void OnDisconnection(NodeConnection* connection) {}
 
 	virtual void DisplayConfig() {}
 

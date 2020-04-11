@@ -29,6 +29,10 @@ public:
 
 	std::list<CanvasNode*> nodes;
 
+	CanvasNode* hoveredNode = nullptr;
+	CanvasNode* selectedNode = nullptr;
+	NodeConnection* selectedConnection = nullptr;
+
 private:
 
 	NodeConnection* connecting = nullptr;

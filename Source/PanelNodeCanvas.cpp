@@ -70,7 +70,7 @@ void PanelNodeCanvas::DrawContent()
 	{
 		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 	}
-	else if (hoveredNode != nullptr)
+	else if (App->nodeCanvas->hoveredNode != nullptr)
 	{
 		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 	}
@@ -84,11 +84,11 @@ void PanelNodeCanvas::DrawContent()
 	CanvasNode* newSelectedNode = nullptr;
 	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n) //Draw in ascending order
 	{
-		(*it_n)->Draw(offset, zoom, hoveredNode == (*it_n), selectedNode == (*it_n));
+		(*it_n)->Draw(offset, zoom, App->nodeCanvas->hoveredNode == (*it_n), App->nodeCanvas->selectedNode == (*it_n));
 	}
 	for (std::list<CanvasNode*>::reverse_iterator it_n = App->nodeCanvas->nodes.rbegin(); it_n != App->nodeCanvas->nodes.rend(); ++it_n) //Calculate interaction logic in reverse (because ImGui takes first drawn as top)
 	{
-		if ((*it_n)->Logic(offset, zoom,selectedNode == (*it_n)) && newHoveredNode == nullptr)
+		if ((*it_n)->Logic(offset, zoom, App->nodeCanvas->selectedNode == (*it_n)) && newHoveredNode == nullptr)
 		{
 			newHoveredNode = (*it_n);
 			if (ImGui::IsMouseClicked(0))
@@ -97,13 +97,14 @@ void PanelNodeCanvas::DrawContent()
 			}
 		}
 	}
-	hoveredNode = newHoveredNode;
-	if (newSelectedNode && newSelectedNode != selectedNode)
+	App->nodeCanvas->hoveredNode = newHoveredNode;
+	if (newSelectedNode && newSelectedNode != App->nodeCanvas->selectedNode)
 	{
 		//Move the selected node to the end of the list to draw it in front
 		App->nodeCanvas->nodes.remove(newSelectedNode);
 		App->nodeCanvas->nodes.push_back(newSelectedNode);
-		selectedNode = newSelectedNode;
+		App->nodeCanvas->selectedNode = newSelectedNode;
+		App->nodeCanvas->selectedConnection = nullptr; //Deselect connection
 	}
 
 	//Click to add nodes
@@ -112,7 +113,7 @@ void PanelNodeCanvas::DrawContent()
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selectedNode = nullptr;
+			App->nodeCanvas->selectedNode = nullptr; //Deselect node
 		}
 		else if (ImGui::IsMouseClicked(1))
 		{

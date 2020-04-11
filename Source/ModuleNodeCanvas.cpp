@@ -3,6 +3,7 @@
 
 #include "CanvasNode.h"
 #include "ModuleGUI.h"
+#include "ModuleParticles.h"
 
 ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 {
@@ -24,34 +25,45 @@ bool ModuleNodeCanvas::Start()
 }
 
 update_state ModuleNodeCanvas::Update(float dt)
-{
-	std::list<CanvasNode*>::iterator it_n = nodes.begin();
-	while (it_n != nodes.end())
-	{
-		if ((*it_n)->toDelete)
-		{
-			RELEASE((*it_n));
-			it_n = nodes.erase(it_n);
-		}
-		else
-			++it_n;
-	}
+{	
 
 	return UPDATE_CONTINUE;
 }
 
 update_state ModuleNodeCanvas::PostUpdate(float dt)
 {
+	//Connect requested nodes
 	if (connectionEnded)
 	{
 		connectionEnded = false;
-		if (connectionCallback != nullptr && connecting != nullptr)
+		if (connectionCallback != nullptr && connecting != nullptr && connecting->type != connectionCallback->type)
 		{
 			connectionCallback->SetConnection(connecting);
 			connecting->SetConnection(connectionCallback);
 		}
 		connecting = nullptr;
 		connectionCallback = nullptr;
+	}
+
+	//Check node deletion
+	std::list<CanvasNode*>::iterator it_n = nodes.begin();
+	while (it_n != nodes.end())
+	{
+		if ((*it_n)->toDelete)
+		{
+			if (hoveredNode == (*it_n))
+				hoveredNode = nullptr;
+			if (selectedNode == (*it_n))
+				selectedNode = nullptr;
+
+			if ((*it_n)->type == EMITTER)
+				App->particles->RemoveEmitter((ParticleEmitter*)(*it_n));
+
+			RELEASE((*it_n));
+			it_n = nodes.erase(it_n);
+		}
+		else
+			++it_n;
 	}
 
 	return UPDATE_CONTINUE;

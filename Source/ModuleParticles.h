@@ -42,7 +42,8 @@ public:
 	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
 
-	void OnConnection(CanvasNode* node);
+	bool OnConnection(CanvasNode* node);
+	void OnDisconnection(NodeConnection* connection);
 
 public:
 
@@ -101,7 +102,8 @@ public:
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
 
-	void OnConnection(CanvasNode* node);
+	bool OnConnection(CanvasNode* node);
+	void OnDisconnection(NodeConnection* connection);
 
 public:
 
@@ -118,9 +120,6 @@ public:
 	};
 
 	float frequency = 0.25f;
-
-	//Connections
-	NodeConnection* particleIn = nullptr;
 
 private:
 
@@ -148,6 +147,7 @@ public:
 	void DrawParticles();
 
 	void AddEmitter(ParticleEmitter* emitter);
+	void RemoveEmitter(ParticleEmitter* emitter);
 	ParticleEmitter* GetEmitter(int index) const;
 
 private:

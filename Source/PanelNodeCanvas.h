@@ -25,9 +25,6 @@ private:
 
 	int zoom = 100;
 
-	CanvasNode* hoveredNode = nullptr;
-	CanvasNode* selectedNode = nullptr;
-
 	char node_filter[64];
 };
 

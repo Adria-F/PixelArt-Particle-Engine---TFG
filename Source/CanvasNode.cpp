@@ -5,6 +5,18 @@
 #include "ModuleGUI.h"
 #include "ModuleNodeCanvas.h"
 
+inline float DistanceToLine(float2 v, float2 w, float2 p);
+inline bool PointInsideRect(float2 A, float2 B, float2 point);
+
+CanvasNode::~CanvasNode()
+{
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		RELEASE((*it_c));
+	}
+	connections.clear();
+}
+
 void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -127,6 +139,16 @@ NodeConnection::NodeConnection(CanvasNode* node, connectionType type, float2 pos
 {
 }
 
+NodeConnection::~NodeConnection()
+{
+	if (connected != nullptr)
+	{
+		if (App->nodeCanvas->selectedConnection == this || App->nodeCanvas->selectedConnection == connected)
+			App->nodeCanvas->selectedConnection = nullptr;
+		connected->Disconnect();
+	}
+}
+
 void NodeConnection::Draw(int zoom)
 {
 	gridPosition = node->gridPosition + localPosition * (zoom / 100.0f);
@@ -139,6 +161,8 @@ void NodeConnection::Draw(int zoom)
 		break;
 	}
 
+
+	//Draw connection lines
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 	if (connecting)
 	{
@@ -151,10 +175,17 @@ void NodeConnection::Draw(int zoom)
 	if (connected != nullptr && type == NODE_OUTPUT)
 	{
 		ImU32 color = IM_COL32(200, 200, 100, 255);
+		float thickness = 3.0f;
 		ImVec2 pointA = { gridPosition.x, gridPosition.y };
 		ImVec2 pointB = { connected->gridPosition.x, connected->gridPosition.y };
 
-		draw_list->AddLine(pointA, pointB, color, 3.0f);
+		if (App->nodeCanvas->selectedConnection == this)
+		{
+			color = IM_COL32(240, 240, 175, 255);
+			thickness = 5.0f;
+		}
+
+		draw_list->AddLine(pointA, pointB, color, thickness);
 	}
 }
 
@@ -173,13 +204,13 @@ bool NodeConnection::Logic(int zoom)
 	else
 		state = IDLE;
 
-	if (ImGui::IsItemClicked(0))
+	if (ImGui::IsItemClicked(0) && connected == nullptr)
 	{
 		connecting = true;
 		App->nodeCanvas->StartConnection(this);
 	}
 
-	if (ImGui::IsMouseReleased(0))
+	if (ImGui::IsMouseReleased(0) && connected == nullptr)
 	{
 		if (connecting)
 		{
@@ -190,6 +221,35 @@ bool NodeConnection::Logic(int zoom)
 		{
 			App->nodeCanvas->RequestConnection(this);
 		}
+	}
+
+	//Handle connection line logic
+	if (ImGui::IsMouseClicked(0) && connected != nullptr && type == NODE_OUTPUT)
+	{
+		float2 mousePos = { ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+		float2 pointA = { gridPosition.x, gridPosition.y };
+		float2 pointB = { connected->gridPosition.x, connected->gridPosition.y };
+
+		bool clicked = false;
+		if (!ImGui::IsAnyItemHovered() && PointInsideRect(pointA, pointB, mousePos))
+		{
+			float distance = DistanceToLine(pointA, pointB, mousePos);
+			if (distance <= 15.0f)
+			{
+				App->nodeCanvas->selectedConnection = this;
+				clicked = true;
+			}
+		}
+		if (!clicked && App->nodeCanvas->selectedConnection == this)
+		{
+			App->nodeCanvas->selectedConnection = nullptr;
+		}
+	}
+	if (App->nodeCanvas->selectedConnection == this && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	{
+		connected->Disconnect();
+		Disconnect();
+		App->nodeCanvas->selectedConnection = nullptr;
 	}
 
 	return (state == HOVERED || state == CLICKED);
@@ -216,9 +276,6 @@ void NodeConnection::DrawTriangle(float scale)
 		outlineColor = IM_COL32(255, 255, 75, 255);
 		thickness *= 2.0f;
 		break;
-	case CONNECTED:
-		fillColor = IM_COL32(200, 200, 100, 255);
-		break;
 	}
 
 	if (connecting || connected != nullptr)
@@ -226,12 +283,41 @@ void NodeConnection::DrawTriangle(float scale)
 		fillColor = IM_COL32(200, 200, 100, 255);
 	}
 
+	if (App->nodeCanvas->selectedConnection != nullptr && (App->nodeCanvas->selectedConnection == this || App->nodeCanvas->selectedConnection->connected == this))
+		fillColor = IM_COL32(240, 240, 175, 255);
+
 	draw_list->AddTriangleFilled(pointA, pointB, pointC, fillColor);
 	draw_list->AddTriangle(pointA, pointB, pointC, outlineColor, thickness);
 }
 
 void NodeConnection::SetConnection(NodeConnection* node)
 {
-	connected = node;
-	this->node->OnConnection(node->node);
+	if (this->node->OnConnection(node->node))
+		connected = node;	
+}
+
+void NodeConnection::Disconnect()
+{
+	this->node->OnDisconnection(connected);
+	connected = nullptr;
+}
+
+inline float DistanceToLine(float2 v, float2 w, float2 p)
+{
+	const float l2 = w.DistanceSq(v);
+	if (l2 == 0.0) return p.DistanceSq(v);   // v == w case
+
+	float2 v1 = p - v;
+	float2 v2 = w - v;
+	const float t = max(0, min(1, v1.Dot(v2) / l2));
+	const float2 projection = v + t * (w - v);
+	return p.DistanceSq(projection);
+}
+
+inline bool PointInsideRect(float2 A, float2 B, float2 point)
+{
+	float2 bottomLeft = { Min(A.x, B.x), Max(A.y, B.y) };
+	float2 topRight = { Max(A.x, B.x), Min(A.y, B.y) };
+
+	return point.x > bottomLeft.x && point.x < topRight.x && point.y < bottomLeft.y && point.y > topRight.y;
 }

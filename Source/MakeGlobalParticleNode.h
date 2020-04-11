@@ -13,6 +13,9 @@ public:
 
 	EntityData* Copy(Particle* particle) const;
 
+	bool OnConnection(CanvasNode* node);
+	void OnDisconnection(NodeConnection* connection);
+
 public:
 
 	bool active = true;

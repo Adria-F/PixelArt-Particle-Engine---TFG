@@ -15,6 +15,9 @@ public:
 
 	void Play();
 
+	bool OnConnection(CanvasNode* node);
+	void OnDisconnection(NodeConnection* connection);
+
 public:
 
 	enum {

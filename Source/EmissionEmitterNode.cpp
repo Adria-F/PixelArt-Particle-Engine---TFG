@@ -5,6 +5,12 @@
 EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size): EntityData(emitter), CanvasNode(name, EMITTER_EMISSION, position, size)
 {
 	lastEmit = frequency;
+
+	NodeConnection* dataOut = new NodeConnection(this, NODE_OUTPUT, { size.x / 2.0f, 0.0f }, TRIANGLE, ImGuiDir_Up);
+	connections.push_back(dataOut);
+
+	NodeConnection* dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
+	connections.push_back(dataIn);
 }
 
 void EmissionEmitterNode::Execute(float dt)
@@ -40,5 +46,54 @@ void EmissionEmitterNode::Play()
 		{
 			emitter->SpawnParticle();
 		}
+	}
+}
+
+bool EmissionEmitterNode::OnConnection(CanvasNode* node)
+{
+	bool ret = false;
+
+	if (node->type > MAX_PARTICLE_NODE && node->type < MAX_EMITTER_NODE)
+	{
+		if (node->type == EMITTER)
+		{
+			emitter = (ParticleEmitter*)node;
+
+			//Check connected nodes below and connect the emitter
+			for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+			{
+				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
+				{
+					(*it_c)->connected->node->OnConnection(node);
+				}
+			}
+		}
+		else if (emitter != nullptr) //It is connecting to a node below
+		{
+			node->OnConnection(emitter);
+		}
+
+		ret = true;
+	}
+
+	return ret;
+}
+
+void EmissionEmitterNode::OnDisconnection(NodeConnection* connection)
+{
+	if (connection->type == NODE_INPUT) //If the other is an input, this is an output :)
+	{
+		emitter = nullptr;
+		for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+		{
+			if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
+			{
+				(*it_c)->connected->node->OnDisconnection((*it_c));
+			}
+		}
+	}
+	else if (emitter != nullptr)
+	{
+		emitter->OnDisconnection(connection);
 	}
 }

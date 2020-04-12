@@ -7,6 +7,10 @@
 BaseColorParticleNode::BaseColorParticleNode(Particle* particle) : EntityData(particle)
 {
 	color = White;
+
+	random.SetColor(White.rgb, 0.0f);
+	random.SetColor(Red.rgb, 0.5f);
+	random.SetColor(Black.rgb, 1.0f);
 }
 
 void BaseColorParticleNode::PrepareRender()

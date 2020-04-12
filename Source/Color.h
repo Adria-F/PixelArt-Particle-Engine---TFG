@@ -51,6 +51,9 @@ struct Gradient
 	void SetAlpha(float alpha, float percent);
 	Color GetColor(float percent);
 
+	bool hasKey(float percent) const;
+	void MoveColorKey(float originalPercent, float newPercent);
+
 	std::map<float, vec> colorList;
 	std::map<float, float> alphaList;
 };

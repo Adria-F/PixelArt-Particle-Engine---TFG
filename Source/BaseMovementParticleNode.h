@@ -25,8 +25,6 @@ public:
 	float randSpeed1 = 0.5f;
 	float randSpeed2 = 10.0f;
 
-private:
-
 	bool randomizeSpeed = false;
 };
 

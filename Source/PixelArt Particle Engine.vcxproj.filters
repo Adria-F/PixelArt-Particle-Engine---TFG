@@ -214,9 +214,6 @@
     <ClCompile Include="EmissionEmitterNode.cpp">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
-    <ClCompile Include="PanelDebugControl.cpp">
-      <Filter>Sources\Panels</Filter>
-    </ClCompile>
     <ClCompile Include="PanelNodeCanvas.cpp">
       <Filter>Sources\Panels</Filter>
     </ClCompile>
@@ -225,6 +222,9 @@
     </ClCompile>
     <ClCompile Include="ModuleNodeCanvas.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelPanelNodeConfiguration.cpp">
+      <Filter>Sources\Panels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -486,9 +486,6 @@
     <ClInclude Include="EmissionEmitterNode.h">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
-    <ClInclude Include="PanelDebugControl.h">
-      <Filter>Sources\Panels</Filter>
-    </ClInclude>
     <ClInclude Include="EntityData.h">
       <Filter>Sources\Nodes</Filter>
     </ClInclude>
@@ -500,6 +497,9 @@
     </ClInclude>
     <ClInclude Include="ModuleNodeCanvas.h">
       <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelPanelNodeConfiguration.h">
+      <Filter>Sources\Panels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

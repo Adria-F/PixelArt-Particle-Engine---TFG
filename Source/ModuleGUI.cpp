@@ -9,7 +9,7 @@
 
 // Include all panels
 #include "PanelScene.h"
-#include "PanelDebugControl.h"
+#include "PanelPanelNodeConfiguration.h"
 #include "PanelNodeCanvas.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
@@ -43,7 +43,7 @@ bool ModuleGUI::Init()
 
 	//Add all panels
 	panels.push_back(new PanelScene("Scene"));
-	panels.push_back(new PanelDebugControl("Debug Control"));
+	panels.push_back(new PanelNodeConfiguration("Node Configuration"));
 	panels.push_back(new PanelNodeCanvas("Node Canvas"));
 
 	return true;
@@ -176,4 +176,140 @@ bool ModuleGUI::UsingKeyboard() const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.WantTextInput && !mouseOnScene;
+}
+
+void ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)
+{
+	if (!enabled)
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+	
+	if (std::string(label).size() > 0)
+	{
+		if (enabled)
+			ImGui::Text(label);
+		else
+			ImGui::TextDisabled(label);
+		ImGui::SameLine();
+	}
+	ImGui::PushItemWidth(50.0f);
+	if (enabled)
+	{
+		float* modifyingValue = value;
+		if (alternativeValue != nullptr && condition)
+			modifyingValue = alternativeValue;
+		ImGui::DragFloat(id, modifyingValue, step, 0.0f, 0.0f, "%.2f");
+		*value = *modifyingValue;
+		if (alternativeValue != nullptr)
+			*alternativeValue = *modifyingValue;
+	}
+	else
+	{
+		char str[1] = "";
+		ImGui::InputText(id, &str[0], 1, ImGuiInputTextFlags_ReadOnly);
+	}
+	ImGui::PopItemWidth();
+
+	if (!enabled)
+		ImGui::PopStyleVar();
+}
+
+void ModuleGUI::DrawColorBox(Color& color)
+{
+	ImGui::PushItemWidth(150.0f);
+	float colorArray[4] = { color.rgb.x, color.rgb.y, color.rgb.z, color.a };
+	ImGui::ColorEdit4("##color", &colorArray[0], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_AlphaPreview | ImGuiColorEditFlags_AlphaBar);
+	color.rgb = { colorArray[0],colorArray[1],colorArray[2] };
+	color.a = colorArray[3];
+	ImGui::PopItemWidth();
+}
+
+void ModuleGUI::DrawGradientBox(Gradient& gradient)
+{
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+	float itemWidth = 150.0f;
+	float itemHeight = 17.0f;
+
+	ImVec2 startPos = ImGui::GetCursorScreenPos();
+
+	std::map<float, vec>::iterator prevC = gradient.colorList.end();
+	for (std::map<float, vec>::iterator currC = gradient.colorList.begin(); currC != gradient.colorList.end();)
+	{
+		float prevPercent;
+		float currPercent;
+		ImVec4 prevColor;
+		ImVec4 currColor;
+
+		prevC = currC++;
+		if (currC == gradient.colorList.end())
+		{
+			prevPercent = (*prevC).first;
+			currPercent = 1.0f;
+			prevColor = { (*prevC).second.x, (*prevC).second.y, (*prevC).second.z, 1.0f };
+			currColor = prevColor;
+		}
+		else
+		{
+			prevPercent = (*prevC).first;
+			currPercent = (*currC).first;
+			prevColor = { (*prevC).second.x, (*prevC).second.y, (*prevC).second.z, 1.0f };
+			currColor = { (*currC).second.x, (*currC).second.y, (*currC).second.z, 1.0f };
+		}
+		if (prevC == gradient.colorList.begin() && prevPercent > 0.0f)
+			draw_list->AddRectFilledMultiColor({ startPos.x, startPos.y }, { startPos.x + itemWidth * prevPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor));
+
+		draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevPercent, startPos.y }, { startPos.x + itemWidth * currPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(prevColor));
+	}
+
+	float buttonWidth = 5.0f;
+	float buttonHeight = 10.0f; //TODO: Currently not applying
+
+	static float movingKey = -1.0f;
+
+	ImGui::PushItemWidth(buttonWidth);
+	int count = 0;
+	for (std::map<float, vec>::iterator it_c = gradient.colorList.begin(); it_c != gradient.colorList.end(); ++it_c)
+	{
+		float percent = (*it_c).first;
+		ImVec4 color = { (*it_c).second.x, (*it_c).second.y, (*it_c).second.z, 1.0 };
+
+		ImGui::SetCursorScreenPos({ startPos.x + itemWidth * percent - buttonWidth * 0.5f, startPos.y + itemHeight - buttonHeight * 0.25f });
+		if (ImGui::IsMouseDragging(0) && movingKey != -1.0f)
+		{
+			ImGui::ColorButton(("##gradientColor" + std::to_string(count)).c_str(), color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, { buttonWidth, 0.0f });
+		}
+		else
+			ImGui::ColorEdit3(("##gradientColor" + std::to_string(count)).c_str(), (*it_c).second.ptr(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
+
+		if (ImGui::IsItemClicked(0) && !ImGui::IsPopupOpen("picker"))
+			movingKey = percent;
+
+		count++;
+	}
+	ImGui::PopItemWidth();
+
+	//Add keys
+	ImGui::SetCursorScreenPos(startPos);
+	if (ImGui::InvisibleButton("##addColor", { itemWidth, itemHeight }))
+	{
+		float percent = (ImGui::GetMousePos().x - startPos.x) / itemWidth;
+		vec color = gradient.GetColor(percent).rgb;
+		gradient.SetColor(color, percent);
+	}
+
+	//Move keys
+	if (movingKey != -1.0)
+	{
+		float percent = (ImGui::GetMousePos().x - startPos.x) / itemWidth;
+		if (!gradient.hasKey(percent) && ImGui::IsMouseDragging(0))
+		{
+			gradient.MoveColorKey(movingKey, percent);
+			movingKey = percent;
+		}		
+
+		if (ImGui::IsMouseReleased(0))
+			movingKey = -1.0f;
+	}
+
+	ImGui::SetCursorScreenPos(startPos); ImGui::Dummy({ 0.0f,0.0f });
 }

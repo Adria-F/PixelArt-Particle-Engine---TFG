@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "ModuleCamera.h"
 #include "ModuleNodeCanvas.h"
+#include "ModuleGUI.h"
 
 #include "EntityData.h"
 
@@ -438,4 +439,50 @@ void Particle::OnDisconnection(NodeConnection* connection)
 		emitter = nullptr;
 		break;
 	}
+}
+
+void Particle::DisplayConfig()
+{
+	ImGui::Text("Particle");
+	ImGui::NewLine();
+
+	//Lifetime
+	ImGui::Text("Lifetime"); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("", "##lifetime", &lifeTime, 0.1f, true, &randLifeTime1, randomizeLifeTime); ImGui::SameLine();
+	App->gui->DrawInputFloat("", "##randLifetime", &randLifeTime2, 0.1f, randomizeLifeTime);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth()-70.0f);  ImGui::Checkbox("Random##lifetime", &randomizeLifeTime);
+	ImGui::Separator();
+
+	//Base transform
+	///Billboard
+	ImGui::Checkbox("Billboard", &baseTransform->billboard);
+	///Rotation
+	ImGui::Text("Rotation"); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("", "##rotationZ", &baseTransform->angleZ, 1.0f, true, &baseTransform->randRotation1, baseTransform->randomizeRotation); ImGui::SameLine();
+	App->gui->DrawInputFloat("", "##randRotationZ", &baseTransform->randRotation2, 1.0f, baseTransform->randomizeRotation);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##rotation", &baseTransform->randomizeRotation);
+	///Scale
+	ImGui::Text("Scale"); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("X", "##scaleX", &baseTransform->scale.x, 0.1f, true, &baseTransform->randScaleX1, baseTransform->randomizeScale); ImGui::SameLine();
+	App->gui->DrawInputFloat("Y", "##scaleY", &baseTransform->scale.y, 0.1f, true, &baseTransform->randScaleY1, baseTransform->randomizeScale);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##scale", &baseTransform->randomizeScale);
+	ImGui::Text(""); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("X", "##randScaleX", &baseTransform->randScaleX2, 0.1f, baseTransform->randomizeScale); ImGui::SameLine();
+	App->gui->DrawInputFloat("Y", "##randScaleY", &baseTransform->randScaleY2, 0.1f, baseTransform->randomizeScale);
+	ImGui::Separator();
+
+	//Base movement
+	ImGui::Text("Spped"); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("", "##speed", &baseMovement->speed, 0.1f, true, &baseMovement->randSpeed1, baseMovement->randomizeSpeed); ImGui::SameLine();
+	App->gui->DrawInputFloat("", "##randSpeed", &baseMovement->randSpeed2, 0.1f, baseMovement->randomizeSpeed);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##speed", &baseMovement->randomizeSpeed);
+	ImGui::Separator();
+
+	//Base color
+	ImGui::Text("Color"); ImGui::SameLine(75.0f);
+	if (!baseColor->randomize)
+		App->gui->DrawColorBox(baseColor->color);
+	else
+		App->gui->DrawGradientBox(baseColor->random);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##color", &baseColor->randomize);
 }

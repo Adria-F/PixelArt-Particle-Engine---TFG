@@ -39,12 +39,12 @@ public:
 	float randScaleY1 = 0.5f;
 	float randScaleY2 = 1.5f;
 
+	bool randomizeScale = false;
+	bool randomizeRotation = false;
+
 private:
 
 	vec eulerAngles;
-
-	bool randomizeScale = false;
-	bool randomizeRotation = false;
 };
 
 #endif // !__BASETRANSFORM_PARTICLENODE_H__

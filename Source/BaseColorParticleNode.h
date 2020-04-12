@@ -2,7 +2,6 @@
 #define __BASECOLOR_PARTICLENODE_H__
 
 #include "EntityData.h"
-#include "Color.h"
 
 class BaseColorParticleNode : public EntityData
 {
@@ -23,10 +22,7 @@ public:
 	Color color = White;
 	Gradient random;
 
-private:
-
 	bool randomize = false;
-
 };
 
 #endif // !__BASECOLOR_PARTICLENODE_H__

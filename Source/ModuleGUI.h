@@ -31,6 +31,10 @@ public:
 	bool UsingMouse() const;
 	bool UsingKeyboard() const;
 
+	void DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue = nullptr, bool condition = false);
+	void DrawColorBox(Color& color);
+	void DrawGradientBox(Gradient& gradient);
+
 public:
 
 	std::list<Panel*> panels;

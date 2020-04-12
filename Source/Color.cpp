@@ -87,3 +87,18 @@ Color Gradient::GetColor(float percent)
 
 	return ret;
 }
+
+bool Gradient::hasKey(float percent) const
+{
+	return colorList.find(percent) != colorList.end();
+}
+
+void Gradient::MoveColorKey(float originalPercent, float newPercent)
+{
+	if (newPercent >= 0.0f && newPercent <= 1.0f && colorList.find(originalPercent) != colorList.end())
+	{
+		vec color = colorList.at(originalPercent);
+		colorList.erase(originalPercent);
+		colorList.insert(std::pair<float, vec>(newPercent, color));
+	}
+}

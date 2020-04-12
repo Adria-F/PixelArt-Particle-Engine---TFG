@@ -16,6 +16,7 @@ public:
 
 	vec position = vec::zero;
 	Quat rotation = Quat::identity;
+	vec rotationEuler = Quat::identity.ToEulerXYZ();
 	vec scale = vec::one;
 
 	float4x4 matrix;

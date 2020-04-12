@@ -18,12 +18,14 @@ public:
 	bool OnConnection(CanvasNode* node);
 	void OnDisconnection(NodeConnection* connection);
 
+	void DisplayConfig();
+
 public:
 
 	enum {
 		CONSTANT,
 		BURST
-	}type = CONSTANT;
+	}type = BURST;
 
 	float frequency = 0.25f;
 	float burst = 10.0f;

@@ -1,6 +1,8 @@
+#include "Application.h"
 #include "EmissionEmitterNode.h"
 
 #include "ModuleParticles.h"
+#include "ModuleGUI.h"
 
 EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size): EntityData(emitter), CanvasNode(name, EMITTER_EMISSION, position, size)
 {
@@ -96,4 +98,22 @@ void EmissionEmitterNode::OnDisconnection(NodeConnection* connection)
 	{
 		emitter->OnDisconnection(connection);
 	}
+}
+
+void EmissionEmitterNode::DisplayConfig()
+{
+	ImGui::Text("Burst");
+	ImGui::NewLine();
+
+	ImGui::Text("Burst"); ImGui::SameLine(75.0f);
+	App->gui->DrawInputFloat("", "##burst", &burst, 1.0f, true);
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Repeat", &repeatBurst);
+
+	if (repeatBurst)
+		ImGui::Text("Frequency");
+	else
+		ImGui::TextDisabled("Frequency");
+	ImGui::SameLine(75.0f);
+	
+	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, repeatBurst);
 }

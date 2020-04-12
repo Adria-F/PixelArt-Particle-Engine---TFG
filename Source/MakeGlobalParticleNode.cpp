@@ -67,3 +67,12 @@ void MakeGlobalParticleNode::OnDisconnection(NodeConnection* connection)
 		particle->OnDisconnection(connection);
 	}
 }
+
+void MakeGlobalParticleNode::DisplayConfig()
+{
+	ImGui::Text("Make Global");
+	ImGui::NewLine();
+
+	ImGui::Text("Active"); ImGui::SameLine();
+	ImGui::Checkbox("##active", &active);
+}

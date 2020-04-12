@@ -1,9 +1,9 @@
+#include "Application.h"
 #include "SpeedParticleNode.h"
 
 #include "ModuleParticles.h"
 #include "BaseMovementParticleNode.h"
-
-#include "MakeGlobalParticleNode.h"
+#include "ModuleGUI.h"
 
 SpeedParticleNode::SpeedParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_SPEED, position, size)
 {
@@ -73,5 +73,27 @@ void SpeedParticleNode::OnDisconnection(NodeConnection* connection)
 	else if (particle != nullptr)
 	{
 		particle->OnDisconnection(connection);
+	}
+}
+
+void SpeedParticleNode::DisplayConfig()
+{
+	ImGui::Text("Speed");
+	ImGui::NewLine();
+
+	if (ImGui::RadioButton("Fix", !overLifetime))
+		overLifetime = false;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Over Lifetime", overLifetime))
+		overLifetime = true;
+
+	if (!overLifetime)
+	{
+		ImGui::Text("Speed"); ImGui::SameLine();
+		App->gui->DrawInputFloat("", "##speed", &speed, 0.1f, true);
+	}
+	else
+	{
+		ImGui::Text("Curve system is work in progress");
 	}
 }

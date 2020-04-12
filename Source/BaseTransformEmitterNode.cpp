@@ -7,5 +7,6 @@ BaseTransformEmitterNode::BaseTransformEmitterNode(ParticleEmitter* emitter): En
 
 void BaseTransformEmitterNode::CalculateMatrix()
 {
+	rotation = Quat::FromEulerXYZ(rotationEuler.x, rotationEuler.y, rotationEuler.z);
 	matrix.Set(float4x4::FromTRS(position, rotation, scale));
 }

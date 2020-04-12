@@ -178,8 +178,10 @@ bool ModuleGUI::UsingKeyboard() const
 	return io.WantTextInput && !mouseOnScene;
 }
 
-void ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)
+bool ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)
 {
+	bool ret = false;
+
 	if (!enabled)
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
 	
@@ -197,7 +199,7 @@ void ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, 
 		float* modifyingValue = value;
 		if (alternativeValue != nullptr && condition)
 			modifyingValue = alternativeValue;
-		ImGui::DragFloat(id, modifyingValue, step, 0.0f, 0.0f, "%.2f");
+		ret = ImGui::DragFloat(id, modifyingValue, step, 0.0f, 0.0f, "%.2f");
 		*value = *modifyingValue;
 		if (alternativeValue != nullptr)
 			*alternativeValue = *modifyingValue;
@@ -211,6 +213,8 @@ void ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, 
 
 	if (!enabled)
 		ImGui::PopStyleVar();
+
+	return ret;
 }
 
 void ModuleGUI::DrawColorBox(Color& color)

@@ -16,6 +16,8 @@ public:
 	bool OnConnection(CanvasNode* node);
 	void OnDisconnection(NodeConnection* connection);
 
+	void DisplayConfig();
+
 public:
 
 	bool active = true;

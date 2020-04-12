@@ -1,7 +1,9 @@
+#include "Application.h"
 #include "ColorParticleNode.h"
 
 #include "ModuleParticles.h"
 #include "BaseColorParticleNode.h"
+#include "ModuleGUI.h"
 
 ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_COLOR, position, size)
 {
@@ -83,4 +85,21 @@ void ColorParticleNode::OnDisconnection(NodeConnection* connection)
 	{
 		particle->OnDisconnection(connection);
 	}
+}
+
+void ColorParticleNode::DisplayConfig()
+{
+	ImGui::Text("Color");
+	ImGui::NewLine();
+
+	if (ImGui::RadioButton("Fix", !overLifetime))
+		overLifetime = false;
+	ImGui::SameLine();
+	if (ImGui::RadioButton("Over Lifetime", overLifetime))
+		overLifetime = true;
+
+	if (!overLifetime)
+		App->gui->DrawColorBox(fixColor);
+	else
+		App->gui->DrawGradientBox(overLifetimeColor);
 }

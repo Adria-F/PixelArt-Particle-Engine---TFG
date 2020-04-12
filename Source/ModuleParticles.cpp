@@ -307,6 +307,56 @@ void ParticleEmitter::OnDisconnection(NodeConnection* connection)
 	}
 }
 
+void ParticleEmitter::DisplayConfig()
+{
+	ImGui::Text("Emitter");
+	ImGui::SameLine();
+
+	//Transform
+	ImGui::Text("Transform:");
+	bool changed = false;
+	///Position
+	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
+	ImGui::Text("Position"); ImGui::SameLine();
+	if (App->gui->DrawInputFloat("X", "##posX", &baseTransform->position.x, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Y", "##posY", &baseTransform->position.y, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Z", "##posZ", &baseTransform->position.z, 0.1f, true))
+		changed = true;
+	///Rotation
+	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
+	ImGui::Text("Rotation"); ImGui::SameLine();
+	if (App->gui->DrawInputFloat("X", "##rotX", &baseTransform->rotationEuler.x, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Y", "##rotY", &baseTransform->rotationEuler.y, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Z", "##rotZ", &baseTransform->rotationEuler.z, 0.1f, true))
+		changed = true;
+	///Scale
+	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
+	ImGui::Text("Scale"); ImGui::SameLine();
+	if (App->gui->DrawInputFloat("X", "##scaleX", &baseTransform->scale.x, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Y", "##scaleY", &baseTransform->scale.y, 0.1f, true))
+		changed = true;
+	ImGui::SameLine();
+	if (App->gui->DrawInputFloat("Z", "##scaleZ", &baseTransform->scale.z, 0.1f, true))
+		changed = true;
+	ImGui::Separator();
+
+	if (changed)
+		baseTransform->CalculateMatrix();
+
+	ImGui::Text("Frequency"); ImGui::SameLine();
+	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, true);
+}
+
 // ----------------------------- PARTICLE ----------------------------------
 
 Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(name, PARTICLE, position, size)

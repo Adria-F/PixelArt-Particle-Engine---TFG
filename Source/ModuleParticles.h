@@ -107,6 +107,8 @@ public:
 	bool OnConnection(CanvasNode* node);
 	void OnDisconnection(NodeConnection* connection);
 
+	void DisplayConfig();
+
 public:
 
 	union

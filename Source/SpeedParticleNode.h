@@ -18,9 +18,13 @@ public:
 	bool OnConnection(CanvasNode* node);
 	void OnDisconnection(NodeConnection* connection);
 
+	void DisplayConfig();
+
 public:
 
 	float speed = 0.0f;
+
+	bool overLifetime = false;
 };
 
 #endif // !__SPEED_PARTICLENODE_H__

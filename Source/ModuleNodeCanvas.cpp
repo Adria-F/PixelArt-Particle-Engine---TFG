@@ -4,6 +4,9 @@
 #include "CanvasNode.h"
 #include "ModuleGUI.h"
 #include "ModuleParticles.h"
+#include "ModuleCamera.h"
+#include "BaseTransformEmitterNode.h"
+#include "ModuleInput.h"
 
 ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 {
@@ -78,6 +81,83 @@ bool ModuleNodeCanvas::CleanUp()
 	nodes.clear();
 
 	return true;
+}
+
+void ModuleNodeCanvas::DrawGuizmo()
+{
+	if (selectedNode != nullptr && selectedNode->type == EMITTER)
+	{
+		ParticleEmitter* emitter = (ParticleEmitter*)selectedNode;
+
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::NO_OPERATION;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::TRANSLATE;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::ROTATE;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT)
+			{
+				guizmoOperation = ImGuizmo::SCALE;
+			}
+		}
+
+		if (guizmoOperation == ImGuizmo::NO_OPERATION)
+		{
+			ImGuizmo::Enable(false);
+		}
+		else
+		{
+			ImGuizmo::Enable(true);
+		}
+
+		ImVec2 cursorPos = { App->gui->scenePosition.x,App->gui->scenePosition.y };
+		ImVec2 windowSize = { App->gui->sceneSize.x,App->gui->sceneSize.y };
+		ImGuizmo::SetRect(cursorPos.x, cursorPos.y, windowSize.x, windowSize.y);
+
+		float4x4* ViewMatrix = (float4x4*)App->camera->getViewMatrix();
+		float4x4*ProjectionMatrix = (float4x4*)App->camera->getProjectionMatrix();
+
+		ImGuizmo::MODE mode;
+
+		float4x4* GlobalMat;
+		GlobalMat = &emitter->baseTransform->matrix;
+
+		float3 scale = float3::one;
+		float3 pos;
+		Quat rot;
+		if (guizmoOperation != ImGuizmo::OPERATION::SCALE)
+		{
+			GlobalMat->Decompose(pos, rot, scale);
+			GlobalMat->Set(float4x4::FromTRS(pos, rot, float3::one));
+		}
+		GlobalMat->Transpose();
+
+		ImGuizmo::SetOrthographic(false);
+
+		ImGuizmo::Manipulate((float*)ViewMatrix, (float*)ProjectionMatrix, guizmoOperation, ImGuizmo::LOCAL, (float*)GlobalMat, NULL, NULL);
+		GlobalMat->Transpose();
+
+		if (guizmoOperation != ImGuizmo::OPERATION::SCALE)
+		{
+			float3 oneScale;
+			GlobalMat->Decompose(pos, rot, oneScale);
+			GlobalMat->Set(float4x4::FromTRS(pos, rot, scale));
+		}
+
+		if (ImGuizmo::IsUsing())
+		{
+			emitter->baseTransform->matrix.Decompose(emitter->baseTransform->position, emitter->baseTransform->rotation, emitter->baseTransform->scale);
+			emitter->baseTransform->rotationEuler = emitter->baseTransform->rotation.ToEulerXYZ();
+		}
+	}
 }
 
 void ModuleNodeCanvas::StopConnection()

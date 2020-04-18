@@ -11,6 +11,7 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "SDL/include/SDL.h"
 #include "ImGui/imgui.h"
+#include "ImGuizmo\ImGuizmo.h"
 
 #include "Glew/include/glew.h"
 #include "SDL\include\SDL_opengl.h"

@@ -63,6 +63,7 @@ update_state ModuleGUI::PreUpdate(float dt)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	ImGui::PushFont(defaultFont);
 
@@ -233,10 +234,16 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 
 	float itemWidth = 150.0f;
 	float itemHeight = 17.0f;
+	float buttonWidth = 5.0f;
+	float buttonHeight = 10.0f; //TODO: Currently not applying
 
 	ImVec2 startPos = ImGui::GetCursorScreenPos();
+	startPos.y += buttonHeight * 2.0f;
+	draw_list->AddCheckerboardRect(startPos, { startPos.x + itemWidth, startPos.y + itemHeight });
 
 	std::map<float, vec>::iterator prevC = gradient.colorList.end();
+	std::map<float, float>::iterator prevA = gradient.alphaList.begin();
+	std::map<float, float>::iterator currA = ++gradient.alphaList.begin();
 	for (std::map<float, vec>::iterator currC = gradient.colorList.begin(); currC != gradient.colorList.end();)
 	{
 		float prevPercent;
@@ -248,8 +255,11 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 		if (currC == gradient.colorList.end())
 		{
 			prevPercent = (*prevC).first;
+			if (prevPercent == 1.0f)
+				break;
 			currPercent = 1.0f;
 			prevColor = { (*prevC).second.x, (*prevC).second.y, (*prevC).second.z, 1.0f };
+			prevColor.w = gradient.GetColor(prevPercent).a;
 			currColor = prevColor;
 		}
 		else
@@ -257,20 +267,62 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 			prevPercent = (*prevC).first;
 			currPercent = (*currC).first;
 			prevColor = { (*prevC).second.x, (*prevC).second.y, (*prevC).second.z, 1.0f };
+			prevColor.w = gradient.GetColor(prevPercent).a;
 			currColor = { (*currC).second.x, (*currC).second.y, (*currC).second.z, 1.0f };
+			currColor.w = gradient.GetColor(currPercent).a;
 		}
-		if (prevC == gradient.colorList.begin() && prevPercent > 0.0f)
-			draw_list->AddRectFilledMultiColor({ startPos.x, startPos.y }, { startPos.x + itemWidth * prevPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor));
 
-		draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevPercent, startPos.y }, { startPos.x + itemWidth * currPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(prevColor));
+		//Draw alpha boxes
+		float prevAPercent = (*prevA).first;
+		float currAPercent = (*currA).first;
+		if (prevAPercent >= prevPercent && prevAPercent < currPercent)
+		{
+			Color prevAlphaColor = gradient.GetColor(prevAPercent);
+			ImVec4 prevAColor = { prevAlphaColor.rgb.x, prevAlphaColor.rgb.y, prevAlphaColor.rgb.z, prevAlphaColor.a };
+			//Draw prevPercent->prevAPercent
+			draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevPercent, startPos.y }, { startPos.x + itemWidth * prevAPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevAColor), ImGui::GetColorU32(prevAColor), ImGui::GetColorU32(prevColor));
+
+			if (currA != gradient.alphaList.end())
+			{
+				currAPercent = (*currA).first;
+				Color currAlphaColor;
+				ImVec4 currAColor;
+				while (currAPercent < currPercent)
+				{
+					currAlphaColor = gradient.GetColor(currAPercent);
+					currAColor = { currAlphaColor.rgb.x, currAlphaColor.rgb.y, currAlphaColor.rgb.z, currAlphaColor.a };
+					//Draw prevAPercent->currAPercent
+					draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevAPercent, startPos.y }, { startPos.x + itemWidth * currAPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevAColor), ImGui::GetColorU32(currAColor), ImGui::GetColorU32(currAColor), ImGui::GetColorU32(prevAColor));
+					prevA = currA++;
+					prevAPercent = currAPercent;
+					prevAlphaColor = currAlphaColor;
+					prevAColor = currAColor;
+					if (currA == gradient.alphaList.end())
+						break;
+					currAPercent = (*currA).first;
+				}
+			}
+			//Draw prevAPercent->currPercent
+			draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevAPercent, startPos.y }, { startPos.x + itemWidth * currPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevAColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(prevAColor));
+
+			if (currA != gradient.alphaList.end())
+				prevA = currA++;
+		}
+		else
+		{
+			if (prevC == gradient.colorList.begin() && prevPercent > 0.0f)
+				draw_list->AddRectFilledMultiColor({ startPos.x, startPos.y }, { startPos.x + itemWidth * prevPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor), ImGui::GetColorU32(prevColor));
+
+			draw_list->AddRectFilledMultiColor({ startPos.x + itemWidth * prevPercent, startPos.y }, { startPos.x + itemWidth * currPercent, startPos.y + itemHeight }, ImGui::GetColorU32(prevColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(currColor), ImGui::GetColorU32(prevColor));
+		}
 	}
 
-	float buttonWidth = 5.0f;
-	float buttonHeight = 10.0f; //TODO: Currently not applying
-
-	static float movingKey = -1.0f;
+	//Draw Keys
+	static float movingColorKey = -1.0f;
+	static float movingAlphaKey = -1.0f;
 
 	ImGui::PushItemWidth(buttonWidth);
+	///Color
 	int count = 0;
 	for (std::map<float, vec>::iterator it_c = gradient.colorList.begin(); it_c != gradient.colorList.end(); ++it_c)
 	{
@@ -278,7 +330,7 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 		ImVec4 color = { (*it_c).second.x, (*it_c).second.y, (*it_c).second.z, 1.0 };
 
 		ImGui::SetCursorScreenPos({ startPos.x + itemWidth * percent - buttonWidth * 0.5f, startPos.y + itemHeight - buttonHeight * 0.25f });
-		if (ImGui::IsMouseDragging(0) && movingKey != -1.0f)
+		if (ImGui::IsMouseDragging(0) && movingColorKey != -1.0f)
 		{
 			ImGui::ColorButton(("##gradientColor" + std::to_string(count)).c_str(), color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, { buttonWidth, 0.0f });
 		}
@@ -286,7 +338,27 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 			ImGui::ColorEdit3(("##gradientColor" + std::to_string(count)).c_str(), (*it_c).second.ptr(), ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
 
 		if (ImGui::IsItemClicked(0) && !ImGui::IsPopupOpen("picker"))
-			movingKey = percent;
+			movingColorKey = percent;
+
+		count++;
+	}
+	///Alpha
+	count = 0;
+	for (std::map<float, float>::iterator it_c = gradient.alphaList.begin(); it_c != gradient.alphaList.end(); ++it_c)
+	{
+		float percent = (*it_c).first;
+		ImVec4 alpha = { (*it_c).second, (*it_c).second, (*it_c).second, 1.0 };
+
+		ImGui::SetCursorScreenPos({ startPos.x + itemWidth * percent - buttonWidth * 0.5f, startPos.y - buttonHeight*1.5f});
+		if (ImGui::IsMouseDragging(0) && movingAlphaKey != -1.0f)
+		{
+			ImGui::ColorButton(("##gradientAlpha" + std::to_string(count)).c_str(), alpha, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, { buttonWidth, 0.0f });
+		}
+		else
+			ImGui::AlphaEdit(("##gradientAlpha" + std::to_string(count)).c_str(), &(*it_c).second, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
+
+		if (ImGui::IsItemClicked(0) && !ImGui::IsPopupOpen("picker"))
+			movingAlphaKey = percent;
 
 		count++;
 	}
@@ -296,23 +368,47 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 	ImGui::SetCursorScreenPos(startPos);
 	if (ImGui::InvisibleButton("##addColor", { itemWidth, itemHeight }))
 	{
-		float percent = (ImGui::GetMousePos().x - startPos.x) / itemWidth;
-		vec color = gradient.GetColor(percent).rgb;
-		gradient.SetColor(color, percent);
+		ImVec2 mousePos = ImGui::GetMousePos();
+		float percent = (mousePos.x - startPos.x) / itemWidth;
+		float verticalPercent = (mousePos.y - startPos.y) / itemHeight;
+		if (verticalPercent >= 0.5f) //Bottom part of the box
+		{
+			vec color = gradient.GetColor(percent).rgb;
+			gradient.SetColor(color, percent);
+		}
+		else //Top part of the box
+		{
+			float alpha = gradient.GetColor(percent).a;
+			gradient.SetAlpha(alpha, percent);
+		}
 	}
 
 	//Move keys
-	if (movingKey != -1.0)
+	///Color
+	if (movingColorKey != -1.0)
 	{
 		float percent = (ImGui::GetMousePos().x - startPos.x) / itemWidth;
-		if (!gradient.hasKey(percent) && ImGui::IsMouseDragging(0))
+		if (!gradient.hasColorKey(percent) && ImGui::IsMouseDragging(0))
 		{
-			gradient.MoveColorKey(movingKey, percent);
-			movingKey = percent;
+			gradient.MoveColorKey(movingColorKey, percent);
+			movingColorKey = percent;
 		}		
 
 		if (ImGui::IsMouseReleased(0))
-			movingKey = -1.0f;
+			movingColorKey = -1.0f;
+	}
+	///Alpha
+	if (movingAlphaKey != -1.0)
+	{
+		float percent = (ImGui::GetMousePos().x - startPos.x) / itemWidth;
+		if (!gradient.hasAlphaKey(percent) && ImGui::IsMouseDragging(0))
+		{
+			gradient.MoveAlphaKey(movingAlphaKey, percent);
+			movingAlphaKey = percent;
+		}
+
+		if (ImGui::IsMouseReleased(0))
+			movingAlphaKey = -1.0f;
 	}
 
 	ImGui::SetCursorScreenPos(startPos); ImGui::Dummy({ 0.0f,0.0f });

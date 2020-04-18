@@ -21,6 +21,8 @@ public:
 	update_state PostUpdate(float dt);
 	bool CleanUp();
 
+	void DrawGuizmo();
+
 	void StartConnection(NodeConnection* connection);
 	void RequestConnection(NodeConnection* node);
 	void StopConnection();
@@ -38,6 +40,8 @@ private:
 	NodeConnection* connecting = nullptr;
 	NodeConnection* connectionCallback = nullptr;
 	bool connectionEnded = false;
+
+	ImGuizmo::OPERATION guizmoOperation = ImGuizmo::TRANSLATE;
 };
 
 #endif // !__MODULENODECANVAS_H__

@@ -107,7 +107,7 @@ bool CanvasNode::Logic(float2 offset, int zoom, bool selected)
 	ImGui::PopStyleVar();
 
 	//Delete selected node with 'Supr'
-	if (selected && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	if (selected && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && ImGui::IsWindowFocused())
 	{
 		toDelete = true;
 	}
@@ -245,7 +245,7 @@ bool NodeConnection::Logic(int zoom)
 			App->nodeCanvas->selectedConnection = nullptr;
 		}
 	}
-	if (App->nodeCanvas->selectedConnection == this && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+	if (App->nodeCanvas->selectedConnection == this && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && ImGui::IsWindowFocused())
 	{
 		connected->Disconnect();
 		Disconnect();

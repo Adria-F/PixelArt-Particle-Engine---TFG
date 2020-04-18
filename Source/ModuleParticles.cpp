@@ -351,7 +351,10 @@ void ParticleEmitter::DisplayConfig()
 	ImGui::Separator();
 
 	if (changed)
+	{
+		baseTransform->rotation = Quat::FromEulerXYZ(baseTransform->rotationEuler.x, baseTransform->rotationEuler.y, baseTransform->rotationEuler.z);
 		baseTransform->CalculateMatrix();
+	}
 
 	ImGui::Text("Frequency"); ImGui::SameLine();
 	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, true);

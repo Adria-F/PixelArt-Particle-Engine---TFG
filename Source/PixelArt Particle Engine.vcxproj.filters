@@ -38,6 +38,9 @@
     <Filter Include="Sources\Nodes\Emitters">
       <UniqueIdentifier>{9c9fb1ff-94e3-4eca-8e87-6c5105e95d68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Tools\ImGuizmo">
+      <UniqueIdentifier>{48770b6d-27bb-459b-b6c0-ed0ef49bc31b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -225,6 +228,12 @@
     </ClCompile>
     <ClCompile Include="PanelPanelNodeConfiguration.cpp">
       <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImSequencer.cpp">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -500,6 +509,12 @@
     </ClInclude>
     <ClInclude Include="PanelPanelNodeConfiguration.h">
       <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImSequencer.h">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

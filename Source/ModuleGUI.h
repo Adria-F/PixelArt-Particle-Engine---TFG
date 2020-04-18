@@ -41,6 +41,9 @@ public:
 
 	bool mouseOnScene = false;
 
+	float2 scenePosition;
+	float2 sceneSize;
+
 private:
 
 	ImFont* defaultFont;

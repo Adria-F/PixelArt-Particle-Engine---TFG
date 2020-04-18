@@ -4489,6 +4489,71 @@ bool ImGui::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flag
     return value_changed;
 }
 
+bool ImGui::AlphaEdit(const char * label, float * alpha, ImGuiColorEditFlags flags)
+{
+	ImGuiWindow* window = GetCurrentWindow();
+	if (window->SkipItems)
+		return false;
+
+	ImGuiContext& g = *GImGui;
+	const ImGuiStyle& style = g.Style;
+	const float square_sz = GetFrameHeight();
+	const float w_full = CalcItemWidth();
+	const float w_button = (flags & ImGuiColorEditFlags_NoSmallPreview) ? 0.0f : (square_sz + style.ItemInnerSpacing.x);
+	const float w_inputs = w_full - w_button;
+	const char* label_display_end = FindRenderedTextEnd(label);
+	g.NextItemData.ClearFlags();
+
+	BeginGroup();
+	PushID(label);
+
+	bool value_changed = false;
+	const ImVec2 pos = window->DC.CursorPos;
+
+	ImGuiWindow* picker_active_window = NULL;
+	window->DC.CursorPos = ImVec2(pos.x, pos.y);
+
+	const ImVec4 col_v4(*alpha, *alpha, *alpha, 1.0f);
+	float w = 0.0f;
+	if (!window->DC.ItemWidthStack.empty())
+		w = window->DC.ItemWidth;
+	if (ColorButton("##ColorButton", col_v4, flags, { w, 0.0f }))
+	{
+		// Store current color and open a picker
+		g.ColorPickerRef = col_v4;
+		OpenPopup("picker");
+		SetNextWindowPos(window->DC.LastItemRect.GetBL() + ImVec2(-1, style.ItemSpacing.y));
+	}
+	if (!(flags & ImGuiColorEditFlags_NoOptions))
+		OpenPopupOnItemClick("context");
+
+	SetNextWindowSizeConstraints({ 0.0f,0.0f }, { 100.0f, 178.0f });
+	if (BeginPopup("picker", ImGuiWindowFlags_NoScrollbar))
+	{
+		picker_active_window = g.CurrentWindow;
+		if (label != label_display_end)
+		{
+			TextEx(label, label_display_end);
+			Spacing();
+		}
+		
+		value_changed |= AlphaPicker("##picker", alpha);
+		EndPopup();
+	}
+
+	PopID();
+	EndGroup();
+
+	// When picker is being actively used, use its active id so IsItemActive() will function on ColorEdit4().
+	if (picker_active_window && g.ActiveId != 0 && g.ActiveIdWindow == picker_active_window)
+		window->DC.LastItemId = g.ActiveId;
+
+	if (value_changed)
+		MarkItemEdited(window->DC.LastItemId);
+
+	return value_changed;
+}
+
 bool ImGui::ColorPicker3(const char* label, float col[3], ImGuiColorEditFlags flags)
 {
     float col4[4] = { col[0], col[1], col[2], 1.0f };
@@ -4931,6 +4996,69 @@ bool ImGui::ColorPicker4(const char* label, float col[4], ImGuiColorEditFlags fl
     PopID();
 
     return value_changed;
+}
+
+bool ImGui::AlphaPicker(const char* label, float* alpha)
+{
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* window = GetCurrentWindow();
+	if (window->SkipItems)
+		return false;
+
+	ImDrawList* draw_list = window->DrawList;
+	ImGuiStyle& style = g.Style;
+	ImGuiIO& io = g.IO;
+
+	const float width = CalcItemWidth();
+	g.NextItemData.ClearFlags();
+
+	PushID(label);
+	BeginGroup();
+
+	// Setup
+	ImVec2 picker_pos = window->DC.CursorPos;
+	float square_sz = GetFrameHeight();
+	float bars_width = square_sz; // Arbitrary smallish width of Hue/Alpha picking bars
+	float sv_picker_size = ImMax(bars_width * 1, width - 2 * (bars_width + style.ItemInnerSpacing.x)); // Saturation/Value picking box
+	float bar0_pos_x = picker_pos.x + style.ItemInnerSpacing.x;
+	float bar1_pos_x = bar0_pos_x + bars_width + style.ItemInnerSpacing.x;
+	float bars_triangles_half_sz = IM_FLOOR(bars_width * 0.20f);
+
+	bool value_changed = false;
+
+	PushItemFlag(ImGuiItemFlags_NoNav, true);
+	// Alpha bar logic
+	SetCursorScreenPos(ImVec2(bar1_pos_x, picker_pos.y));
+	InvisibleButton("alpha", ImVec2(bars_width, sv_picker_size));
+	if (IsItemActive())
+	{
+		*alpha = 1.0f - ImSaturate((io.MousePos.y - picker_pos.y) / (sv_picker_size - 1));
+		value_changed = true;
+	}
+	PopItemFlag(); // ImGuiItemFlags_NoNav
+
+	const int style_alpha8 = IM_F32_TO_INT8_SAT(style.Alpha);
+	const ImU32 col_black = IM_COL32(0, 0, 0, style_alpha8);
+	const ImU32 col_white = IM_COL32(255, 255, 255, style_alpha8);
+
+	ImU32 user_col32_striped_of_alpha = col_white;//ColorConvertFloat4ToU32(ImVec4(R, G, B, style.Alpha)); // Important: this is still including the main rendering/style alpha!!
+
+	// Render alpha bar
+	ImRect bar1_bb(bar1_pos_x, picker_pos.y, bar1_pos_x + bars_width, picker_pos.y + sv_picker_size);
+	RenderColorRectWithAlphaCheckerboard(bar1_bb.Min, bar1_bb.Max, 0, bar1_bb.GetWidth() / 2.0f, ImVec2(0.0f, 0.0f));
+	draw_list->AddRectFilledMultiColor(bar1_bb.Min, bar1_bb.Max, user_col32_striped_of_alpha, user_col32_striped_of_alpha, user_col32_striped_of_alpha & ~IM_COL32_A_MASK, user_col32_striped_of_alpha & ~IM_COL32_A_MASK);
+	float bar1_line_y = IM_ROUND(picker_pos.y + (1.0f - *alpha) * sv_picker_size);
+	RenderFrameBorder(bar1_bb.Min, bar1_bb.Max, 0.0f);
+	RenderArrowsForVerticalBar(draw_list, ImVec2(bar1_pos_x - 1, bar1_line_y), ImVec2(bars_triangles_half_sz + 1, bars_triangles_half_sz), bars_width + 2.0f, style.Alpha);
+
+	SetCursorPos({ 5.0f, sv_picker_size * (1.0f-*alpha)});
+	Text("%.2f", *alpha);
+
+	EndGroup();
+
+	PopID();
+
+	return value_changed;
 }
 
 // A little colored square. Return true when clicked.

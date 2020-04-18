@@ -1060,6 +1060,16 @@ void ImDrawList::AddRectFilledMultiColor(const ImVec2& p_min, const ImVec2& p_ma
     PrimWriteVtx(ImVec2(p_min.x, p_max.y), uv, col_bot_left);
 }
 
+void ImDrawList::AddCheckerboardRect(const ImVec2 & p_min, const ImVec2 & p_max)
+{
+	ImGuiContext& g = *GImGui;
+	ImVec2 size = { p_max.x - p_min.x, p_max.y - p_min.y };
+	float grid_step = ImMin(size.x, size.y) / 2.99f;
+	float rounding = (g.Style.FrameRounding < grid_step * 0.5f) ? g.Style.FrameRounding : grid_step * 0.5f;
+	float off = -0.75f; // The border (using Col_FrameBg) tends to look off when color is near-opaque and rounding is enabled. This offset seemed like a good middle ground to reduce those artifacts.
+	ImGui::RenderColorRectWithAlphaCheckerboard(p_min, p_max, IM_COL32(0, 0, 0, 0), grid_step, ImVec2(-grid_step + off, off), rounding, ImDrawCornerFlags_TopRight | ImDrawCornerFlags_BotRight);
+}
+
 void ImDrawList::AddQuad(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, const ImVec2& p4, ImU32 col, float thickness)
 {
     if ((col & IM_COL32_A_MASK) == 0)

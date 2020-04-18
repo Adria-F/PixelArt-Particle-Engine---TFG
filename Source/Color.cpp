@@ -36,7 +36,7 @@ Color Gradient::GetColor(float percent)
 {
 	Color ret;
 
-	std::map<float, vec>::iterator prevColor;
+	std::map<float, vec>::iterator prevColor = colorList.begin();
 	std::map<float, vec>::iterator nextColor;
 	for (nextColor = colorList.begin(); nextColor != colorList.end(); ++nextColor)
 	{
@@ -55,7 +55,7 @@ Color Gradient::GetColor(float percent)
 		}
 	}
 
-	std::map<float, float>::iterator prevAlpha;
+	std::map<float, float>::iterator prevAlpha = alphaList.begin();
 	std::map<float, float>::iterator nextAlpha;
 	for (nextAlpha = alphaList.begin(); nextAlpha != alphaList.end(); ++nextAlpha)
 	{
@@ -76,21 +76,32 @@ Color Gradient::GetColor(float percent)
 
 	float colorDelta = 0.0f;
 	if ((*prevColor).first != (*nextColor).first)
-		colorDelta = percent / ((*prevColor).first + (*nextColor).first);
+		colorDelta = (1.0f/((*nextColor).first - (*prevColor).first))*(percent- (*prevColor).first);
 	
 	float alphaDelta = 0.0f;
 	if ((*prevAlpha).first != (*nextAlpha).first)
-		alphaDelta = percent / ((*prevAlpha).first + (*nextAlpha).first);
+		alphaDelta = (1.0f / ((*nextAlpha).first - (*prevAlpha).first))*(percent - (*prevAlpha).first);
 
-	ret.rgb = Lerp((*prevColor).second, (*nextColor).second, colorDelta);
-	ret.a = Lerp((*prevAlpha).second, (*nextAlpha).second, alphaDelta);
+	if (nextColor == colorList.end())
+		ret.rgb = (*prevColor).second;
+	else
+		ret.rgb = Lerp((*prevColor).second, (*nextColor).second, colorDelta);
+	if (nextAlpha == alphaList.end())
+		ret.a = (*prevAlpha).second;
+	else
+		ret.a = Lerp((*prevAlpha).second, (*nextAlpha).second, alphaDelta);
 
 	return ret;
 }
 
-bool Gradient::hasKey(float percent) const
+bool Gradient::hasColorKey(float percent) const
 {
 	return colorList.find(percent) != colorList.end();
+}
+
+bool Gradient::hasAlphaKey(float percent) const
+{
+	return alphaList.find(percent) != alphaList.end();
 }
 
 void Gradient::MoveColorKey(float originalPercent, float newPercent)
@@ -101,4 +112,24 @@ void Gradient::MoveColorKey(float originalPercent, float newPercent)
 		colorList.erase(originalPercent);
 		colorList.insert(std::pair<float, vec>(newPercent, color));
 	}
+}
+
+void Gradient::MoveAlphaKey(float originalPercent, float newPercent)
+{
+	if (newPercent >= 0.0f && newPercent <= 1.0f && alphaList.find(originalPercent) != alphaList.end())
+	{
+		float alpha = alphaList.at(originalPercent);
+		alphaList.erase(originalPercent);
+		alphaList.insert(std::pair<float, float>(newPercent, alpha));
+	}
+}
+
+void Gradient::RemoveColorKey(float percent)
+{
+	colorList.erase(percent);
+}
+
+void Gradient::RemoveAlphaKey(float percent)
+{
+	alphaList.erase(percent);
 }

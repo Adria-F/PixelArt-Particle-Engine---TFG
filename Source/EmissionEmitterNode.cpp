@@ -51,10 +51,10 @@ void EmissionEmitterNode::Play()
 	}
 }
 
-bool EmissionEmitterNode::OnConnection(CanvasNode* node)
+bool EmissionEmitterNode::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
-
+	CanvasNode* node = connection->node;
 	if (node->type > MAX_PARTICLE_NODE && node->type < MAX_EMITTER_NODE)
 	{
 		if (node->type == EMITTER)
@@ -66,13 +66,14 @@ bool EmissionEmitterNode::OnConnection(CanvasNode* node)
 			{
 				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
 				{
-					(*it_c)->connected->node->OnConnection(node);
+					(*it_c)->connected->node->OnConnection(connection);
 				}
 			}
 		}
 		else if (emitter != nullptr) //It is connecting to a node below
 		{
-			node->OnConnection(emitter);
+			emitter->OnConnection(connection);
+			node->OnConnection(emitter->GetDataConnection());
 		}
 
 		ret = true;
@@ -102,9 +103,6 @@ void EmissionEmitterNode::OnDisconnection(NodeConnection* connection)
 
 void EmissionEmitterNode::DisplayConfig()
 {
-	ImGui::Text("Burst");
-	ImGui::NewLine();
-
 	ImGui::Text("Burst"); ImGui::SameLine(75.0f);
 	App->gui->DrawInputFloat("", "##burst", &burst, 1.0f, true);
 	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Repeat", &repeatBurst);

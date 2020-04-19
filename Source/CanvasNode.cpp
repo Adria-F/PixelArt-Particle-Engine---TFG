@@ -292,7 +292,7 @@ void NodeConnection::DrawTriangle(float scale)
 
 void NodeConnection::SetConnection(NodeConnection* node)
 {
-	if (this->node->OnConnection(node->node))
+	if (this->node->OnConnection(node))
 		connected = node;	
 }
 

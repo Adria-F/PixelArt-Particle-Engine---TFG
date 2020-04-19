@@ -44,8 +44,7 @@ extern Color Orange;
 
 struct Gradient
 {
-	Gradient() : Gradient(White.rgb) {}
-	Gradient(vec baseColor);
+	Gradient();
 
 	void SetColor(vec color, float percent);
 	void SetAlpha(float alpha, float percent);

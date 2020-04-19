@@ -235,6 +235,9 @@
     <ClCompile Include="ImGuizmo\ImSequencer.cpp">
       <Filter>Sources\Tools\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="DeathInstantiationParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Tools\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathInstantiationParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

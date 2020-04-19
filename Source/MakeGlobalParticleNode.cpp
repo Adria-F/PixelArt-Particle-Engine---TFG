@@ -20,10 +20,11 @@ EntityData* MakeGlobalParticleNode::Copy(Particle* particle) const
 	return ret;
 }
 
-bool MakeGlobalParticleNode::OnConnection(CanvasNode* node)
+bool MakeGlobalParticleNode::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
+	CanvasNode* node = connection->node;
 	if (node->type < MAX_PARTICLE_NODE)
 	{
 		if (node->type == PARTICLE)
@@ -34,13 +35,14 @@ bool MakeGlobalParticleNode::OnConnection(CanvasNode* node)
 			{
 				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
 				{
-					(*it_c)->connected->node->OnConnection(node);
+					(*it_c)->connected->node->OnConnection(connection);
 				}
 			}
 		}
 		else if (particle != nullptr) //It is connecting to a node below
 		{
-			node->OnConnection(particle);
+			particle->OnConnection(connection);
+			node->OnConnection(particle->GetDataConnection());
 		}
 
 		ret = true;
@@ -70,9 +72,6 @@ void MakeGlobalParticleNode::OnDisconnection(NodeConnection* connection)
 
 void MakeGlobalParticleNode::DisplayConfig()
 {
-	ImGui::Text("Make Global");
-	ImGui::NewLine();
-
 	ImGui::Text("Active"); ImGui::SameLine();
 	ImGui::Checkbox("##active", &active);
 }

@@ -20,6 +20,7 @@ class BaseColorParticleNode;
 class ColorParticleNode;
 class SpeedParticleNode;
 class MakeGlobalParticleNode;
+class DeathInstantiationParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -42,8 +43,10 @@ public:
 	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
 
-	bool OnConnection(CanvasNode* node);
+	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
+
+	NodeConnection* GetDataConnection() const;
 
 	void DisplayConfig();
 
@@ -56,6 +59,7 @@ public:
 			ColorParticleNode* color;
 			SpeedParticleNode* speed;
 			MakeGlobalParticleNode* makeGlobal;
+			DeathInstantiationParticleNode* deathInstantiation;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -79,6 +83,8 @@ public:
 
 private:
 
+	NodeConnection* dataIn = nullptr;
+
 	float timeAlive = 0.0f;
 	bool randomizeLifeTime = false;
 };
@@ -99,13 +105,16 @@ public:
 	void DrawParticles();
 
 	void SpawnParticle();
+	Particle* SpawnParticle(Particle* particle);
 	vec randomDirectionInCone(float radius, float height) const;
 
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
 
-	bool OnConnection(CanvasNode* node);
+	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
+
+	NodeConnection* GetDataConnection() const;
 
 	void DisplayConfig();
 
@@ -129,6 +138,8 @@ private:
 
 	Particle* templateParticle = nullptr;
 	std::list<Particle*> particles;
+
+	NodeConnection* dataIn = nullptr;
 
 	float lastEmit = 0.0f;
 	bool playing = true;

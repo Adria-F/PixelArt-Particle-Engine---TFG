@@ -11,10 +11,10 @@ Color Gray = Color(0.3f, 0.3f, 0.3f);
 Color Yellow = Color(1.0f, 0.9f, 0.0f);
 Color Orange = Color(1.0f, 0.5f, 0.0f);
 
-Gradient::Gradient(vec baseColor)
+Gradient::Gradient()
 {
-	colorList.insert(std::pair<float, vec>(0.0f, baseColor));
-	colorList.insert(std::pair<float, vec>(1.0f, baseColor));
+	colorList.insert(std::pair<float, vec>(0.0f, White.rgb));
+	colorList.insert(std::pair<float, vec>(1.0f, Black.rgb));
 
 	alphaList.insert(std::pair<float, float>(0.0f, 1.0f));
 	alphaList.insert(std::pair<float, float>(1.0f, 1.0f));

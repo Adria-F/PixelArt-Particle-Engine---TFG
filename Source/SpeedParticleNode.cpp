@@ -28,10 +28,11 @@ EntityData* SpeedParticleNode::Copy(Particle* particle) const
 	return ret;
 }
 
-bool SpeedParticleNode::OnConnection(CanvasNode* node)
+bool SpeedParticleNode::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
+	CanvasNode* node = connection->node;
 	if (node->type < MAX_PARTICLE_NODE)
 	{
 		if (node->type == PARTICLE)
@@ -42,13 +43,14 @@ bool SpeedParticleNode::OnConnection(CanvasNode* node)
 			{
 				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
 				{
-					(*it_c)->connected->node->OnConnection(node);
+					(*it_c)->connected->node->OnConnection(connection);
 				}
 			}
 		}
 		else if (particle != nullptr) //It is connecting to a node below
 		{
-			node->OnConnection(particle);
+			particle->OnConnection(connection);
+			node->OnConnection(particle->GetDataConnection());
 		}
 
 		ret = true;
@@ -78,9 +80,6 @@ void SpeedParticleNode::OnDisconnection(NodeConnection* connection)
 
 void SpeedParticleNode::DisplayConfig()
 {
-	ImGui::Text("Speed");
-	ImGui::NewLine();
-
 	if (ImGui::RadioButton("Fix", !overLifetime))
 		overLifetime = false;
 	ImGui::SameLine();

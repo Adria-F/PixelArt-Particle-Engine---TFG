@@ -3,6 +3,7 @@
 
 #include "ModuleParticles.h"
 #include "ModuleNodeCanvas.h"
+#include "ModuleGUI.h"
 
 #include "BaseColorParticleNode.h"
 #include "BaseMovementParticleNode.h"
@@ -22,6 +23,16 @@ void PanelNodeConfiguration::DrawContent()
 {
 	if (App->nodeCanvas->selectedNode == nullptr)
 		return;
+
+	ImFont* scaledFont = App->gui->GetFont(100);
+	if (scaledFont != nullptr)
+		ImGui::PushFont(scaledFont);
+
+	ImGui::Text(App->nodeCanvas->selectedNode->name.c_str());
+
+	if (scaledFont != nullptr)
+		ImGui::PopFont();
+	ImGui::NewLine();
 
 	App->nodeCanvas->selectedNode->DisplayConfig();
 }

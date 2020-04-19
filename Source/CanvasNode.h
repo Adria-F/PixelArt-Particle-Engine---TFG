@@ -65,6 +65,7 @@ enum nodeType
 	PARTICLE_COLOR,
 	PARTICLE_SPEED,
 	PARTICLE_MAKEGLOBAL,
+	PARTICLE_DEATHINSTANTIATION,
 	MAX_PARTICLE_NODE,
 	EMITTER,
 	EMITTER_EMISSION,
@@ -85,7 +86,7 @@ public:
 	void Draw(float2 offset, int zoom, bool hovered = false, bool selected = false);
 	bool Logic(float2 offset, int zoom, bool selected = false);
 
-	virtual bool OnConnection(CanvasNode* node) { return false; }
+	virtual bool OnConnection(NodeConnection* connection) { return false; }
 	virtual void OnDisconnection(NodeConnection* connection) {}
 
 	virtual void DisplayConfig() {}

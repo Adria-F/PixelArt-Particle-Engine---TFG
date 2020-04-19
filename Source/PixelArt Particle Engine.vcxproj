@@ -133,6 +133,7 @@
     <ClCompile Include="CanvasNode.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorParticleNode.cpp" />
+    <ClCompile Include="DeathInstantiationParticleNode.cpp" />
     <ClCompile Include="EmissionEmitterNode.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="ImGuizmo\ImSequencer.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="CanvasNode.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorParticleNode.h" />
+    <ClInclude Include="DeathInstantiationParticleNode.h" />
     <ClInclude Include="EmissionEmitterNode.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />

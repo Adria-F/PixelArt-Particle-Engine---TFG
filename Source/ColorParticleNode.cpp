@@ -12,6 +12,8 @@ ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float
 
 	NodeConnection* dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
 	connections.push_back(dataIn);
+
+	fixColor = White;
 }
 
 void ColorParticleNode::Execute(float dt)
@@ -38,10 +40,11 @@ EntityData* ColorParticleNode::Copy(Particle* particle) const
 	return ret;
 }
 
-bool ColorParticleNode::OnConnection(CanvasNode* node)
+bool ColorParticleNode::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
+	CanvasNode* node = connection->node;
 	if (node->type < MAX_PARTICLE_NODE)
 	{
 		if (node->type == PARTICLE)
@@ -53,13 +56,14 @@ bool ColorParticleNode::OnConnection(CanvasNode* node)
 			{
 				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
 				{
-					(*it_c)->connected->node->OnConnection(node);
+					(*it_c)->connected->node->OnConnection(connection);
 				}
 			}
 		}
 		else if (particle != nullptr) //It is connecting to a node below
 		{
-			node->OnConnection(particle);
+			particle->OnConnection(connection);
+			node->OnConnection(particle->GetDataConnection());
 		}
 
 		ret = true;
@@ -89,9 +93,6 @@ void ColorParticleNode::OnDisconnection(NodeConnection* connection)
 
 void ColorParticleNode::DisplayConfig()
 {
-	ImGui::Text("Color");
-	ImGui::NewLine();
-
 	if (ImGui::RadioButton("Fix", !overLifetime))
 		overLifetime = false;
 	ImGui::SameLine();

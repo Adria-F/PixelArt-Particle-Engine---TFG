@@ -16,6 +16,7 @@
 #include "ColorParticleNode.h"
 #include "SpeedParticleNode.h"
 #include "MakeGlobalParticleNode.h"
+#include "DeathInstantiationParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -137,8 +138,8 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size)
 	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x - GRAPH_NODE_WINDOW_PADDING * 0.25f, size.y/2.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleIn);
 
-	NodeConnection* emitterIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(emitterIn);
+	dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
+	connections.push_back(dataIn);
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -245,6 +246,13 @@ void ParticleEmitter::SpawnParticle()
 	particles.push_back(part);
 }
 
+Particle* ParticleEmitter::SpawnParticle(Particle* particle)
+{
+	Particle* ret = new Particle(this, particle);
+	particles.push_back(ret);
+	return ret;
+}
+
 vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 {
 	float angle = 2.0*PI * GET_RANDOM();
@@ -266,10 +274,11 @@ int ParticleEmitter::GetParticleCount() const
 	return particles.size();
 }
 
-bool ParticleEmitter::OnConnection(CanvasNode* node)
+bool ParticleEmitter::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
+	CanvasNode* node = connection->node;
 	if (node->type == PARTICLE)
 	{
 		templateParticle = (Particle*)node;
@@ -307,11 +316,13 @@ void ParticleEmitter::OnDisconnection(NodeConnection* connection)
 	}
 }
 
+NodeConnection* ParticleEmitter::GetDataConnection() const
+{
+	return dataIn;
+}
+
 void ParticleEmitter::DisplayConfig()
 {
-	ImGui::Text("Emitter");
-	ImGui::SameLine();
-
 	//Transform
 	ImGui::Text("Transform:");
 	bool changed = false;
@@ -376,8 +387,8 @@ Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(n
 	particleOut = new NodeConnection(this, NODE_OUTPUT, { 0.0f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleOut);
 
-	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(particleIn);
+	dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
+	connections.push_back(dataIn);
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
@@ -448,28 +459,45 @@ float Particle::GetLifePercent() const
 	return timeAlive/lifeTime;
 }
 
-bool Particle::OnConnection(CanvasNode* node)
+bool Particle::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
-	switch (node->type)
+	CanvasNode* node = connection->node;
+	if (connection->type == NODE_OUTPUT)
 	{
-	case PARTICLE_COLOR:
-		color = (ColorParticleNode*)node;
-		ret = true;
-		break;
-	case PARTICLE_SPEED:
-		speed = (SpeedParticleNode*)node;
-		ret = true;
-		break;
-	case PARTICLE_MAKEGLOBAL:
-		makeGlobal = (MakeGlobalParticleNode*)node;
-		ret = true;
-		break;
-	case EMITTER:
-		emitter = (ParticleEmitter*)node;
-		ret = true;
-		break;
+		switch (node->type)
+		{
+		case PARTICLE_COLOR:
+			color = (ColorParticleNode*)node;
+			ret = true;
+			break;
+		case PARTICLE_SPEED:
+			speed = (SpeedParticleNode*)node;
+			ret = true;
+			break;
+		case PARTICLE_MAKEGLOBAL:
+			makeGlobal = (MakeGlobalParticleNode*)node;
+			ret = true;
+			break;
+		case PARTICLE_DEATHINSTANTIATION:
+			deathInstantiation = (DeathInstantiationParticleNode*)node;
+			ret = true;
+			break;
+		};
+	}
+	else
+	{
+		switch (node->type)
+		{
+		case PARTICLE_DEATHINSTANTIATION:
+			ret = true;
+			break;
+		case EMITTER:
+			emitter = (ParticleEmitter*)node;
+			ret = true;
+			break;
+		};
 	}
 
 	return ret;
@@ -488,17 +516,22 @@ void Particle::OnDisconnection(NodeConnection* connection)
 	case PARTICLE_MAKEGLOBAL:
 		makeGlobal = nullptr;
 		break;
+	case PARTICLE_DEATHINSTANTIATION:
+		deathInstantiation = nullptr;
+		break;
 	case EMITTER:
 		emitter = nullptr;
 		break;
 	}
 }
 
+NodeConnection* Particle::GetDataConnection() const
+{
+	return dataIn;
+}
+
 void Particle::DisplayConfig()
 {
-	ImGui::Text("Particle");
-	ImGui::NewLine();
-
 	//Lifetime
 	ImGui::Text("Lifetime"); ImGui::SameLine(75.0f);
 	App->gui->DrawInputFloat("", "##lifetime", &lifeTime, 0.1f, true, &randLifeTime1, randomizeLifeTime); ImGui::SameLine();

@@ -11,6 +11,7 @@
 #include "ColorParticleNode.h"
 #include "SpeedParticleNode.h"
 #include "MakeGlobalParticleNode.h"
+#include "DeathInstantiationParticleNode.h"
 #include "EmissionEmitterNode.h"
 
 PanelNodeCanvas::PanelNodeCanvas(const char* name): Panel(name)
@@ -38,7 +39,7 @@ void PanelNodeCanvas::DrawContent()
 
 	//Manage zoom
 	float wheelDelta = ImGui::GetIO().MouseWheel;
-	if (wheelDelta != 0.0f) //There is scroll
+	if (wheelDelta != 0.0f && ImGui::IsWindowHovered()) //There is scroll
 	{
 		int newZoom = zoom + wheelDelta * 100 * ZOOM_STEPS;
 		newZoom = Clamp(newZoom, (int)(MIN_ZOOM*100), (int)(MAX_ZOOM*100));
@@ -142,7 +143,7 @@ void PanelNodeCanvas::DrawContent()
 
 void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
 {
-	static std::vector<std::string> nodes = { "Particle", "Emitter", "Color", "Speed", "Make Global", "Emission" };
+	static std::vector<std::string> nodes = { "Particle", "Emitter", "Color", "Speed", "Make Global", "Emission", "Death Instantiation" };
 	
 	//Filter
 	ImGui::PushItemWidth(100.0f);
@@ -170,11 +171,11 @@ void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
 
 	if (choice != -1)
 	{
-		ImFont* scaledFont = App->gui->GetFont(zoom);
+		ImFont* scaledFont = App->gui->GetFont(100);
 		if (scaledFont != nullptr)
 			ImGui::PushFont(scaledFont);
 
-		float textSize = ImGui::CalcTextSize(nodes[choice].c_str()).x + GRAPH_NODE_WINDOW_PADDING * (zoom / 100.0f)*2.0f;
+		float textSize = ImGui::CalcTextSize(nodes[choice].c_str()).x + GRAPH_NODE_WINDOW_PADDING *2.0f;
 
 		if (scaledFont != nullptr)
 			ImGui::PopFont();
@@ -200,6 +201,9 @@ void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
 			break;
 		case 5: //Emission
 			node = new EmissionEmitterNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });
+			break;
+		case 6: //Death Instantiation
+			node = new DeathInstantiationParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize, 45 });
 			break;
 		}
 

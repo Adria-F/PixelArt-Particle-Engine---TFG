@@ -41,6 +41,9 @@
     <Filter Include="Sources\Tools\ImGuizmo">
       <UniqueIdentifier>{48770b6d-27bb-459b-b6c0-ed0ef49bc31b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Nodes\Types">
+      <UniqueIdentifier>{82e447bb-2dfe-46b1-9593-b36b749102c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -237,6 +240,9 @@
     </ClCompile>
     <ClCompile Include="DeathInstantiationParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeGroup.cpp">
+      <Filter>Sources\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -521,6 +527,9 @@
     </ClInclude>
     <ClInclude Include="DeathInstantiationParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeGroup.h">
+      <Filter>Sources\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

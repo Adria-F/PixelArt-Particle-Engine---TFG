@@ -1255,7 +1255,7 @@ void ImGui::AlignTextToFramePadding()
 }
 
 // Horizontal/vertical separating line
-void ImGui::SeparatorEx(ImGuiSeparatorFlags flags)
+void ImGui::SeparatorEx(ImGuiSeparatorFlags flags, float length)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1270,7 +1270,7 @@ void ImGui::SeparatorEx(ImGuiSeparatorFlags flags)
     {
         // Vertical separator, for menu bars (use current line height). Not exposed because it is misleading and it doesn't have an effect on regular layout.
         float y1 = window->DC.CursorPos.y;
-        float y2 = window->DC.CursorPos.y + window->DC.CurrLineSize.y;
+        float y2 = window->DC.CursorPos.y + ((length > 0.0f)?length:window->DC.CurrLineSize.y);
         const ImRect bb(ImVec2(window->DC.CursorPos.x, y1), ImVec2(window->DC.CursorPos.x + thickness_draw, y2));
         ItemSize(ImVec2(thickness_layout, 0.0f));
         if (!ItemAdd(bb, 0))
@@ -1285,9 +1285,13 @@ void ImGui::SeparatorEx(ImGuiSeparatorFlags flags)
     {
         // Horizontal Separator
         float x1 = window->Pos.x;
-        float x2 = window->Pos.x + window->Size.x;
-        if (!window->DC.GroupStack.empty())
-            x1 += window->DC.Indent.x;
+        float x2 = window->Pos.x + ((length>0.0f)?length:window->Size.x);
+		if (!window->DC.GroupStack.empty())
+		{
+			x1 += window->DC.Indent.x;
+			if (length > 0.0f)
+				x2 += window->DC.Indent.x;
+		}
 
         ImGuiColumns* columns = (flags & ImGuiSeparatorFlags_SpanAllColumns) ? window->DC.CurrentColumns : NULL;
         if (columns)
@@ -1312,7 +1316,7 @@ void ImGui::SeparatorEx(ImGuiSeparatorFlags flags)
     }
 }
 
-void ImGui::Separator()
+void ImGui::Separator(float length)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1322,7 +1326,7 @@ void ImGui::Separator()
     // Those flags should eventually be overridable by the user
     ImGuiSeparatorFlags flags = (window->DC.LayoutType == ImGuiLayoutType_Horizontal) ? ImGuiSeparatorFlags_Vertical : ImGuiSeparatorFlags_Horizontal;
     flags |= ImGuiSeparatorFlags_SpanAllColumns;
-    SeparatorEx(flags);
+    SeparatorEx(flags, length);
 }
 
 // Using 'hover_visibility_delay' allows us to hide the highlight and mouse cursor for a short time, which can be convenient to reduce visual noise.

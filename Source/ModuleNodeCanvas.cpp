@@ -21,7 +21,8 @@ bool ModuleNodeCanvas::Start()
 	//Create fonts for canvas zooming
 	for (float i = MIN_ZOOM*100; i <= MAX_ZOOM*100; i += ZOOM_STEPS*100)
 	{
-		App->gui->AddFont(i);
+		App->gui->AddFont(i, CANVAS_FONT_SIZE);
+		App->gui->AddFont(i, DEFAULT_FONT_SIZE);
 	}
 
 	return true;
@@ -29,6 +30,21 @@ bool ModuleNodeCanvas::Start()
 
 update_state ModuleNodeCanvas::Update(float dt)
 {	
+	//Delete selected elements with 'supr'
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && canvasFocused)
+	{
+		if (selectedNode != nullptr) //TODO: Manage list
+		{
+			selectedNode->toDelete = true;
+			selectedNode = nullptr;
+		}
+		if (selectedConnection != nullptr) //TODO: Manage list
+		{
+			selectedConnection->connected->Disconnect();
+			selectedConnection->Disconnect();
+			selectedConnection = nullptr;
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }

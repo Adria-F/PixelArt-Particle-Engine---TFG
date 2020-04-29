@@ -35,6 +35,8 @@ public:
 	CanvasNode* selectedNode = nullptr;
 	NodeConnection* selectedConnection = nullptr;
 
+	bool canvasFocused = false;
+
 private:
 
 	NodeConnection* connecting = nullptr;

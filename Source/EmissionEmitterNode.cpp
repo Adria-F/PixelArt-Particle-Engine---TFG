@@ -51,56 +51,6 @@ void EmissionEmitterNode::Play()
 	}
 }
 
-bool EmissionEmitterNode::OnConnection(NodeConnection* connection)
-{
-	bool ret = false;
-	CanvasNode* node = connection->node;
-	if (node->type > MAX_PARTICLE_NODE && node->type < MAX_EMITTER_NODE)
-	{
-		if (node->type == EMITTER)
-		{
-			emitter = (ParticleEmitter*)node;
-
-			//Check connected nodes below and connect the emitter
-			for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
-			{
-				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
-				{
-					(*it_c)->connected->node->OnConnection(connection);
-				}
-			}
-		}
-		else if (emitter != nullptr) //It is connecting to a node below
-		{
-			emitter->OnConnection(connection);
-			node->OnConnection(emitter->GetDataConnection());
-		}
-
-		ret = true;
-	}
-
-	return ret;
-}
-
-void EmissionEmitterNode::OnDisconnection(NodeConnection* connection)
-{
-	if (connection->type == NODE_INPUT) //If the other is an input, this is an output :)
-	{
-		emitter = nullptr;
-		for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
-		{
-			if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
-			{
-				(*it_c)->connected->node->OnDisconnection((*it_c));
-			}
-		}
-	}
-	else if (emitter != nullptr)
-	{
-		emitter->OnDisconnection(connection);
-	}
-}
-
 void EmissionEmitterNode::DisplayConfig()
 {
 	ImGui::Text("Burst"); ImGui::SameLine(75.0f);

@@ -24,7 +24,7 @@ void PanelNodeConfiguration::DrawContent()
 	if (App->nodeCanvas->selectedNode == nullptr)
 		return;
 
-	ImFont* scaledFont = App->gui->GetFont(100);
+	ImFont* scaledFont = App->gui->GetFont(100, CANVAS_FONT_SIZE);
 	if (scaledFont != nullptr)
 		ImGui::PushFont(scaledFont);
 

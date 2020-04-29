@@ -25,8 +25,8 @@ public:
 	void Draw();
 
 	void handleInput(SDL_Event* event);
-	void AddFont(int fontPercent);
-	ImFont* GetFont(int fontPercent) const;
+	void AddFont(int fontPercent = 100, int fontSize = DEFAULT_FONT_SIZE);
+	ImFont* GetFont(int fontPercent = 100, int fontSize = DEFAULT_FONT_SIZE) const;
 
 	bool UsingMouse() const;
 	bool UsingKeyboard() const;

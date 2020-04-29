@@ -17,7 +17,7 @@ CanvasNode::~CanvasNode()
 	connections.clear();
 }
 
-void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
+void CanvasNode::Draw(float2 offset, int zoom)
 {
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
@@ -26,11 +26,11 @@ void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
 	ImU32 backgroundColor = IM_COL32(45, 45, 45, 255);
 	float thickness = 1.0f;
 
-	if (hovered)
+	if (App->nodeCanvas->hoveredNode == this || hoveringElement)
 	{
 		borderColor = IM_COL32(150, 150, 100, 255);
 	}
-	if (selected)
+	if (App->nodeCanvas->selectedNode == this)
 	{
 		borderColor = IM_COL32(255, 255, 75, 255);
 		backgroundColor = IM_COL32(55, 55, 55, 255);
@@ -44,17 +44,18 @@ void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
 	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, borderColor, 4.0f, 15, thickness);
 
 	//Draw scalable text
-	ImFont* scaledFont = App->gui->GetFont(zoom);
+	ImFont* scaledFont = App->gui->GetFont(zoom, CANVAS_FONT_SIZE);
 	if (scaledFont != nullptr)
 		ImGui::PushFont(scaledFont);
 
-	ImGui::SetCursorScreenPos({ gridPosition.x + GRAPH_NODE_WINDOW_PADDING*(zoom / 100.0f), gridPosition.y + GRAPH_NODE_WINDOW_PADDING*(zoom / 100.0f) });
+	ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING*(zoom / 100.0f), gridPosition.y + NODE_PADDING*(zoom / 100.0f) });
 	ImGui::BeginGroup();
 	ImGui::Text(name.c_str());
 
 	if (scaledFont != nullptr)
 		ImGui::PopFont();
 
+	//Draw connections
 	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
 	{
 		(*it_c)->Draw(zoom);
@@ -63,7 +64,7 @@ void CanvasNode::Draw(float2 offset, int zoom, bool hovered, bool selected)
 	ImGui::EndGroup();
 }
 
-bool CanvasNode::Logic(float2 offset, int zoom, bool selected)
+bool CanvasNode::Logic(float2 offset, int zoom)
 {
 	bool isHovered = false;
 
@@ -77,60 +78,59 @@ bool CanvasNode::Logic(float2 offset, int zoom, bool selected)
 		}
 	}
 
-	ImGui::PushID(UID);
-	float2 scaledSize = size * (zoom / 100.0f);
+	hoveringElement = ElementLogic(offset, zoom);
 
-	//Node hovering //& linking
-	ImGui::SetCursorScreenPos({ gridPosition.x, gridPosition.y });
-	ImGui::BeginGroup();
-	ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
-	if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection)
+	if (interactable)
 	{
-		isHovered = true;
+		ImGui::PushID(UID);
+		float2 scaledSize = size * (zoom / 100.0f);
 
-		if (ImGui::IsMouseClicked(1))
+		//Node hovering //& linking
+		ImGui::SetCursorScreenPos({ gridPosition.x, gridPosition.y });
+		ImGui::BeginGroup();
+		ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
+		if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection && !hoveringElement)
 		{
-			ImGui::OpenPopup("##node info");
-		}
-	}
+			isHovered = true;
 
-	//Right click pop up
-	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
-	if (ImGui::BeginPopup("##node info"))
-	{
-		if (ImGui::Selectable("Remove"))
+			if (ImGui::IsMouseClicked(1))
+			{
+				ImGui::OpenPopup("##node info");
+			}
+		}
+
+		//Right click pop up
+		ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
+		if (ImGui::BeginPopup("##node info"))
 		{
-			toDelete = true;
+			if (ImGui::Selectable("Remove"))
+			{
+				toDelete = true;
+			}
+			ImGui::EndPopup();
 		}
-		ImGui::EndPopup();
-	}
-	ImGui::PopStyleVar();
+		ImGui::PopStyleVar();
 
-	//Delete selected node with 'Supr'
-	if (selected && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && ImGui::IsWindowFocused())
-	{
-		toDelete = true;
-	}
+		//Dragging
+		static bool dragging = false;
+		if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
+		{
+			clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
+			dragging = true;
+		}
+		if (dragging && ImGui::IsMouseReleased(0))
+		{
+			dragging = false;
+		}
+		if (App->nodeCanvas->selectedNode == this && dragging && ImGui::IsMouseDragging(0))
+		{
+			position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
+			position /= (zoom / 100.0f);
+		}
 
-	//Dragging
-	static bool dragging = false;
-	if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
-	{
-		clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
-		dragging = true;
+		ImGui::EndGroup();
+		ImGui::PopID();
 	}
-	if (dragging && ImGui::IsMouseReleased(0))
-	{
-		dragging = false;
-	}
-	if (selected && dragging && ImGui::IsMouseDragging(0))
-	{
-		position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
-		position /= (zoom / 100.0f);
-	}
-
-	ImGui::EndGroup();
-	ImGui::PopID();
 
 	return isHovered;
 }
@@ -158,6 +158,7 @@ void NodeConnection::Draw(int zoom)
 		DrawTriangle(zoom / 100.0f);
 		break;
 	case CIRCLE:
+		DrawCircle(zoom / 100.0f);
 		break;
 	}
 
@@ -245,12 +246,6 @@ bool NodeConnection::Logic(int zoom)
 			App->nodeCanvas->selectedConnection = nullptr;
 		}
 	}
-	if (App->nodeCanvas->selectedConnection == this && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && ImGui::IsWindowFocused())
-	{
-		connected->Disconnect();
-		Disconnect();
-		App->nodeCanvas->selectedConnection = nullptr;
-	}
 
 	return (state == HOVERED || state == CLICKED);
 }
@@ -288,6 +283,47 @@ void NodeConnection::DrawTriangle(float scale)
 
 	draw_list->AddTriangleFilled(pointA, pointB, pointC, fillColor);
 	draw_list->AddTriangle(pointA, pointB, pointC, outlineColor, thickness);
+}
+
+void NodeConnection::DrawCircle(float scale)
+{
+	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+	float thickness = CONNECTION_OUTLINE_THICKNESS * scale;
+
+	ImU32 fillColor = IM_COL32(100, 100, 105, 255);
+	ImU32 outlineColor = IM_COL32(200, 200, 205, 255);
+	switch (state)
+	{
+	case HOVERED:
+		outlineColor = IM_COL32(255, 255, 75, 255);
+		break;
+	case CLICKED:
+		outlineColor = IM_COL32(255, 255, 75, 255);
+		thickness *= 2.0f;
+		break;
+	}
+
+	ImU32 selectedColor = IM_COL32(100, 100, 105, 255);
+	bool drawInside = false;
+
+	if (connecting || connected != nullptr)
+	{
+		selectedColor = IM_COL32(200, 200, 100, 255);
+		drawInside = true;
+	}
+
+	if (App->nodeCanvas->selectedConnection != nullptr && (App->nodeCanvas->selectedConnection == this || App->nodeCanvas->selectedConnection->connected == this))
+	{
+		selectedColor = IM_COL32(240, 240, 175, 255);
+		drawInside = true;
+	}
+
+	draw_list->AddCircleFilled({ gridPosition.x, gridPosition.y }, CONNECTIONCIRCLE_SIZE*scale, fillColor, 16);
+	draw_list->AddCircle({ gridPosition.x, gridPosition.y }, CONNECTIONCIRCLE_SIZE*scale, outlineColor, 16, thickness);
+
+	if (drawInside)
+		draw_list->AddCircleFilled({ gridPosition.x, gridPosition.y }, CONNECTIONCIRCLE_SIZE*scale*0.5f, selectedColor, 16);
 }
 
 void NodeConnection::SetConnection(NodeConnection* node)

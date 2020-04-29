@@ -125,7 +125,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
-ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): CanvasNode(name, EMITTER, position, size)
+ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): NodeGroup(name, position)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -135,11 +135,10 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size)
 	baseTransform = new BaseTransformEmitterNode(this);
 	lastEmit = frequency;
 
-	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x - GRAPH_NODE_WINDOW_PADDING * 0.25f, size.y/2.0f }, TRIANGLE, ImGuiDir_Left);
-	connections.push_back(particleIn);
-
-	dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataIn);
+	//Node boxes
+	AddNodeBox("Emitter SetUp", EMITTER_NODE_BOX);
+	AddNodeBox("Emitting Particle", EMITTER_NODE_BOX);
+	AddNodeBox("Emitter Update", EMITTER_NODE_BOX);
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -274,51 +273,33 @@ int ParticleEmitter::GetParticleCount() const
 	return particles.size();
 }
 
-bool ParticleEmitter::OnConnection(NodeConnection* connection)
+void ParticleEmitter::OnNodeAdded(CanvasNode* node)
 {
-	bool ret = false;
-
-	CanvasNode* node = connection->node;
-	if (node->type == PARTICLE)
-	{
-		templateParticle = (Particle*)node;
-		Play(); //TMP if scene is playing
-		ret = true;
-	}
-
 	switch (node->type)
 	{
-	case PARTICLE:
+	/*case PARTICLE:
 		templateParticle = (Particle*)node;
 		Play(); //TMP if scene is playing
 		ret = true;
-		break;
+		break;*/
 	case EMITTER_EMISSION:
 		emission = (EmissionEmitterNode*)node;
-		ret = true;
 		break;
 	}
-
-	return ret;
 }
 
-void ParticleEmitter::OnDisconnection(NodeConnection* connection)
+void ParticleEmitter::OnNodeRemoved(CanvasNode* node)
 {
-	switch (connection->node->type)
+	switch (node->type)
 	{
-	case PARTICLE:
+	/*case PARTICLE:
 		Stop();
 		templateParticle = nullptr;
-		break;
+		break;*/
 	case EMITTER_EMISSION:
 		emission = nullptr;
 		break;
 	}
-}
-
-NodeConnection* ParticleEmitter::GetDataConnection() const
-{
-	return dataIn;
 }
 
 void ParticleEmitter::DisplayConfig()
@@ -373,7 +354,7 @@ void ParticleEmitter::DisplayConfig()
 
 // ----------------------------- PARTICLE ----------------------------------
 
-Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(name, PARTICLE, position, size)
+Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(name, position)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -384,11 +365,9 @@ Particle::Particle(const char* name, float2 position, float2 size): CanvasNode(n
 	baseMovement = new BaseMovementParticleNode(this);
 	baseColor = new BaseColorParticleNode(this);
 
-	particleOut = new NodeConnection(this, NODE_OUTPUT, { 0.0f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
-	connections.push_back(particleOut);
-
-	dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataIn);
+	AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX);
+	AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
+	AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
@@ -459,53 +438,28 @@ float Particle::GetLifePercent() const
 	return timeAlive/lifeTime;
 }
 
-bool Particle::OnConnection(NodeConnection* connection)
+void Particle::OnNodeAdded(CanvasNode * node)
 {
-	bool ret = false;
-
-	CanvasNode* node = connection->node;
-	if (connection->type == NODE_OUTPUT)
+	switch (node->type)
 	{
-		switch (node->type)
-		{
-		case PARTICLE_COLOR:
-			color = (ColorParticleNode*)node;
-			ret = true;
-			break;
-		case PARTICLE_SPEED:
-			speed = (SpeedParticleNode*)node;
-			ret = true;
-			break;
-		case PARTICLE_MAKEGLOBAL:
-			makeGlobal = (MakeGlobalParticleNode*)node;
-			ret = true;
-			break;
-		case PARTICLE_DEATHINSTANTIATION:
-			deathInstantiation = (DeathInstantiationParticleNode*)node;
-			ret = true;
-			break;
-		};
-	}
-	else
-	{
-		switch (node->type)
-		{
-		case PARTICLE_DEATHINSTANTIATION:
-			ret = true;
-			break;
-		case EMITTER:
-			emitter = (ParticleEmitter*)node;
-			ret = true;
-			break;
-		};
-	}
-
-	return ret;
+	case PARTICLE_COLOR:
+		color = (ColorParticleNode*)node;
+		break;
+	case PARTICLE_SPEED:
+		speed = (SpeedParticleNode*)node;
+		break;
+	case PARTICLE_MAKEGLOBAL:
+		makeGlobal = (MakeGlobalParticleNode*)node;
+		break;
+	case PARTICLE_DEATHINSTANTIATION:
+		deathInstantiation = (DeathInstantiationParticleNode*)node;
+		break;
+	};
 }
 
-void Particle::OnDisconnection(NodeConnection* connection)
+void Particle::OnNodeRemoved(CanvasNode * node)
 {
-	switch (connection->node->type)
+	switch (node->type)
 	{
 	case PARTICLE_COLOR:
 		color = nullptr;
@@ -519,15 +473,7 @@ void Particle::OnDisconnection(NodeConnection* connection)
 	case PARTICLE_DEATHINSTANTIATION:
 		deathInstantiation = nullptr;
 		break;
-	case EMITTER:
-		emitter = nullptr;
-		break;
 	}
-}
-
-NodeConnection* Particle::GetDataConnection() const
-{
-	return dataIn;
 }
 
 void Particle::DisplayConfig()

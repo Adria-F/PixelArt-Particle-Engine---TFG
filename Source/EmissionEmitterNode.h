@@ -8,15 +8,12 @@ class EmissionEmitterNode : public EntityData, public CanvasNode
 {
 public:
 
-	EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
+	EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 	~EmissionEmitterNode() {}
 
 	void Execute(float dt);
 
 	void Play();
-
-	bool OnConnection(NodeConnection* connection);
-	void OnDisconnection(NodeConnection* connection);
 
 	void DisplayConfig();
 

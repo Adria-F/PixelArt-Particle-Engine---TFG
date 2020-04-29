@@ -36,6 +36,7 @@ public:
 	bool Logic(int zoom);
 
 	void DrawTriangle(float scale);
+	void DrawCircle(float scale);
 
 	void SetConnection(NodeConnection* node);
 	void Disconnect();
@@ -69,7 +70,10 @@ enum nodeType
 	MAX_PARTICLE_NODE,
 	EMITTER,
 	EMITTER_EMISSION,
-	MAX_EMITTER_NODE
+	MAX_EMITTER_NODE,
+	NODE_HOLDER,
+	PARTICLE_NODE_BOX,
+	EMITTER_NODE_BOX
 };
 
 class CanvasNode
@@ -77,14 +81,15 @@ class CanvasNode
 public:
 
 	CanvasNode() {}
-	CanvasNode(const char* name, nodeType type, float2 position, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT }) : name(name), type(type), position(position), size(size)
+	CanvasNode(const char* name, nodeType type, float2 position, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }) : name(name), type(type), position(position), size(size)
 	{
 		UID = GENERATE_UID();
 	}
 	virtual ~CanvasNode();
 
-	void Draw(float2 offset, int zoom, bool hovered = false, bool selected = false);
-	bool Logic(float2 offset, int zoom, bool selected = false);
+	virtual void Draw(float2 offset, int zoom);
+	bool Logic(float2 offset, int zoom);
+	virtual bool ElementLogic(float2 offset, int zoom) { return false; }
 
 	virtual bool OnConnection(NodeConnection* connection) { return false; }
 	virtual void OnDisconnection(NodeConnection* connection) {}
@@ -105,6 +110,8 @@ public:
 	float2 clickOffset;
 
 	bool toDelete = false;
+	bool hoveringElement = false;
+	bool interactable = true;
 };
 
 #endif // !__CANVASNODE_H__

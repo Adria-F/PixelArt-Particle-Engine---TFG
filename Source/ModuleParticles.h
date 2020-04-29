@@ -6,7 +6,7 @@
 #include <list>
 #include <unordered_map>
 
-#include "CanvasNode.h"
+#include "NodeGroup.h"
 
 class EntityData;
 
@@ -29,11 +29,11 @@ class BaseTransformEmitterNode;
 
 class EmissionEmitterNode;
 
-class Particle: public CanvasNode
+class Particle: public NodeGroup
 {
 public:
 
-	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
+	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 	Particle(ParticleEmitter* emitter, Particle* templateParticle);
 	~Particle();
 
@@ -43,10 +43,9 @@ public:
 	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
 
-	bool OnConnection(NodeConnection* connection);
-	void OnDisconnection(NodeConnection* connection);
-
-	NodeConnection* GetDataConnection() const;
+	//Canvas
+	void OnNodeAdded(CanvasNode* node);
+	void OnNodeRemoved(CanvasNode* node);
 
 	void DisplayConfig();
 
@@ -83,17 +82,15 @@ public:
 
 private:
 
-	NodeConnection* dataIn = nullptr;
-
 	float timeAlive = 0.0f;
 	bool randomizeLifeTime = false;
 };
 
-class ParticleEmitter: public CanvasNode
+class ParticleEmitter: public NodeGroup
 {
 public:
 
-	ParticleEmitter(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { STANDARD_NODE_WIDTH, STANDARD_NODE_HEIGHT });
+	ParticleEmitter(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 	~ParticleEmitter();
 
 	void Play();
@@ -111,10 +108,9 @@ public:
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
 
-	bool OnConnection(NodeConnection* connection);
-	void OnDisconnection(NodeConnection* connection);
-
-	NodeConnection* GetDataConnection() const;
+	//Canvas
+	void OnNodeAdded(CanvasNode* node);
+	void OnNodeRemoved(CanvasNode* node);
 
 	void DisplayConfig();
 
@@ -138,8 +134,6 @@ private:
 
 	Particle* templateParticle = nullptr;
 	std::list<Particle*> particles;
-
-	NodeConnection* dataIn = nullptr;
 
 	float lastEmit = 0.0f;
 	bool playing = true;

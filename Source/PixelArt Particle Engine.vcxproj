@@ -183,6 +183,7 @@
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
+    <ClCompile Include="NodeGroup.cpp" />
     <ClCompile Include="PanelPanelNodeConfiguration.cpp" />
     <ClCompile Include="PanelNodeCanvas.cpp" />
     <ClCompile Include="PanelScene.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleParticles.h" />
+    <ClInclude Include="NodeGroup.h" />
     <ClInclude Include="Panel.h" />
     <ClInclude Include="PanelPanelNodeConfiguration.h" />
     <ClInclude Include="PanelNodeCanvas.h" />

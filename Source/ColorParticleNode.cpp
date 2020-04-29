@@ -40,57 +40,6 @@ EntityData* ColorParticleNode::Copy(Particle* particle) const
 	return ret;
 }
 
-bool ColorParticleNode::OnConnection(NodeConnection* connection)
-{
-	bool ret = false;
-
-	CanvasNode* node = connection->node;
-	if (node->type < MAX_PARTICLE_NODE)
-	{
-		if (node->type == PARTICLE)
-		{
-			particle = (Particle*)node;
-			
-			//Check connected nodes below and connect the particle
-			for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
-			{
-				if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
-				{
-					(*it_c)->connected->node->OnConnection(connection);
-				}
-			}
-		}
-		else if (particle != nullptr) //It is connecting to a node below
-		{
-			particle->OnConnection(connection);
-			node->OnConnection(particle->GetDataConnection());
-		}
-
-		ret = true;
-	}
-
-	return ret;
-}
-
-void ColorParticleNode::OnDisconnection(NodeConnection* connection)
-{
-	if (connection->type == NODE_INPUT) //If the other is an input, this is an output :)
-	{
-		particle = nullptr;
-		for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
-		{
-			if ((*it_c)->type == NODE_INPUT && (*it_c)->connected != nullptr)
-			{
-				(*it_c)->connected->node->OnDisconnection((*it_c));
-			}
-		}
-	}
-	else if (particle != nullptr)
-	{
-		particle->OnDisconnection(connection);
-	}
-}
-
 void ColorParticleNode::DisplayConfig()
 {
 	if (ImGui::RadioButton("Fix", !overLifetime))

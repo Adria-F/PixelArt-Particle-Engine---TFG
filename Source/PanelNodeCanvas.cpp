@@ -16,7 +16,7 @@
 
 PanelNodeCanvas::PanelNodeCanvas(const char* name): Panel(name)
 {
-
+	showGrid = false;
 }
 
 void PanelNodeCanvas::SetFlags()
@@ -28,14 +28,20 @@ void PanelNodeCanvas::DrawContent()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1, 1));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-	ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(50, 50, 55, 200));
+	ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(45, 45, 50, 255));
 
-	ImVec2 cursorPos = ImGui::GetCursorPos();
-	ImGui::Text("Zoom x %.1f", zoom/100.0f);
-	ImGui::SetCursorPos(cursorPos);
+	ImVec2 cursorPos = ImGui::GetCursorScreenPos();
 
 	ImGui::BeginChild("scrolling_region", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollWithMouse);
 	ImGui::PushItemWidth(120.0f);
+
+	//Display current zoom
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.25f);
+	ImGui::SetCursorScreenPos(cursorPos);
+	ImGui::Text("Zoom x %.1f", zoom / 100.0f);
+	ImGui::PopStyleVar();
+
+	App->nodeCanvas->canvasFocused = ImGui::IsWindowFocused();
 
 	//Manage zoom
 	float wheelDelta = ImGui::GetIO().MouseWheel;
@@ -85,11 +91,11 @@ void PanelNodeCanvas::DrawContent()
 	CanvasNode* newSelectedNode = nullptr;
 	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n) //Draw in ascending order
 	{
-		(*it_n)->Draw(offset, zoom, App->nodeCanvas->hoveredNode == (*it_n), App->nodeCanvas->selectedNode == (*it_n));
+		(*it_n)->Draw(offset, zoom);
 	}
 	for (std::list<CanvasNode*>::reverse_iterator it_n = App->nodeCanvas->nodes.rbegin(); it_n != App->nodeCanvas->nodes.rend(); ++it_n) //Calculate interaction logic in reverse (because ImGui takes first drawn as top)
 	{
-		if ((*it_n)->Logic(offset, zoom, App->nodeCanvas->selectedNode == (*it_n)) && newHoveredNode == nullptr)
+		if ((*it_n)->Logic(offset, zoom))
 		{
 			newHoveredNode = (*it_n);
 			if (ImGui::IsMouseClicked(0))
@@ -98,7 +104,8 @@ void PanelNodeCanvas::DrawContent()
 			}
 		}
 	}
-	App->nodeCanvas->hoveredNode = newHoveredNode;
+	if (newHoveredNode != nullptr)
+		App->nodeCanvas->hoveredNode = newHoveredNode;
 	if (newSelectedNode && newSelectedNode != App->nodeCanvas->selectedNode)
 	{
 		//Move the selected node to the end of the list to draw it in front
@@ -171,39 +178,30 @@ void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
 
 	if (choice != -1)
 	{
-		ImFont* scaledFont = App->gui->GetFont(100);
-		if (scaledFont != nullptr)
-			ImGui::PushFont(scaledFont);
-
-		float textSize = ImGui::CalcTextSize(nodes[choice].c_str()).x + GRAPH_NODE_WINDOW_PADDING *2.0f;
-
-		if (scaledFont != nullptr)
-			ImGui::PopFont();
-
 		CanvasNode* node = nullptr;
 		switch (choice)
 		{
 		case 0: //Particle
-			node = new Particle(nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new Particle(nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		case 1: //Emitter
-			node = new ParticleEmitter(nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new ParticleEmitter(nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			App->particles->AddEmitter((ParticleEmitter*)node);
 			break;
 		case 2: //Color
-			node = new ColorParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new ColorParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		case 3: //Speed
-			node = new SpeedParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new SpeedParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		case 4: //Make Global
-			node = new MakeGlobalParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new MakeGlobalParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		case 5: //Emission
-			node = new EmissionEmitterNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize,45 });
+			node = new EmissionEmitterNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		case 6: //Death Instantiation
-			node = new DeathInstantiationParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { textSize, 45 });
+			node = new DeathInstantiationParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 			break;
 		}
 

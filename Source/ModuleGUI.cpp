@@ -35,11 +35,8 @@ bool ModuleGUI::Init()
 	ImGui_ImplOpenGL3_Init();
 
 	//Load default font
-	ImFontConfig config;
-	config.SizePixels = DEFAULT_FONT_SIZE;
-	config.OversampleH = config.OversampleV = 1;
-	config.PixelSnapH = true;
-	defaultFont = io.Fonts->AddFontDefault(&config);
+	AddFont();
+	defaultFont = GetFont();
 
 	//Add all panels
 	panels.push_back(new PanelScene("Scene"));
@@ -145,23 +142,23 @@ void ModuleGUI::handleInput(SDL_Event * event)
 	ImGui_ImplSDL2_ProcessEvent(event);
 }
 
-void ModuleGUI::AddFont(int fontPercent)
+void ModuleGUI::AddFont(int fontPercent, int fontSize)
 {
 	ImGuiIO &io = ImGui::GetIO();
 	ImFontConfig config;
-	config.SizePixels = fontPercent/100.0f*(CANVAS_FONT_SIZE);
+	config.SizePixels = fontPercent/100.0f*(fontSize);
 	config.OversampleH = config.OversampleV = 1;
 	config.PixelSnapH = true;
 	ImFont *font = io.Fonts->AddFontDefault(&config);
 	
-	fonts.insert(std::pair<int, ImFont*>(fontPercent, font));
+	fonts.insert(std::pair<int, ImFont*>(fontPercent*fontSize, font));
 }
 
-ImFont* ModuleGUI::GetFont(int fontPercent) const
+ImFont* ModuleGUI::GetFont(int fontPercent, int fontSize) const
 {
-	if (fonts.find(fontPercent) != fonts.end())
+	if (fonts.find(fontPercent*fontSize) != fonts.end())
 	{
-		return fonts.at(fontPercent);
+		return fonts.at(fontPercent*fontSize);
 	}
 
 	return nullptr;

@@ -219,16 +219,34 @@ void NodeBox::Draw(float2 offset, int zoom)
 	ImGui::BeginGroup();
 	ImGui::Text(name.c_str());
 
-	if (scaledFont != nullptr)
-		ImGui::PopFont();
-
 	ImGui::Separator(scaledSize.x- NODE_BOX_PADDING * (zoom / 100.0f)*2.0f);
+
+	ImVec2 cursorPos = nodeStartPosition = ImGui::GetCursorScreenPos();
 
 	//Draw nodes
 	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
 	{
-		(*it_n)->Draw(offset, zoom);
+		(*it_n)->Draw({ cursorPos.x, cursorPos.y }, zoom);
+		cursorPos.y += (*it_n)->size.y + NODE_BOX_PADDING;
 	}
+
+	//Draw empty block to add nodes
+	ImU32 blockColor = IM_COL32(20, 20, 20, 255);
+	if (addBlockHovered)
+	{
+		blockColor = IM_COL32(25, 25, 25, 255);
+		addBlockHovered = false;
+	}
+	draw_list->AddRectFilled(cursorPos, { cursorPos.x + NODE_DEFAULT_WIDTH * (zoom / 100.0f), cursorPos.y + 20.0f* (zoom / 100.0f) }, blockColor, 2.0f);
+	
+	ImVec2 textSize = ImGui::CalcTextSize("Add Node");
+	ImGui::SetCursorScreenPos({ cursorPos.x + (NODE_DEFAULT_WIDTH*(zoom / 100.0f) - textSize.x)*0.5f, cursorPos.y + (20.0f*(zoom / 100.0f)-textSize.y)*0.5f});
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+	ImGui::Text("Add Node");
+	ImGui::PopStyleVar();
+
+	if (scaledFont != nullptr)
+		ImGui::PopFont();
 
 	//Draw conections
 	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
@@ -237,6 +255,54 @@ void NodeBox::Draw(float2 offset, int zoom)
 	}
 
 	ImGui::EndGroup();
+}
+
+bool NodeBox::ElementLogic(float2 offset, int zoom)
+{
+	ImVec2 cursorPos = nodeStartPosition;
+	//Handle nodes
+	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
+	{
+		//nodeHovered = Logic();
+		cursorPos.y += (*it_n)->size.y + NODE_BOX_PADDING;
+	}
+
+	//Handle node addition
+	ImGui::SetCursorScreenPos(cursorPos);
+	ImGui::PushID(UID);
+	float2 scaledSize = { NODE_DEFAULT_WIDTH, 20.0f };
+	scaledSize *= (zoom / 100.0f);
+
+	//Block hovering and pop up
+	ImGui::BeginGroup();
+	ImGui::InvisibleButton("add node", { scaledSize.x, scaledSize.y });
+	if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/)
+	{
+		addBlockHovered = true;
+
+		if (ImGui::IsMouseClicked(1))
+		{
+			ImGui::OpenPopup("##node list");
+		}
+	}
+
+	//Right click pop up
+	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
+	if (ImGui::BeginPopup("##node list"))
+	{
+		static nodeType allowedNodes[1] = { EMITTER_EMISSION };
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, allowedNodes, 1);
+		if (createdNode != nullptr)
+			nodes.push_back(createdNode);
+
+		ImGui::EndPopup();
+	}
+	ImGui::PopStyleVar();
+
+	ImGui::EndGroup();
+	ImGui::PopID();
+
+	return addBlockHovered/*|| nodeHovered*/;
 }
 
 float2 NodeBox::calcSize()

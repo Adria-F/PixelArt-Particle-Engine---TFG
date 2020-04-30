@@ -8,11 +8,6 @@
 
 //Include ndoes
 #include "ModuleParticles.h"
-#include "ColorParticleNode.h"
-#include "SpeedParticleNode.h"
-#include "MakeGlobalParticleNode.h"
-#include "DeathInstantiationParticleNode.h"
-#include "EmissionEmitterNode.h"
 
 PanelNodeCanvas::PanelNodeCanvas(const char* name): Panel(name)
 {
@@ -132,13 +127,12 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##addNode"))
 	{
-		DrawNodeList((mousePos - offset) / (zoom / 100.0f), zoom);
+		static nodeType allowedNodes[2] = { PARTICLE, EMITTER };
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), allowedNodes, 2);
+		if (createdNode != nullptr)
+			App->nodeCanvas->nodes.push_back(createdNode);
 
 		ImGui::EndPopup();
-	}
-	else if (((std::string)node_filter).size() > 0)
-	{
-		memcpy(&node_filter, "\0", 1);
 	}
 	ImGui::PopStyleVar();
 
@@ -146,68 +140,4 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::EndChild();
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar(2);
-}
-
-void PanelNodeCanvas::DrawNodeList(float2 spawnPos, int zoom)
-{
-	static std::vector<std::string> nodes = { "Particle", "Emitter", "Color", "Speed", "Make Global", "Emission", "Death Instantiation" };
-	
-	//Filter
-	ImGui::PushItemWidth(100.0f);
-	ImGui::InputText("##filter", node_filter, 64);
-	ImGui::PopItemWidth();
-	ImGui::SameLine();
-	if (ImGui::Selectable("X", false, ImGuiSelectableFlags_DontClosePopups, { 8,13 }))
-	{
-		memcpy(&node_filter, "\0", 1);
-	}
-	std::string filter = node_filter;
-
-	int choice = -1;
-	for (int i = 0; i < nodes.size(); ++i)
-	{
-		if (filter.size() == 0 || nodes[i].find(filter) != std::string::npos)
-		{
-			if (ImGui::Selectable(nodes[i].c_str()))
-			{
-				choice = i;
-				break;
-			}
-		}
-	}
-
-	if (choice != -1)
-	{
-		CanvasNode* node = nullptr;
-		switch (choice)
-		{
-		case 0: //Particle
-			node = new Particle(nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		case 1: //Emitter
-			node = new ParticleEmitter(nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			App->particles->AddEmitter((ParticleEmitter*)node);
-			break;
-		case 2: //Color
-			node = new ColorParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		case 3: //Speed
-			node = new SpeedParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		case 4: //Make Global
-			node = new MakeGlobalParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		case 5: //Emission
-			node = new EmissionEmitterNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		case 6: //Death Instantiation
-			node = new DeathInstantiationParticleNode(nullptr, nodes[choice].c_str(), spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
-			break;
-		}
-
-		if (node != nullptr)
-		{
-			App->nodeCanvas->nodes.push_back(node);
-		}
-	}
 }

@@ -2,6 +2,7 @@
 #define __PANEL_NODECANVAS_H__
 
 #include "Panel.h"
+#include <map>
 
 class CanvasNode;
 class ImFont;
@@ -16,16 +17,12 @@ public:
 	void SetFlags();
 	void DrawContent();
 
-	void DrawNodeList(float2 spawnPos, int zoom);
-
 private:
 
 	float2 scrolling = { 0.0f,0.0f };
 	bool showGrid = true;
 
 	int zoom = 100;
-
-	char node_filter[64];
 };
 
 #endif // !__PANEL_NODECANVAS_H__

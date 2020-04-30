@@ -14,6 +14,7 @@ public:
 	~NodeBox();
 
 	void Draw(float2 offset, int zoom);
+	bool ElementLogic(float2 offset, int zoom);
 
 	float2 calcSize();
 
@@ -28,6 +29,11 @@ public:
 	NodeConnection* bottomConnection = nullptr;
 
 	std::list<CanvasNode*> nodes;
+
+private:
+
+	ImVec2 nodeStartPosition;
+	bool addBlockHovered = false;
 };
 
 class NodeGroup : public CanvasNode

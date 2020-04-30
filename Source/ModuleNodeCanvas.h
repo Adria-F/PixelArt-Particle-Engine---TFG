@@ -8,6 +8,7 @@ class CanvasNode;
 class NodeConnection;
 
 enum connectionState;
+enum nodeType;
 
 class ModuleNodeCanvas : public Module
 {
@@ -22,6 +23,10 @@ public:
 	bool CleanUp();
 
 	void DrawGuizmo();
+
+	CanvasNode* DrawNodeList(float2 spawnPos, nodeType* allowedNodes, int numElements);
+	std::map<std::string, int> RequestNodeList(nodeType* nodes, int numElements) const;
+	CanvasNode* CreateNode(const char* name, nodeType type, float2 spawnPos) const;
 
 	void StartConnection(NodeConnection* connection);
 	void RequestConnection(NodeConnection* node);
@@ -44,6 +49,9 @@ private:
 	bool connectionEnded = false;
 
 	ImGuizmo::OPERATION guizmoOperation = ImGuizmo::TRANSLATE;
+
+	char node_filter[64];
+	bool drawingNodeList = false;
 };
 
 #endif // !__MODULENODECANVAS_H__

@@ -98,5 +98,6 @@ enum update_state
 #define NODE_BOX_MIN_HEIGHT 75.0f
 #define NODE_BOX_SEPARATION 20.0f
 #define BOX_CONTAINER_MARGIN 20.0f
+#define NODE_BOX_ADD_BUTTON_HEIGHT 20.0f
 
 #endif // !__GLOBALS_H__

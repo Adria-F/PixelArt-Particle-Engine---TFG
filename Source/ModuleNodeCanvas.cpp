@@ -53,6 +53,9 @@ update_state ModuleNodeCanvas::Update(float dt)
 		}
 	}
 
+	hoveredNode = newHoveredNode;
+	newHoveredNode = nullptr; //For detecting new hovered node in this frame
+
 	return UPDATE_CONTINUE;
 }
 

@@ -111,21 +111,24 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 		}
 		ImGui::PopStyleVar();
 
-		//Dragging
-		static bool dragging = false;
-		if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
+		if (movable)
 		{
-			clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
-			dragging = true;
-		}
-		if (dragging && ImGui::IsMouseReleased(0))
-		{
-			dragging = false;
-		}
-		if (App->nodeCanvas->selectedNode == this && dragging && ImGui::IsMouseDragging(0))
-		{
-			position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
-			position /= (zoom / 100.0f);
+			//Dragging
+			static bool dragging = false;
+			if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
+			{
+				clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
+				dragging = true;
+			}
+			if (dragging && ImGui::IsMouseReleased(0))
+			{
+				dragging = false;
+			}
+			if (App->nodeCanvas->selectedNode == this && dragging && ImGui::IsMouseDragging(0))
+			{
+				position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
+				position /= (zoom / 100.0f);
+			}
 		}
 
 		ImGui::EndGroup();

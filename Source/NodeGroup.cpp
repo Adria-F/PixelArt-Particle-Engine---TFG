@@ -84,7 +84,8 @@ bool NodeGroup::ElementLogic(float2 offset, int zoom)
 			}
 		}
 	}
-	App->nodeCanvas->hoveredNode = newHoveredNode;
+	if (newHoveredNode != nullptr)
+		App->nodeCanvas->newHoveredNode = newHoveredNode;
 
 	if (newSelectedNode && newSelectedNode != App->nodeCanvas->selectedNode)
 	{
@@ -137,6 +138,23 @@ void NodeGroup::RemoveBox(NodeBox* box, bool keepInList)
 	for (std::list<CanvasNode*>::iterator it_n = box->nodes.begin(); it_n != box->nodes.end(); ++it_n)
 	{
 		OnNodeRemoved((*it_n));
+	}
+}
+
+void NodeGroup::RepositionBoxes(NodeBox* resizedBox, float prevBottom)
+{
+	float boxBottom = resizedBox->position.y + resizedBox->size.y;
+	for (std::list<NodeBox*>::iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
+	{
+		if ((*it_b) != resizedBox)
+		{
+			if ((*it_b)->position.y <= boxBottom + NODE_BOX_SEPARATION && (*it_b)->position.y >= prevBottom)
+			{
+				float movingBoxPrevBottom = (*it_b)->position.y+(*it_b)->size.y;
+				(*it_b)->position.y = boxBottom + ((*it_b)->position.y -prevBottom);
+				RepositionBoxes((*it_b), movingBoxPrevBottom);
+			}
+		}
 	}
 }
 
@@ -237,10 +255,10 @@ void NodeBox::Draw(float2 offset, int zoom)
 		blockColor = IM_COL32(25, 25, 25, 255);
 		addBlockHovered = false;
 	}
-	draw_list->AddRectFilled(cursorPos, { cursorPos.x + NODE_DEFAULT_WIDTH * (zoom / 100.0f), cursorPos.y + 20.0f* (zoom / 100.0f) }, blockColor, 2.0f);
+	draw_list->AddRectFilled(cursorPos, { cursorPos.x + NODE_DEFAULT_WIDTH * (zoom / 100.0f), cursorPos.y + NODE_BOX_ADD_BUTTON_HEIGHT * (zoom / 100.0f) }, blockColor, 2.0f);
 	
 	ImVec2 textSize = ImGui::CalcTextSize("Add Node");
-	ImGui::SetCursorScreenPos({ cursorPos.x + (NODE_DEFAULT_WIDTH*(zoom / 100.0f) - textSize.x)*0.5f, cursorPos.y + (20.0f*(zoom / 100.0f)-textSize.y)*0.5f});
+	ImGui::SetCursorScreenPos({ cursorPos.x + (NODE_DEFAULT_WIDTH*(zoom / 100.0f) - textSize.x)*0.5f, cursorPos.y + (NODE_BOX_ADD_BUTTON_HEIGHT*(zoom / 100.0f)-textSize.y)*0.5f});
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
 	ImGui::Text("Add Node");
 	ImGui::PopStyleVar();
@@ -261,16 +279,53 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 {
 	ImVec2 cursorPos = nodeStartPosition;
 	//Handle nodes
+	CanvasNode* newHoveredNode = nullptr;
+	CanvasNode* newSelectedNode = nullptr;
 	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
 	{
-		//nodeHovered = Logic();
+		//Handle node deletion
+		if ((*it_n)->toDelete)
+		{
+			if (App->nodeCanvas->hoveredNode == (*it_n))
+				App->nodeCanvas->hoveredNode = nullptr;
+			if (App->nodeCanvas->selectedNode == (*it_n))
+				App->nodeCanvas->selectedNode = nullptr;
+
+			parentGroup->OnNodeRemoved((*it_n));
+
+			RELEASE((*it_n));
+			it_n = nodes.erase(it_n);
+
+			calcSize();
+
+			if (it_n == nodes.end())
+				break;
+		}		
+
+		//Handle node logic
+		if ((*it_n)->Logic({ cursorPos.x, cursorPos.y }, zoom))
+		{
+			newHoveredNode = (*it_n);
+			if (ImGui::IsMouseClicked(0))
+			{
+				newSelectedNode = (*it_n);
+			}
+		}
 		cursorPos.y += (*it_n)->size.y + NODE_BOX_PADDING;
+	}
+	if (newHoveredNode != nullptr)
+		App->nodeCanvas->newHoveredNode = newHoveredNode;
+
+	if (newSelectedNode && newSelectedNode != App->nodeCanvas->selectedNode)
+	{
+		App->nodeCanvas->selectedNode = newSelectedNode;
+		App->nodeCanvas->selectedConnection = nullptr; //Deselect connection
 	}
 
 	//Handle node addition
 	ImGui::SetCursorScreenPos(cursorPos);
 	ImGui::PushID(UID);
-	float2 scaledSize = { NODE_DEFAULT_WIDTH, 20.0f };
+	float2 scaledSize = { NODE_DEFAULT_WIDTH, NODE_BOX_ADD_BUTTON_HEIGHT };
 	scaledSize *= (zoom / 100.0f);
 
 	//Block hovering and pop up
@@ -293,7 +348,14 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 		static nodeType allowedNodes[1] = { EMITTER_EMISSION };
 		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, allowedNodes, 1);
 		if (createdNode != nullptr)
+		{
+			createdNode->movable = false;		
 			nodes.push_back(createdNode);
+			parentGroup->OnNodeAdded(createdNode);
+			float prevBottom = position.y + size.y;
+			calcSize();
+			parentGroup->RepositionBoxes(this, prevBottom);
+		}
 
 		ImGui::EndPopup();
 	}
@@ -302,7 +364,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	ImGui::EndGroup();
 	ImGui::PopID();
 
-	return addBlockHovered/*|| nodeHovered*/;
+	return addBlockHovered || newHoveredNode != nullptr;
 }
 
 float2 NodeBox::calcSize()
@@ -313,13 +375,16 @@ float2 NodeBox::calcSize()
 	}
 	else
 	{
-		size.y = ImGui::CalcTextSize(name.c_str()).y;
-		size.y += NODE_BOX_PADDING*2.0f;
-		for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
+		size.y = ImGui::CalcTextSize(name.c_str()).y + NODE_BOX_PADDING; //Box title
+		size.y += NODE_BOX_PADDING*2.0f; //Separator
+		for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n) //Nodes
 		{
 			size.y += (*it_n)->size.y + NODE_BOX_PADDING;
 		}
+		size.y += NODE_BOX_ADD_BUTTON_HEIGHT + NODE_BOX_PADDING; //Add node button
 	}
+
+	bottomConnection->localPosition.y = size.y;
 
 	return size;
 }

@@ -50,6 +50,8 @@ public:
 	void InsertBox(NodeBox* box);
 	void RemoveBox(NodeBox* box, bool keepInList = false);
 
+	void RepositionBoxes(NodeBox* resizedBox, float prevBottom);
+
 	virtual void OnNodeAdded(CanvasNode* node) {}
 	virtual void OnNodeRemoved(CanvasNode* node) {}
 	

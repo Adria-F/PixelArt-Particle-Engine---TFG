@@ -100,7 +100,7 @@ void PanelNodeCanvas::DrawContent()
 		}
 	}
 	if (newHoveredNode != nullptr)
-		App->nodeCanvas->hoveredNode = newHoveredNode;
+		App->nodeCanvas->newHoveredNode = newHoveredNode;
 	if (newSelectedNode && newSelectedNode != App->nodeCanvas->selectedNode)
 	{
 		//Move the selected node to the end of the list to draw it in front

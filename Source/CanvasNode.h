@@ -112,6 +112,7 @@ public:
 	bool toDelete = false;
 	bool hoveringElement = false;
 	bool interactable = true;
+	bool movable = true;
 };
 
 #endif // !__CANVASNODE_H__

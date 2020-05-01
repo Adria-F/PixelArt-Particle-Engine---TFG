@@ -7,12 +7,6 @@
 EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size): EntityData(emitter), CanvasNode(name, EMITTER_EMISSION, position, size)
 {
 	lastEmit = frequency;
-
-	NodeConnection* dataOut = new NodeConnection(this, NODE_OUTPUT, { size.x / 2.0f, 0.0f }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataOut);
-
-	NodeConnection* dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataIn);
 }
 
 void EmissionEmitterNode::Execute(float dt)

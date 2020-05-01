@@ -143,6 +143,7 @@
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\imgui_impl_sdl.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="InputParticleEmitterNode.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeGlobalParticleNode.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SpeedParticleNode.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TransformEmitterNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="InputParticleEmitterNode.h" />
     <ClInclude Include="MakeGlobalParticleNode.h" />
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\Geometry\AABB.h" />
@@ -288,6 +291,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SpeedParticleNode.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TransformEmitterNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Application\Shaders\default.fs" />

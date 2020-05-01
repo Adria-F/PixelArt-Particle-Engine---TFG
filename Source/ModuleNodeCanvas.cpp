@@ -14,6 +14,8 @@
 #include "MakeGlobalParticleNode.h"
 #include "DeathInstantiationParticleNode.h"
 #include "EmissionEmitterNode.h"
+#include "TransformEmitterNode.h"
+#include "InputParticleEmitterNode.h"
 
 ModuleNodeCanvas::ModuleNodeCanvas(bool start_enabled): Module(start_enabled)
 {
@@ -118,9 +120,9 @@ bool ModuleNodeCanvas::CleanUp()
 
 void ModuleNodeCanvas::DrawGuizmo()
 {
-	if (selectedNode != nullptr && selectedNode->type == EMITTER)
+	if (selectedNode != nullptr && selectedNode->type == EMITTER_TRANSFORM)
 	{
-		ParticleEmitter* emitter = (ParticleEmitter*)selectedNode;
+		TransformEmitterNode* transform = (TransformEmitterNode*)selectedNode;
 
 		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_IDLE)
 		{
@@ -161,7 +163,7 @@ void ModuleNodeCanvas::DrawGuizmo()
 		ImGuizmo::MODE mode;
 
 		float4x4* GlobalMat;
-		GlobalMat = &emitter->baseTransform->matrix;
+		GlobalMat = &transform->matrix;
 
 		float3 scale = float3::one;
 		float3 pos;
@@ -187,8 +189,9 @@ void ModuleNodeCanvas::DrawGuizmo()
 
 		if (ImGuizmo::IsUsing())
 		{
-			emitter->baseTransform->matrix.Decompose(emitter->baseTransform->position, emitter->baseTransform->rotation, emitter->baseTransform->scale);
-			emitter->baseTransform->rotationEuler = emitter->baseTransform->rotation.ToEulerXYZ();
+			transform->matrix.Decompose(transform->position, transform->rotation, transform->scale);
+			transform->rotationEuler = transform->rotation.ToEulerXYZ();
+			transform->changed = true;
 		}
 	}
 }
@@ -260,6 +263,12 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 		case EMITTER_EMISSION:
 			nodeList.insert(std::pair<std::string, nodeType>("Emission", nodes[i]));
 			break;
+		case EMITTER_TRANSFORM:
+			nodeList.insert(std::pair<std::string, nodeType>("Transform", nodes[i]));
+			break;
+		case EMITTER_INPUTPARTICLE:
+			nodeList.insert(std::pair<std::string, nodeType>("Input Particle", nodes[i]));
+			break;
 		}
 	}
 
@@ -293,6 +302,12 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case EMITTER_EMISSION:
 		node = new EmissionEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		break;
+	case EMITTER_TRANSFORM:
+		node = new TransformEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		break;
+	case EMITTER_INPUTPARTICLE:
+		node = new InputParticleEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 		break;
 	}
 

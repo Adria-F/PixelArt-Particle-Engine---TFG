@@ -6,14 +6,8 @@
 
 DeathInstantiationParticleNode::DeathInstantiationParticleNode(Particle * particle, const char * name, float2 position, float2 size) : EntityData(particle), CanvasNode(name, PARTICLE_DEATHINSTANTIATION, position, size)
 {
-	NodeConnection* dataOut = new NodeConnection(this, NODE_OUTPUT, { size.x / 2.0f, 0.0f }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataOut);
-
-	NodeConnection* dataIn = new NodeConnection(this, NODE_INPUT, { size.x / 2.0f, size.y }, TRIANGLE, ImGuiDir_Up);
-	connections.push_back(dataIn);
-
-	NodeConnection* dataIn2 = new NodeConnection(this, NODE_INPUT, { size.x - NODE_PADDING * 0.25f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
-	connections.push_back(dataIn2);
+	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x - NODE_PADDING * 0.25f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
+	connections.push_back(particleIn);
 }
 
 void DeathInstantiationParticleNode::Execute(float dt)

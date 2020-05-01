@@ -4,7 +4,7 @@
 #include "ModuleGUI.h"
 #include "ModuleNodeCanvas.h"
 
-NodeGroup::NodeGroup(const char* name, float2 position) : CanvasNode(name, NODE_HOLDER, position)
+NodeGroup::NodeGroup(const char* name, float2 position, nodeType type) : CanvasNode(name, type, position)
 {
 	interactable = false;
 }
@@ -50,6 +50,12 @@ void NodeGroup::Draw(float2 offset, int zoom)
 	for (std::list<NodeBox*>::iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
 	{
 		(*it_b)->Draw(offset, zoom);
+	}
+
+	//Draw conections
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		(*it_c)->Draw(zoom);
 	}
 
 	ImGui::EndGroup();
@@ -245,7 +251,7 @@ void NodeBox::Draw(float2 offset, int zoom)
 	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
 	{
 		(*it_n)->Draw({ cursorPos.x, cursorPos.y }, zoom);
-		cursorPos.y += (*it_n)->size.y + NODE_BOX_PADDING;
+		cursorPos.y += ((*it_n)->size.y + NODE_BOX_PADDING)*(zoom / 100.0f);
 	}
 
 	//Draw empty block to add nodes
@@ -311,7 +317,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 				newSelectedNode = (*it_n);
 			}
 		}
-		cursorPos.y += (*it_n)->size.y + NODE_BOX_PADDING;
+		cursorPos.y += ((*it_n)->size.y + NODE_BOX_PADDING)*(zoom / 100.0f);
 	}
 	if (newHoveredNode != nullptr)
 		App->nodeCanvas->newHoveredNode = newHoveredNode;
@@ -345,8 +351,17 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##node list"))
 	{
-		static nodeType allowedNodes[1] = { EMITTER_EMISSION };
-		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, allowedNodes, 1);
+		CanvasNode* createdNode = nullptr;
+		if (type == EMITTER_NODE_BOX)
+		{
+			static nodeType emitterNodes[3] = { EMITTER_EMISSION, EMITTER_TRANSFORM, EMITTER_INPUTPARTICLE };
+			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, emitterNodes, 3);
+		}
+		else if (type == PARTICLE_NODE_BOX)
+		{
+			static nodeType particleNodes[4] = { PARTICLE_COLOR, PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_DEATHINSTANTIATION };
+			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, particleNodes, 4);
+		}
 		if (createdNode != nullptr)
 		{
 			createdNode->movable = false;		

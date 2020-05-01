@@ -241,8 +241,14 @@
     <ClCompile Include="DeathInstantiationParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="TransformEmitterNode.cpp">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClCompile>
     <ClCompile Include="NodeGroup.cpp">
-      <Filter>Sources\Nodes</Filter>
+      <Filter>Sources\Nodes\Types</Filter>
+    </ClCompile>
+    <ClCompile Include="InputParticleEmitterNode.cpp">
+      <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -528,8 +534,14 @@
     <ClInclude Include="DeathInstantiationParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="TransformEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClInclude>
     <ClInclude Include="NodeGroup.h">
-      <Filter>Sources\Nodes</Filter>
+      <Filter>Sources\Nodes\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="InputParticleEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

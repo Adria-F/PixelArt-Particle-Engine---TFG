@@ -40,7 +40,7 @@ class NodeGroup : public CanvasNode
 {
 public:
 	NodeGroup() {}
-	NodeGroup(const char* name, float2 position);
+	NodeGroup(const char* name, float2 position, nodeType type);
 	~NodeGroup();
 
 	void Draw(float2 offset, int zoom);

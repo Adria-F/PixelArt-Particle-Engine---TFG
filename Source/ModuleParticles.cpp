@@ -22,6 +22,8 @@
 #include "BaseTransformEmitterNode.h"
 
 #include "EmissionEmitterNode.h"
+#include "TransformEmitterNode.h"
+#include "InputParticleEmitterNode.h"
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled)
 {
@@ -125,7 +127,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
-ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): NodeGroup(name, position)
+ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): NodeGroup(name, position, EMITTER)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -188,13 +190,18 @@ void ParticleEmitter::Stop()
 
 void ParticleEmitter::Update(float dt)
 {
+	if (inputParticle != nullptr)
+		inputParticle->Execute(dt);
+
 	if (playing && templateParticle != nullptr)
 	{
-		if (emission != nullptr)
+		for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 		{
-			emission->Execute(dt);
+			if (data[i] != nullptr)
+				data[i]->Execute(dt);
 		}
-		else
+
+		if (emission == nullptr)
 		{
 			lastEmit += dt;
 
@@ -263,6 +270,16 @@ vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
 	return point.Normalized();
 }
 
+void ParticleEmitter::SetTemplate(Particle* templateParticle)
+{
+	if (templateParticle != nullptr)
+		Play(); //TMP only if scene is playing
+	else
+		Stop();
+
+	this->templateParticle = templateParticle;
+}
+
 Particle* ParticleEmitter::GetTemplate() const
 {
 	return templateParticle;
@@ -277,13 +294,17 @@ void ParticleEmitter::OnNodeAdded(CanvasNode* node)
 {
 	switch (node->type)
 	{
-	/*case PARTICLE:
-		templateParticle = (Particle*)node;
-		Play(); //TMP if scene is playing
-		ret = true;
-		break;*/
 	case EMITTER_EMISSION:
 		emission = (EmissionEmitterNode*)node;
+		emission->emitter = this;
+		break;
+	case EMITTER_TRANSFORM:
+		transform = (TransformEmitterNode*)node;
+		transform->emitter = this;
+		break;
+	case EMITTER_INPUTPARTICLE:
+		inputParticle = (InputParticleEmitterNode*)node;
+		inputParticle->emitter = this;
 		break;
 	}
 }
@@ -292,69 +313,22 @@ void ParticleEmitter::OnNodeRemoved(CanvasNode* node)
 {
 	switch (node->type)
 	{
-	/*case PARTICLE:
-		Stop();
-		templateParticle = nullptr;
-		break;*/
 	case EMITTER_EMISSION:
 		emission = nullptr;
+		break;
+	case EMITTER_TRANSFORM:
+		transform = nullptr;
+		break;
+	case EMITTER_INPUTPARTICLE:
+		Stop();
+		inputParticle = nullptr;
 		break;
 	}
 }
 
-void ParticleEmitter::DisplayConfig()
-{
-	//Transform
-	ImGui::Text("Transform:");
-	bool changed = false;
-	///Position
-	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
-	ImGui::Text("Position"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##posX", &baseTransform->position.x, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##posY", &baseTransform->position.y, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##posZ", &baseTransform->position.z, 0.1f, true))
-		changed = true;
-	///Rotation
-	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
-	ImGui::Text("Rotation"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##rotX", &baseTransform->rotationEuler.x, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##rotY", &baseTransform->rotationEuler.y, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##rotZ", &baseTransform->rotationEuler.z, 0.1f, true))
-		changed = true;
-	///Scale
-	ImGui::Dummy({ 25.0f, 0.0f }); ImGui::SameLine();
-	ImGui::Text("Scale"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##scaleX", &baseTransform->scale.x, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##scaleY", &baseTransform->scale.y, 0.1f, true))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##scaleZ", &baseTransform->scale.z, 0.1f, true))
-		changed = true;
-	ImGui::Separator();
-
-	if (changed)
-	{
-		baseTransform->rotation = Quat::FromEulerXYZ(baseTransform->rotationEuler.x, baseTransform->rotationEuler.y, baseTransform->rotationEuler.z);
-		baseTransform->CalculateMatrix();
-	}
-
-	ImGui::Text("Frequency"); ImGui::SameLine();
-	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, true);
-}
-
 // ----------------------------- PARTICLE ----------------------------------
 
-Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(name, position)
+Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(name, position, PARTICLE)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -368,6 +342,9 @@ Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(na
 	AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX);
 	AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
 	AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
+
+	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { 0.0f, 25.0f }, TRIANGLE, ImGuiDir_Left);
+	connections.push_back(particleOut);
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)
@@ -394,7 +371,7 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 
 Particle::~Particle()
 {
-	if (particleOut == nullptr) //If it has node connections means that it's managed from canvas, so data will be deleted from there as nodes (template particle)
+	if (boxes.size() == 0) //If it has NodeBoxes means that it's managed from canvas, so data will be deleted from there as nodes (template particle)
 	{
 		for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 		{
@@ -444,15 +421,19 @@ void Particle::OnNodeAdded(CanvasNode * node)
 	{
 	case PARTICLE_COLOR:
 		color = (ColorParticleNode*)node;
+		color->particle = this;
 		break;
 	case PARTICLE_SPEED:
 		speed = (SpeedParticleNode*)node;
+		speed->particle = this;
 		break;
 	case PARTICLE_MAKEGLOBAL:
 		makeGlobal = (MakeGlobalParticleNode*)node;
+		makeGlobal->particle = this;
 		break;
 	case PARTICLE_DEATHINSTANTIATION:
 		deathInstantiation = (DeathInstantiationParticleNode*)node;
+		deathInstantiation->particle = this;
 		break;
 	};
 }
@@ -474,6 +455,24 @@ void Particle::OnNodeRemoved(CanvasNode * node)
 		deathInstantiation = nullptr;
 		break;
 	}
+}
+
+bool Particle::OnConnection(NodeConnection* connection)
+{
+	bool ret = false;
+
+	if (connection->type == NODE_INPUT && connection->node->type == EMITTER_INPUTPARTICLE)
+	{
+		emitter = ((InputParticleEmitterNode*)connection->node)->emitter;
+		ret = true;
+	}
+
+	return ret;
+}
+
+void Particle::OnDisconnection(NodeConnection* connection)
+{
+	emitter = nullptr; //Only connection with Input Particle node
 }
 
 void Particle::DisplayConfig()

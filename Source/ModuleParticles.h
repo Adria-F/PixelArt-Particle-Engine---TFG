@@ -28,6 +28,8 @@ class ParticleEmitter;
 class BaseTransformEmitterNode;
 
 class EmissionEmitterNode;
+class TransformEmitterNode;
+class InputParticleEmitterNode;
 
 class Particle: public NodeGroup
 {
@@ -46,6 +48,9 @@ public:
 	//Canvas
 	void OnNodeAdded(CanvasNode* node);
 	void OnNodeRemoved(CanvasNode* node);
+
+	bool OnConnection(NodeConnection* connection);
+	void OnDisconnection(NodeConnection* connection);
 
 	void DisplayConfig();
 
@@ -69,9 +74,6 @@ public:
 	};
 
 	ParticleEmitter* emitter = nullptr;
-
-	//Connections
-	NodeConnection* particleOut = nullptr;
 
 	float lifeTime = 5.0f;
 
@@ -105,14 +107,13 @@ public:
 	Particle* SpawnParticle(Particle* particle);
 	vec randomDirectionInCone(float radius, float height) const;
 
+	void SetTemplate(Particle* templateParticle);
 	Particle* GetTemplate() const;
 	int GetParticleCount() const;
 
 	//Canvas
 	void OnNodeAdded(CanvasNode* node);
 	void OnNodeRemoved(CanvasNode* node);
-
-	void DisplayConfig();
 
 public:
 
@@ -121,6 +122,8 @@ public:
 		struct
 		{
 			EmissionEmitterNode* emission;
+			TransformEmitterNode* transform;
+			InputParticleEmitterNode* inputParticle;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformEmitterNode* baseTransform;
@@ -128,7 +131,7 @@ public:
 		EntityData* data[MAX_ENTITY_DATA];
 	};
 
-	float frequency = 0.25f;
+	float frequency = 0.0f;
 
 private:
 

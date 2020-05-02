@@ -5,7 +5,7 @@
 
 InputParticleEmitterNode::InputParticleEmitterNode(ParticleEmitter* emitter, const char * name, float2 position, float2 size) : EntityData(emitter), CanvasNode(name, EMITTER_INPUTPARTICLE, position, size)
 {
-	particleIn = new NodeConnection(this, NODE_INPUT, { size.x, size.y/2.0f }, TRIANGLE, ImGuiDir_Left);
+	particleIn = new NodeConnection(this, NODE_INPUT, { size.x-CONNECTIONTRIANGLE_SIZE*0.5f, size.y/2.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleIn);
 }
 

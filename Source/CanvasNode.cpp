@@ -8,6 +8,22 @@
 inline float DistanceToLine(float2 v, float2 w, float2 p);
 inline bool PointInsideRect(float2 A, float2 B, float2 point);
 
+CanvasNode::CanvasNode(const char* name, nodeType type, float2 position, float2 size) : name(name), type(type), position(position), size(size)
+{
+	UID = GENERATE_UID();
+
+	//Calculate title size
+	ImFont* canvasFont = App->gui->GetFont(100, CANVAS_FONT_SIZE);
+	if (canvasFont != nullptr)
+		ImGui::PushFont(canvasFont);
+
+	ImVec2 textSize = ImGui::CalcTextSize(name);
+	titleSize = { textSize.x, textSize.y};
+
+	if (canvasFont != nullptr)
+		ImGui::PopFont();
+}
+
 CanvasNode::~CanvasNode()
 {
 	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
@@ -48,7 +64,8 @@ void CanvasNode::Draw(float2 offset, int zoom)
 	if (scaledFont != nullptr)
 		ImGui::PushFont(scaledFont);
 
-	ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING*(zoom / 100.0f), gridPosition.y + NODE_PADDING*(zoom / 100.0f) });
+	float2 scaledTitleSize = titleSize * (zoom / 100.0f);
+	ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING*(zoom / 100.0f), gridPosition.y + (scaledSize.y-scaledTitleSize.y)*0.5f });
 	ImGui::BeginGroup();
 	ImGui::Text(name.c_str());
 
@@ -337,8 +354,11 @@ void NodeConnection::SetConnection(NodeConnection* node)
 
 void NodeConnection::Disconnect()
 {
-	this->node->OnDisconnection(connected);
-	connected = nullptr;
+	if (connected)
+	{
+		this->node->OnDisconnection(connected);
+		connected = nullptr;
+	}
 }
 
 inline float DistanceToLine(float2 v, float2 w, float2 p)

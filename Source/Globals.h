@@ -92,7 +92,7 @@ enum update_state
 #define NODE_PADDING 10.0f
 #define NODE_BOX_PADDING 5.0f
 
-#define NODE_DEFAULT_WIDTH 175.0f
+#define NODE_DEFAULT_WIDTH 185.0f
 #define NODE_DEFAULT_HEIGHT 50.0f
 
 #define NODE_BOX_MIN_HEIGHT 75.0f

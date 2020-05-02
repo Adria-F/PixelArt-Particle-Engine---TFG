@@ -7,6 +7,9 @@
 NodeGroup::NodeGroup(const char* name, float2 position, nodeType type) : CanvasNode(name, type, position)
 {
 	interactable = false;
+
+	titleSize.x += NODE_PADDING * 2.0f;
+	titleSize.y += NODE_PADDING;
 }
 
 NodeGroup::~NodeGroup()
@@ -25,21 +28,26 @@ void NodeGroup::Draw(float2 offset, int zoom)
 	//Node box
 	ImU32 borderColor = IM_COL32(100, 100, 100, 255);
 	ImU32 backgroundColor = IM_COL32(45, 45, 50, 255);
-	float thickness = 5.0f;
+	float thickness = 3.0f;
 
 	CalcRect();
 	gridPosition = position * (zoom / 100.0f) + offset;
 	float2 scaledSize = size * (zoom / 100.0f);
 
+	float2 scaledTitleSize = titleSize * (zoom / 100.0f);
+	float2 titlePos = { gridPosition.x + scaledSize.x*0.5f - scaledTitleSize.x*0.5f, gridPosition.y - scaledTitleSize.y };
+
+	draw_list->AddRect({ titlePos.x, titlePos.y }, { titlePos.x + scaledTitleSize.x, titlePos.y + scaledTitleSize.y*2.0f }, borderColor, 8.0f, 15, thickness*2.0f);
 	draw_list->AddRectFilled({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, backgroundColor, 4.0f);
 	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, borderColor, 4.0f, 15, thickness);
+	draw_list->AddRectFilled({ titlePos.x, titlePos.y }, { titlePos.x + scaledTitleSize.x, titlePos.y + scaledTitleSize.y+thickness*3.0f }, backgroundColor, 8.0f);
 
 	//Draw scalable text
 	ImFont* scaledFont = App->gui->GetFont(zoom, CANVAS_FONT_SIZE);
 	if (scaledFont != nullptr)
 		ImGui::PushFont(scaledFont);
 
-	ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING * (zoom / 100.0f), gridPosition.y + NODE_PADDING * (zoom / 100.0f) });
+	ImGui::SetCursorScreenPos({ titlePos.x + NODE_PADDING * (zoom / 100.0f), titlePos.y + NODE_PADDING * (zoom / 100.0f) });
 	ImGui::BeginGroup();
 	ImGui::Text(name.c_str());
 

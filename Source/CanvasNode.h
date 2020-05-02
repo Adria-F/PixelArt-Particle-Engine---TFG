@@ -83,10 +83,7 @@ class CanvasNode
 public:
 
 	CanvasNode() {}
-	CanvasNode(const char* name, nodeType type, float2 position, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }) : name(name), type(type), position(position), size(size)
-	{
-		UID = GENERATE_UID();
-	}
+	CanvasNode(const char* name, nodeType type, float2 position, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 	virtual ~CanvasNode();
 
 	virtual void Draw(float2 offset, int zoom);
@@ -110,6 +107,8 @@ public:
 
 	float2 gridPosition;
 	float2 clickOffset;
+
+	float2 titleSize;
 
 	bool toDelete = false;
 	bool hoveringElement = false;

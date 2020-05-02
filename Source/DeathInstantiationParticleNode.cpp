@@ -6,7 +6,7 @@
 
 DeathInstantiationParticleNode::DeathInstantiationParticleNode(Particle * particle, const char * name, float2 position, float2 size) : EntityData(particle), CanvasNode(name, PARTICLE_DEATHINSTANTIATION, position, size)
 {
-	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x - NODE_PADDING * 0.25f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
+	NodeConnection* particleIn = new NodeConnection(this, NODE_INPUT, { size.x - CONNECTIONTRIANGLE_SIZE*0.5f, size.y / 2.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleIn);
 }
 
@@ -27,4 +27,22 @@ EntityData* DeathInstantiationParticleNode::Copy(Particle* particle) const
 	ret->instantiateParticle = instantiateParticle;
 
 	return ret;
+}
+
+bool DeathInstantiationParticleNode::OnConnection(NodeConnection* connection)
+{
+	bool ret = false;
+
+	if (connection->type == NODE_OUTPUT && connection->node->type == PARTICLE && connection->node != particle)
+	{
+		instantiateParticle = (Particle*)connection->node;
+		ret = true;
+	}
+
+	return ret;
+}
+
+void DeathInstantiationParticleNode::OnDisconnection(NodeConnection * connection)
+{
+	instantiateParticle = nullptr;
 }

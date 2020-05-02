@@ -343,7 +343,7 @@ Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(na
 	AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
 	AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
 
-	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { 0.0f, 25.0f }, TRIANGLE, ImGuiDir_Left);
+	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { -CONNECTIONTRIANGLE_SIZE*0.5f, 25.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleOut);
 }
 
@@ -461,10 +461,17 @@ bool Particle::OnConnection(NodeConnection* connection)
 {
 	bool ret = false;
 
-	if (connection->type == NODE_INPUT && connection->node->type == EMITTER_INPUTPARTICLE)
+	if (connection->type == NODE_INPUT)
 	{
-		emitter = ((InputParticleEmitterNode*)connection->node)->emitter;
-		ret = true;
+		if (connection->node->type == EMITTER_INPUTPARTICLE)
+		{
+			emitter = ((InputParticleEmitterNode*)connection->node)->emitter;
+			ret = true;
+		}
+		if (connection->node->type == PARTICLE_DEATHINSTANTIATION)
+		{
+			ret = true;
+		}
 	}
 
 	return ret;

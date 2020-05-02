@@ -71,6 +71,12 @@ update_state ModuleNodeCanvas::PostUpdate(float dt)
 		{
 			connectionCallback->SetConnection(connecting);
 			connecting->SetConnection(connectionCallback);
+
+			if (connectionCallback->connected != connecting || connecting->connected != connectionCallback) //If one of them has not accepted connection, disconnect the other
+			{
+				connectionCallback->Disconnect();
+				connecting->Disconnect();
+			}
 		}
 		connecting = nullptr;
 		connectionCallback = nullptr;
@@ -255,7 +261,7 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 			nodeList.insert(std::pair<std::string, nodeType>("Make Global", nodes[i]));
 			break;
 		case PARTICLE_DEATHINSTANTIATION:
-			nodeList.insert(std::pair<std::string, nodeType>("Death Instantiation", nodes[i]));
+			nodeList.insert(std::pair<std::string, nodeType>("Death Instantiate", nodes[i]));
 			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));

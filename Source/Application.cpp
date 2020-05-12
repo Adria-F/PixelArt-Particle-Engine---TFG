@@ -9,11 +9,14 @@
 
 #include "ModuleParticles.h"
 #include "ModuleNodeCanvas.h"
+#include "ModuleProjectManager.h"
 
 using namespace std;
 
 Application::Application()
 {
+	JSON_Manager = new JSONManager();
+
 	// Create all modules
 	window = new ModuleWindow();
 	render = new ModuleRender();
@@ -23,6 +26,7 @@ Application::Application()
 
 	particles = new ModuleParticles();
 	nodeCanvas = new ModuleNodeCanvas();
+	projectManager = new ModuleProjectManager();
 
 	// Add all modules to application
 	AddModule(window);
@@ -32,6 +36,7 @@ Application::Application()
 
 	AddModule(particles);
 	AddModule(nodeCanvas);
+	AddModule(projectManager);
 
 	//Render module last
 	AddModule(render);

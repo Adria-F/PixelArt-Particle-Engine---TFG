@@ -36,3 +36,8 @@ void InputParticleEmitterNode::OnDisconnection(NodeConnection* connection)
 	inputParticle = nullptr;
 	emitter->SetTemplate(nullptr);
 }
+
+void InputParticleEmitterNode::SaveExtraInfo(JSON_Value * node)
+{
+	node->addUint("particle", (inputParticle != nullptr) ? inputParticle->UID : 0);
+}

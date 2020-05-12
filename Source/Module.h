@@ -11,7 +11,7 @@ private:
 
 public:
 
-	Module (bool start_anabled = true): enabled(start_anabled)
+	Module (bool start_enabled = true): enabled(start_enabled)
 	{}
 	virtual ~Module(){}
 

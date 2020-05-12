@@ -155,6 +155,27 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 	return isHovered;
 }
 
+void CanvasNode::Save(JSON_Value* project)
+{
+	JSON_Value* node = project->createValue();
+
+	node->addString("name", name.c_str());
+	node->addUint("uid", UID);
+	node->addUint("type", type);
+
+	node->addVector2("position", position);
+	node->addVector2("size", size);
+
+	//TODO: Connections?
+
+	node->addBool("interactable", interactable);
+	node->addBool("movable", movable);
+
+	SaveExtraInfo(node);	
+	project->addValue("", node);
+	SaveChildNodes(project);
+}
+
 NodeConnection::NodeConnection(CanvasNode* node, connectionType type, float2 position, shapeType shape, ImGuiDir_ direction): node(node), type(type), localPosition(position), shape(shape), direction(direction)
 {
 }

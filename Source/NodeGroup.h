@@ -21,6 +21,9 @@ public:
 	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
 
+	void SaveExtraInfo(JSON_Value* node);
+	void SaveChildNodes(JSON_Value* project);
+
 public:
 
 	NodeGroup* parentGroup = nullptr;
@@ -56,6 +59,8 @@ public:
 	virtual void OnNodeRemoved(CanvasNode* node) {}
 	
 	void CalcRect();
+
+	void SaveChildNodes(JSON_Value* project);
 
 public:
 

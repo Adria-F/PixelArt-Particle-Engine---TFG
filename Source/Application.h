@@ -8,6 +8,7 @@
 
 // Predefine all Modules
 class Module;
+class JSONManager;
 class ModuleWindow;
 class ModuleRender;
 class ModuleInput;
@@ -16,20 +17,24 @@ class ModuleCamera;
 
 class ModuleParticles;
 class ModuleNodeCanvas;
+class ModuleProjectManager;
 
 class Application
 {
 public:
 
-	//Declare All Module pointers
-	ModuleWindow*		window = nullptr;
-	ModuleRender*		render = nullptr;
-	ModuleInput*		input = nullptr;
-	ModuleGUI*			gui = nullptr;
-	ModuleCamera*		camera = nullptr;
+	JSONManager* JSON_Manager = nullptr;
 
-	ModuleParticles*	particles = nullptr;
-	ModuleNodeCanvas*	nodeCanvas = nullptr;
+	//Declare All Module pointers
+	ModuleWindow*			window = nullptr;
+	ModuleRender*			render = nullptr;
+	ModuleInput*			input = nullptr;
+	ModuleGUI*				gui = nullptr;
+	ModuleCamera*			camera = nullptr;
+
+	ModuleParticles*		particles = nullptr;
+	ModuleNodeCanvas*		nodeCanvas = nullptr;
+	ModuleProjectManager*	projectManager = nullptr;
 
 private:
 

@@ -59,3 +59,10 @@ void EmissionEmitterNode::DisplayConfig()
 	
 	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, repeatBurst);
 }
+
+void EmissionEmitterNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addFloat("frequency", frequency);
+	node->addFloat("burst", burst);
+	node->addBool("repeat", repeatBurst);
+}

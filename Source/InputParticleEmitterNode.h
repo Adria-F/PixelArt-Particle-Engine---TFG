@@ -16,6 +16,8 @@ public:
 	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
 
+	void SaveExtraInfo(JSON_Value* node);
+
 public:
 
 	NodeConnection* particleIn = nullptr;

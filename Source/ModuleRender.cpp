@@ -73,10 +73,6 @@ bool ModuleRender::Init()
 		//Initialize clear color
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);//clear values for the color buffers. The initial values are all 0.
 
-
-		//specify pixel arithmetic glBlendFunc(rgb source blending factors, rgb destination blending factors)
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		//Check for error
 		error = glGetError();
 		if (error != GL_NO_ERROR)

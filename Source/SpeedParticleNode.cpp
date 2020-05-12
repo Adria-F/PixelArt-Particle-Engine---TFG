@@ -41,3 +41,9 @@ void SpeedParticleNode::DisplayConfig()
 		ImGui::Text("Curve system is work in progress");
 	}
 }
+
+void SpeedParticleNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addFloat("speed", speed);
+	node->addBool("overLifetime", overLifetime);
+}

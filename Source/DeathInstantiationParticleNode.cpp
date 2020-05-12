@@ -46,3 +46,8 @@ void DeathInstantiationParticleNode::OnDisconnection(NodeConnection * connection
 {
 	instantiateParticle = nullptr;
 }
+
+void DeathInstantiationParticleNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addUint("particle", (instantiateParticle != nullptr) ? instantiateParticle->UID : 0);
+}

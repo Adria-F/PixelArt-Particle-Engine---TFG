@@ -60,3 +60,8 @@ void TransformEmitterNode::DisplayConfig()
 	if (App->gui->DrawInputFloat("Z", "##scaleZ", &scale.z, 0.1f, true))
 		changed = true;
 }
+
+void TransformEmitterNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addTransform("matrix", matrix);
+}

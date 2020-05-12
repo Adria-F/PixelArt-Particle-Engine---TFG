@@ -17,6 +17,8 @@ public:
 
 	void DisplayConfig();
 
+	void SaveExtraInfo(JSON_Value* node);
+
 public:
 
 	enum {

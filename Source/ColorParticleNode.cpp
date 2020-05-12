@@ -47,3 +47,34 @@ void ColorParticleNode::DisplayConfig()
 	else
 		App->gui->DrawGradientBox(overLifetimeColor);
 }
+
+void ColorParticleNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addVector4("color", fixColor.Get());
+
+	//Save gradient
+	JSON_Value* gradient = node->createValue();
+	for (std::map<float, vec>::iterator it_c = overLifetimeColor.colorList.begin(); it_c != overLifetimeColor.colorList.end(); ++it_c)
+	{
+		JSON_Value* key = gradient->createValue();
+
+		key->addUint("type", 0); //0 for color - 1 for alpha
+		key->addFloat("percent", (*it_c).first);
+		key->addVector3("color", (*it_c).second);
+
+		gradient->addValue("", key);
+	}
+	for (std::map<float, float>::iterator it_a = overLifetimeColor.alphaList.begin(); it_a != overLifetimeColor.alphaList.end(); ++it_a)
+	{
+		JSON_Value* key = gradient->createValue();
+
+		key->addUint("type", 1); //0 for color - 1 for alpha
+		key->addFloat("percent", (*it_a).first);
+		key->addFloat("alpha", (*it_a).second);
+
+		gradient->addValue("", key);
+	}
+	node->addValue("gradient", gradient);
+
+	node->addBool("overLifetime", overLifetime);
+}

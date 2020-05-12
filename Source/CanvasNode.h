@@ -95,6 +95,10 @@ public:
 
 	virtual void DisplayConfig() {}
 
+	void Save(JSON_Value* project);
+	virtual void SaveExtraInfo(JSON_Value* node) {}
+	virtual void SaveChildNodes(JSON_Value* project) {}
+
 public:
 
 	std::string name;

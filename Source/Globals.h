@@ -19,9 +19,10 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#include "Color.h"
-
 typedef unsigned int uint;
+
+#include "Color.h"
+#include "JSONManager.h"
 
 #define LOG(format, ...) log(__FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -99,5 +100,10 @@ enum update_state
 #define NODE_BOX_SEPARATION 20.0f
 #define BOX_CONTAINER_MARGIN 20.0f
 #define NODE_BOX_ADD_BUTTON_HEIGHT 20.0f
+
+// Files PATHS
+#define PATHS_AMOUNT 2
+#define ASSETS_FOLDER "Assets/"
+#define PROJECTS_FOLDER "Projects/"
 
 #endif // !__GLOBALS_H__

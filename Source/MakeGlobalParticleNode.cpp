@@ -20,3 +20,8 @@ void MakeGlobalParticleNode::DisplayConfig()
 	ImGui::Text("Active"); ImGui::SameLine();
 	ImGui::Checkbox("##active", &active);
 }
+
+void MakeGlobalParticleNode::SaveExtraInfo(JSON_Value* node)
+{
+	node->addBool("active", active);
+}

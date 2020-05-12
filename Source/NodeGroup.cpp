@@ -195,6 +195,14 @@ void NodeGroup::CalcRect()
 	size = bottomRight - topLeft;
 }
 
+void NodeGroup::SaveChildNodes(JSON_Value* project)
+{
+	for (std::list<NodeBox*>::iterator it_n = boxes.begin(); it_n != boxes.end(); ++it_n)
+	{
+		(*it_n)->Save(project);
+	}
+}
+
 NodeBox::NodeBox(const char* name, nodeType type, float2 position, float2 size, NodeGroup* parentGroup) : CanvasNode(name, type, position, size), parentGroup(parentGroup)
 {
 	topConnection = new NodeConnection(this, NODE_INPUT, { size.x/2.0f, 0.0f }, CIRCLE);
@@ -455,5 +463,21 @@ void NodeBox::OnDisconnection(NodeConnection* connection)
 		{
 			bottomConnection->connected->node->OnDisconnection(bottomConnection);
 		}
+	}
+}
+
+void NodeBox::SaveExtraInfo(JSON_Value* node)
+{
+	node->addUint("parent", parentGroup->UID);
+
+	node->addUint("topConnection", (topConnection != nullptr) ? topConnection->node->UID : 0);
+	node->addUint("bottomConnection", (bottomConnection != nullptr) ? bottomConnection->node->UID : 0);
+}
+
+void NodeBox::SaveChildNodes(JSON_Value* project)
+{
+	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
+	{
+		(*it_n)->Save(project);
 	}
 }

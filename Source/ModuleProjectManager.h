@@ -17,6 +17,13 @@ public:
 	void SaveProject(const char* path);
 	void LoadProject(const char* path);
 
+	std::string OpenFileDialog(const char* extensionHint, const char* extension);
+	std::string SaveFileDialog(const char* extensionHint, const char* extension);
+
+public:
+
+	std::string workingDir;
+
 };
 
 #endif // !__MODULE_PROJECTMANAGER_H__

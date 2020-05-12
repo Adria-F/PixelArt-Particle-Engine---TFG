@@ -36,7 +36,7 @@ void EmissionEmitterNode::Execute(float dt)
 
 void EmissionEmitterNode::Play()
 {
-	if (type == BURST && !repeatBurst)
+	if (emitter && emitter->GetTemplate() != nullptr && type == BURST && !repeatBurst)
 	{
 		for (int i = 0; i < burst; ++i)
 		{

@@ -6,6 +6,7 @@
 
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleProjectManager.h"
 
 // Include all panels
 #include "PanelScene.h"
@@ -87,6 +88,44 @@ update_state ModuleGUI::PreUpdate(float dt)
 
 update_state ModuleGUI::Update(float dt)
 {	
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New"))
+			{
+				//Request to save if changes made
+				//Create empty project
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+				App->projectManager->OpenFileDialog(PROJECT_FORMAT_HINT, (std::string("*")+PROJECT_EXTENSION).c_str());
+			}
+			if (ImGui::MenuItem("Save"))
+			{
+				if (App->projectManager->workingDir.length() == 0)
+				{
+					App->projectManager->workingDir = App->projectManager->SaveFileDialog(PROJECT_FORMAT_HINT, PROJECT_EXTENSION);
+				}
+				if (App->projectManager->workingDir.length() > 0)
+				{
+					App->projectManager->SaveProject(App->projectManager->workingDir.c_str());
+				}
+			}
+			if (ImGui::MenuItem("Save As"))
+			{
+				App->projectManager->workingDir = App->projectManager->SaveFileDialog(PROJECT_FORMAT_HINT, PROJECT_EXTENSION);
+				if (App->projectManager->workingDir.length() > 0)
+				{
+					App->projectManager->SaveProject(App->projectManager->workingDir.c_str());
+				}
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
 
 	return UPDATE_CONTINUE;
 }

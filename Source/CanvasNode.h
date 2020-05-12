@@ -95,7 +95,7 @@ public:
 
 	virtual void DisplayConfig() {}
 
-	void Save(JSON_Value* project);
+	void Save(JSON_Value* project, uint parent = 0);
 	virtual void SaveExtraInfo(JSON_Value* node) {}
 	virtual void SaveChildNodes(JSON_Value* project) {}
 

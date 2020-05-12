@@ -155,13 +155,15 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 	return isHovered;
 }
 
-void CanvasNode::Save(JSON_Value* project)
+void CanvasNode::Save(JSON_Value* project, uint parent)
 {
 	JSON_Value* node = project->createValue();
 
 	node->addString("name", name.c_str());
 	node->addUint("uid", UID);
 	node->addUint("type", type);
+	if (parent != 0)
+		node->addUint("parent", parent);
 
 	node->addVector2("position", position);
 	node->addVector2("size", size);

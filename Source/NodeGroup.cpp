@@ -199,7 +199,7 @@ void NodeGroup::SaveChildNodes(JSON_Value* project)
 {
 	for (std::list<NodeBox*>::iterator it_n = boxes.begin(); it_n != boxes.end(); ++it_n)
 	{
-		(*it_n)->Save(project);
+		(*it_n)->Save(project, UID);
 	}
 }
 
@@ -468,16 +468,14 @@ void NodeBox::OnDisconnection(NodeConnection* connection)
 
 void NodeBox::SaveExtraInfo(JSON_Value* node)
 {
-	node->addUint("parent", parentGroup->UID);
-
-	node->addUint("topConnection", (topConnection != nullptr) ? topConnection->node->UID : 0);
-	node->addUint("bottomConnection", (bottomConnection != nullptr) ? bottomConnection->node->UID : 0);
+	node->addUint("topConnection", (topConnection->connected != nullptr) ? topConnection->connected->node->UID : 0);
+	node->addUint("bottomConnection", (bottomConnection->connected != nullptr) ? bottomConnection->connected->node->UID : 0);
 }
 
 void NodeBox::SaveChildNodes(JSON_Value* project)
 {
 	for (std::list<CanvasNode*>::iterator it_n = nodes.begin(); it_n != nodes.end(); ++it_n)
 	{
-		(*it_n)->Save(project);
+		(*it_n)->Save(project, UID);
 	}
 }

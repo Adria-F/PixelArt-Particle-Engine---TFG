@@ -5,6 +5,8 @@
 #include "ModuleNodeCanvas.h"
 #include "CanvasNode.h"
 
+#include "WinItemDialog.h" 
+
 ModuleProjectManager::ModuleProjectManager(bool stat_enabled)
 {
 }
@@ -44,6 +46,20 @@ void ModuleProjectManager::SaveProject(const char* path)
 	App->JSON_Manager->closeFile(projectFile);
 }
 
-void ModuleProjectManager::LoadProject(const char * path)
+void ModuleProjectManager::LoadProject(const char* path)
 {
+}
+
+std::string ModuleProjectManager::SaveFileDialog(const char* extensionHint, const char* extension)
+{
+	std::string path = saveFileWID(extensionHint, extension);
+	if (path.length() > 0)
+		return path + extension;
+	else
+		return path;
+}
+
+std::string ModuleProjectManager::OpenFileDialog(const char* extensionHint, const char* extension)
+{
+	return openFileWID(extensionHint, extension);
 }

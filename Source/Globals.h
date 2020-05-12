@@ -106,4 +106,10 @@ enum update_state
 #define ASSETS_FOLDER "Assets/"
 #define PROJECTS_FOLDER "Projects/"
 
+#define PROJECT_FORMAT_HINT "VFX Graph Project"
+#define PROJECT_EXTENSION ".vfxg"
+
+#define SPRITESHEET_FORMAT_HINT "PNG Image"
+#define SPRITESHEET_EXTENSION ".png"
+
 #endif // !__GLOBALS_H__

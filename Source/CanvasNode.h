@@ -53,6 +53,7 @@ public:
 	float2 gridPosition;
 
 	NodeConnection* connected = nullptr;
+	uint connectedNodeUID = 0; //Used only for loading projects
 
 private:
 
@@ -102,6 +103,7 @@ public:
 	virtual void SaveChildNodes(JSON_Value* project) {}
 	void Load(JSON_Value* nodeDef);
 	virtual void LoadExtraInfo(JSON_Value* nodeDef) {}
+	void LoadConnections(std::map<uint, CanvasNode*> nodes);
 
 public:
 

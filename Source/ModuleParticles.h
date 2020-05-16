@@ -161,6 +161,7 @@ public:
 	void AddEmitter(ParticleEmitter* emitter);
 	void RemoveEmitter(ParticleEmitter* emitter);
 	ParticleEmitter* GetEmitter(int index) const;
+	void ClearAll();
 
 private:
 

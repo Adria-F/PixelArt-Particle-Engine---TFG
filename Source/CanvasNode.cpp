@@ -168,10 +168,19 @@ void CanvasNode::Save(JSON_Value* project, uint parent)
 	node->addVector2("position", position);
 	node->addVector2("size", size);
 
-	//TODO: Connections?
-
 	node->addBool("interactable", interactable);
 	node->addBool("movable", movable);
+
+	//Connections
+	JSON_Value* connectionsValue = node->createValue();
+	connectionsValue->convertToArray();
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		JSON_Value* connection = connectionsValue->createValue();
+		connection->addUint("connectedNode", ((*it_c)->connected) ? (*it_c)->connected->node->UID : 0);
+		connectionsValue->addValue("", connection);
+	}
+	node->addValue("connections", connectionsValue);
 
 	SaveExtraInfo(node);	
 	project->addValue("", node);
@@ -188,7 +197,44 @@ void CanvasNode::Load(JSON_Value* nodeDef)
 	interactable = nodeDef->getBool("interactable");
 	movable = nodeDef->getBool("movable");
 
+	//Connections
+	JSON_Value* connectionsValue = nodeDef->getValue("connections");
+	std::list<NodeConnection*>::iterator it_c = connections.begin();
+	for (int i = 0; i < connectionsValue->getRapidJSONValue()->Size(); ++i)
+	{
+		JSON_Value* connection = connectionsValue->getValueFromArray(i);
+		(*it_c)->connectedNodeUID = connection->getUint("connectedNode");
+		if (++it_c == connections.end())
+			break;
+	}
+
 	LoadExtraInfo(nodeDef);
+}
+
+void CanvasNode::LoadConnections(std::map<uint, CanvasNode*> nodes)
+{
+	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
+	{
+		if ((*it_c)->connectedNodeUID != 0 && (*it_c)->connected == nullptr && nodes.find((*it_c)->connectedNodeUID) != nodes.end()) //It connects to a node that exists on the map and is still not connected
+		{
+			CanvasNode* node = nodes.at((*it_c)->connectedNodeUID);
+			connectionType searchingType = ((*it_c)->type == NODE_INPUT) ? NODE_OUTPUT : NODE_INPUT;
+			NodeConnection* result = nullptr;
+			for (std::list<NodeConnection*>::iterator it_c2 = node->connections.begin(); it_c2 != node->connections.end(); ++it_c2)
+			{
+				if ((*it_c2)->type == searchingType)
+				{
+					result = (*it_c2);
+					break;
+				}
+			}
+			if (result != nullptr)
+			{
+				(*it_c)->SetConnection(result);
+				result->SetConnection((*it_c));
+			}
+		}
+	}
 }
 
 NodeConnection::NodeConnection(CanvasNode* node, connectionType type, float2 position, shapeType shape, ImGuiDir_ direction): node(node), type(type), localPosition(position), shape(shape), direction(direction)

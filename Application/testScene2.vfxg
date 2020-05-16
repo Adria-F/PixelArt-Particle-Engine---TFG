@@ -2,27 +2,28 @@
     "project": [
         {
             "name": "Emitter",
-            "uid": 2420391543,
+            "uid": 2518142928,
             "type": 6,
             "position": [
-                68.0,
-                51.0
+                51.0,
+                46.0
             ],
             "size": [
                 235.0,
-                396.1111145019531
+                338.0
             ],
             "interactable": false,
-            "movable": true
+            "movable": true,
+            "connections": []
         },
         {
             "name": "Emitter SetUp",
-            "uid": 2830005624,
+            "uid": 2878103981,
             "type": 13,
-            "parent": 2420391543,
+            "parent": 2518142928,
             "position": [
-                88.0,
-                71.0
+                71.0,
+                66.0
             ],
             "size": [
                 195.0,
@@ -30,35 +31,73 @@
             ],
             "interactable": true,
             "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 3736015060
+                }
+            ],
             "topConnection": 0,
-            "bottomConnection": 2416502839
+            "bottomConnection": 3736015060
         },
         {
             "name": "Emitting Particle",
-            "uid": 2416502839,
+            "uid": 3736015060,
             "type": 13,
-            "parent": 2420391543,
+            "parent": 2518142928,
             "position": [
-                88.0,
-                166.0
+                71.0,
+                161.0
             ],
             "size": [
                 195.0,
-                75.0
+                108.0
             ],
             "interactable": true,
             "movable": true,
-            "topConnection": 2830005624,
-            "bottomConnection": 666543588
+            "connections": [
+                {
+                    "connectedNode": 2878103981
+                },
+                {
+                    "connectedNode": 1316651981
+                }
+            ],
+            "topConnection": 2878103981,
+            "bottomConnection": 1316651981
+        },
+        {
+            "name": "Input Particle",
+            "uid": 977460906,
+            "type": 9,
+            "parent": 3736015060,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 3907045278
+                }
+            ],
+            "particle": 3907045278
         },
         {
             "name": "Emitter Update",
-            "uid": 666543588,
+            "uid": 1316651981,
             "type": 13,
-            "parent": 2420391543,
+            "parent": 2518142928,
             "position": [
-                88.0,
-                352.1111145019531
+                71.0,
+                289.0
             ],
             "size": [
                 195.0,
@@ -66,7 +105,113 @@
             ],
             "interactable": true,
             "movable": true,
-            "topConnection": 2416502839,
+            "connections": [
+                {
+                    "connectedNode": 3736015060
+                },
+                {
+                    "connectedNode": 0
+                }
+            ],
+            "topConnection": 3736015060,
+            "bottomConnection": 0
+        },
+        {
+            "name": "Particle",
+            "uid": 3907045278,
+            "type": 0,
+            "position": [
+                393.0,
+                232.0
+            ],
+            "size": [
+                235.0,
+                305.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 977460906
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 2319540904,
+            "type": 12,
+            "parent": 3907045278,
+            "position": [
+                413.0,
+                252.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 4117124124
+                }
+            ],
+            "topConnection": 0,
+            "bottomConnection": 4117124124
+        },
+        {
+            "name": "Particle Update",
+            "uid": 4117124124,
+            "type": 12,
+            "parent": 3907045278,
+            "position": [
+                413.0,
+                347.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2319540904
+                },
+                {
+                    "connectedNode": 479551319
+                }
+            ],
+            "topConnection": 2319540904,
+            "bottomConnection": 479551319
+        },
+        {
+            "name": "Particle Render",
+            "uid": 479551319,
+            "type": 12,
+            "parent": 3907045278,
+            "position": [
+                413.0,
+                442.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 4117124124
+                },
+                {
+                    "connectedNode": 0
+                }
+            ],
+            "topConnection": 4117124124,
             "bottomConnection": 0
         }
     ]

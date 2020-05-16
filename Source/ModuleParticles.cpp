@@ -70,6 +70,8 @@ bool ModuleParticles::CleanUp()
 {
 	//TODO: Remove VAO
 
+	emitters.clear();
+
 	return true;
 }
 
@@ -123,6 +125,11 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 	}
 
 	return nullptr;
+}
+
+void ModuleParticles::ClearAll()
+{
+	emitters.clear();
 }
 
 // ---------------------- PARTICLE EMITTER --------------------------

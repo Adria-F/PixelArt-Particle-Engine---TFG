@@ -14,6 +14,7 @@ public:
 	update_state Update(float dt);
 	bool CleanUp();
 
+	void NewProject();
 	void SaveProject(const char* path);
 	void LoadProject(const char* path);
 

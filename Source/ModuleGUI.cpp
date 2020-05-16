@@ -7,6 +7,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleProjectManager.h"
+#include "ModuleParticles.h"
 
 // Include all panels
 #include "PanelScene.h"
@@ -94,11 +95,13 @@ update_state ModuleGUI::Update(float dt)
 		{
 			if (ImGui::MenuItem("New"))
 			{
-				//Request to save if changes made
+				//TODO: Request to save if changes made
 				//Create empty project
+				App->projectManager->NewProject();
 			}
 			if (ImGui::MenuItem("Load"))
 			{
+				//TODO: Request to save if changes made
 				std::string newProject = App->projectManager->OpenFileDialog(PROJECT_FORMAT_HINT, (std::string("*")+PROJECT_EXTENSION).c_str());
 				if (newProject.length() > 0)
 				{
@@ -123,6 +126,23 @@ update_state ModuleGUI::Update(float dt)
 				{
 					App->projectManager->SaveProject(App->projectManager->workingDir.c_str());
 				}
+			}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Particles"))
+		{
+			if (ImGui::MenuItem("Play"))
+			{
+				App->particles->Play();
+			}
+			if (ImGui::MenuItem("Pause"))
+			{
+				App->particles->Pause();
+			}
+			if (ImGui::MenuItem("Stop"))
+			{
+				App->particles->Stop();
 			}
 
 			ImGui::EndMenu();

@@ -1,0 +1,73 @@
+{
+    "project": [
+        {
+            "name": "Emitter",
+            "uid": 2420391543,
+            "type": 6,
+            "position": [
+                68.0,
+                51.0
+            ],
+            "size": [
+                235.0,
+                396.1111145019531
+            ],
+            "interactable": false,
+            "movable": true
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 2830005624,
+            "type": 13,
+            "parent": 2420391543,
+            "position": [
+                88.0,
+                71.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "topConnection": 0,
+            "bottomConnection": 2416502839
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 2416502839,
+            "type": 13,
+            "parent": 2420391543,
+            "position": [
+                88.0,
+                166.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "topConnection": 2830005624,
+            "bottomConnection": 666543588
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 666543588,
+            "type": 13,
+            "parent": 2420391543,
+            "position": [
+                88.0,
+                352.1111145019531
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "topConnection": 2416502839,
+            "bottomConnection": 0
+        }
+    ]
+}

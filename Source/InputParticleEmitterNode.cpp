@@ -41,3 +41,8 @@ void InputParticleEmitterNode::SaveExtraInfo(JSON_Value * node)
 {
 	node->addUint("particle", (inputParticle != nullptr) ? inputParticle->UID : 0);
 }
+
+void InputParticleEmitterNode::LoadExtraInfo(JSON_Value * nodeDef)
+{
+	//TODO
+}

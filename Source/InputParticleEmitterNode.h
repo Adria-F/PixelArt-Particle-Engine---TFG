@@ -17,6 +17,7 @@ public:
 	void OnDisconnection(NodeConnection* connection);
 
 	void SaveExtraInfo(JSON_Value* node);
+	void LoadExtraInfo(JSON_Value* nodeDef);
 
 public:
 

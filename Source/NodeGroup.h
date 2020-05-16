@@ -18,6 +18,8 @@ public:
 
 	float2 calcSize();
 
+	void InsertNode(CanvasNode* node);
+
 	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
 
@@ -50,13 +52,14 @@ public:
 	bool ElementLogic(float2 offset, int zoom);
 
 	NodeBox* AddNodeBox(const char* name, nodeType type);
-	void InsertBox(NodeBox* box);
+	void InsertNode(CanvasNode* node);
 	void RemoveBox(NodeBox* box, bool keepInList = false);
 
 	void RepositionBoxes(NodeBox* resizedBox, float prevBottom);
 
 	virtual void OnNodeAdded(CanvasNode* node) {}
 	virtual void OnNodeRemoved(CanvasNode* node) {}
+	void AddNodes();
 	
 	void CalcRect();
 

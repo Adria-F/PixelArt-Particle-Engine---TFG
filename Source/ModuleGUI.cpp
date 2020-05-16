@@ -99,7 +99,11 @@ update_state ModuleGUI::Update(float dt)
 			}
 			if (ImGui::MenuItem("Load"))
 			{
-				App->projectManager->OpenFileDialog(PROJECT_FORMAT_HINT, (std::string("*")+PROJECT_EXTENSION).c_str());
+				std::string newProject = App->projectManager->OpenFileDialog(PROJECT_FORMAT_HINT, (std::string("*")+PROJECT_EXTENSION).c_str());
+				if (newProject.length() > 0)
+				{
+					App->projectManager->LoadProject(newProject.c_str());
+				}
 			}
 			if (ImGui::MenuItem("Save"))
 			{

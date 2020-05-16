@@ -66,3 +66,10 @@ void EmissionEmitterNode::SaveExtraInfo(JSON_Value* node)
 	node->addFloat("burst", burst);
 	node->addBool("repeat", repeatBurst);
 }
+
+void EmissionEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	frequency = nodeDef->getFloat("frequency");
+	burst = nodeDef->getFloat("burst");
+	repeatBurst = nodeDef->getBool("repeat");
+}

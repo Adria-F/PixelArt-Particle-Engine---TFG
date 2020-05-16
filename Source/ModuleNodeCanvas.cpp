@@ -281,14 +281,14 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 	return nodeList;
 }
 
-CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2 spawnPos) const
+CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2 spawnPos, bool empty) const
 {
 	CanvasNode* node = nullptr;
 
 	switch (type)
 	{
 	case PARTICLE:
-		node = new Particle(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new Particle(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		break;
 	case PARTICLE_COLOR:
 		node = new ColorParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
@@ -303,7 +303,7 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		node = new DeathInstantiationParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 		break;
 	case EMITTER:
-		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		App->particles->AddEmitter((ParticleEmitter*)node);
 		break;
 	case EMITTER_EMISSION:
@@ -314,6 +314,10 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case EMITTER_INPUTPARTICLE:
 		node = new InputParticleEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		break;
+	case PARTICLE_NODE_BOX:
+	case EMITTER_NODE_BOX:
+		node = new NodeBox(name, type, spawnPos, { NODE_DEFAULT_WIDTH + NODE_BOX_PADDING * 2.0f, NODE_BOX_MIN_HEIGHT }, nullptr);
 		break;
 	}
 

@@ -35,7 +35,7 @@ class Particle: public NodeGroup
 {
 public:
 
-	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, bool empty = false);
 	Particle(ParticleEmitter* emitter, Particle* templateParticle);
 	~Particle();
 
@@ -92,7 +92,7 @@ class ParticleEmitter: public NodeGroup
 {
 public:
 
-	ParticleEmitter(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+	ParticleEmitter(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, bool empty = false);
 	~ParticleEmitter();
 
 	void Play();

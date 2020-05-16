@@ -51,3 +51,8 @@ void DeathInstantiationParticleNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addUint("particle", (instantiateParticle != nullptr) ? instantiateParticle->UID : 0);
 }
+
+void DeathInstantiationParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	//TODO
+}

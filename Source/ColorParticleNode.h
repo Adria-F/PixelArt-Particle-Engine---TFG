@@ -20,6 +20,7 @@ public:
 	void DisplayConfig();
 
 	void SaveExtraInfo(JSON_Value* node);
+	void LoadExtraInfo(JSON_Value* nodeDef);
 
 public:
 

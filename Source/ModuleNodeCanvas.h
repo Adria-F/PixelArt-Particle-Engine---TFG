@@ -26,7 +26,7 @@ public:
 
 	CanvasNode* DrawNodeList(float2 spawnPos, nodeType* allowedNodes, int numElements);
 	std::map<std::string, int> RequestNodeList(nodeType* nodes, int numElements) const;
-	CanvasNode* CreateNode(const char* name, nodeType type, float2 spawnPos) const;
+	CanvasNode* CreateNode(const char* name, nodeType type, float2 spawnPos, bool empty = false) const;
 
 	void StartConnection(NodeConnection* connection);
 	void RequestConnection(NodeConnection* node);

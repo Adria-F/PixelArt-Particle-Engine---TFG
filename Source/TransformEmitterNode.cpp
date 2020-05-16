@@ -65,3 +65,11 @@ void TransformEmitterNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addTransform("matrix", matrix);
 }
+
+void TransformEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	matrix = nodeDef->getTransform("matrix");
+
+	matrix.Decompose(position, rotation, scale);
+	rotationEuler = rotation.ToEulerXYZ();
+}

@@ -178,6 +178,19 @@ void CanvasNode::Save(JSON_Value* project, uint parent)
 	SaveChildNodes(project);
 }
 
+void CanvasNode::Load(JSON_Value* nodeDef)
+{
+	UID = nodeDef->getUint("uid");
+	parentUID = nodeDef->getUint("parent");
+
+	size = nodeDef->getVector2("size");
+
+	interactable = nodeDef->getBool("interactable");
+	movable = nodeDef->getBool("movable");
+
+	LoadExtraInfo(nodeDef);
+}
+
 NodeConnection::NodeConnection(CanvasNode* node, connectionType type, float2 position, shapeType shape, ImGuiDir_ direction): node(node), type(type), localPosition(position), shape(shape), direction(direction)
 {
 }

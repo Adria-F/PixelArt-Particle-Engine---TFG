@@ -54,6 +54,7 @@ void ColorParticleNode::SaveExtraInfo(JSON_Value* node)
 
 	//Save gradient
 	JSON_Value* gradient = node->createValue();
+	gradient->convertToArray();
 	for (std::map<float, vec>::iterator it_c = overLifetimeColor.colorList.begin(); it_c != overLifetimeColor.colorList.end(); ++it_c)
 	{
 		JSON_Value* key = gradient->createValue();
@@ -77,4 +78,31 @@ void ColorParticleNode::SaveExtraInfo(JSON_Value* node)
 	node->addValue("gradient", gradient);
 
 	node->addBool("overLifetime", overLifetime);
+}
+
+void ColorParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	float4 color = nodeDef->getVector4("color");
+	fixColor.Set(color.x, color.y, color.z, color.w);
+
+	JSON_Value* gradient = nodeDef->getValue("gradient");
+	for (int i = 0; i < gradient->getRapidJSONValue()->Size(); ++i)
+	{
+		JSON_Value* key = gradient->getValueFromArray(i);
+		uint type = key->getUint("type");
+		float percent = key->getFloat("percent");
+
+		if (type == 0) //Color
+		{
+			vec color = key->getVector3("color");
+			overLifetimeColor.SetColor(color, percent);
+		}
+		else if (type == 1) //Alpha
+		{
+			float alpha = key->getFloat("alpha");
+			overLifetimeColor.SetAlpha(alpha, percent);
+		}
+	}
+
+	overLifetime = nodeDef->getBool("overLifetime");
 }

@@ -127,7 +127,7 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 
 // ---------------------- PARTICLE EMITTER --------------------------
 
-ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size): NodeGroup(name, position, EMITTER)
+ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size, bool empty): NodeGroup(name, position, EMITTER)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -138,9 +138,12 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size)
 	lastEmit = frequency;
 
 	//Node boxes
-	AddNodeBox("Emitter SetUp", EMITTER_NODE_BOX);
-	AddNodeBox("Emitting Particle", EMITTER_NODE_BOX);
-	AddNodeBox("Emitter Update", EMITTER_NODE_BOX);
+	if (!empty)
+	{
+		AddNodeBox("Emitter SetUp", EMITTER_NODE_BOX);
+		AddNodeBox("Emitting Particle", EMITTER_NODE_BOX);
+		AddNodeBox("Emitter Update", EMITTER_NODE_BOX);
+	}
 }
 
 ParticleEmitter::~ParticleEmitter()
@@ -328,7 +331,7 @@ void ParticleEmitter::OnNodeRemoved(CanvasNode* node)
 
 // ----------------------------- PARTICLE ----------------------------------
 
-Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(name, position, PARTICLE)
+Particle::Particle(const char* name, float2 position, float2 size, bool empty): NodeGroup(name, position, PARTICLE)
 {
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -339,9 +342,12 @@ Particle::Particle(const char* name, float2 position, float2 size): NodeGroup(na
 	baseMovement = new BaseMovementParticleNode(this);
 	baseColor = new BaseColorParticleNode(this);
 
-	AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX);
-	AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
-	AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
+	if (!empty)
+	{
+		AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX);
+		AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
+		AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
+	}
 
 	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { -CONNECTIONTRIANGLE_SIZE*0.5f, 25.0f }, TRIANGLE, ImGuiDir_Left);
 	connections.push_back(particleOut);

@@ -127,20 +127,25 @@ NodeBox* NodeGroup::AddNodeBox(const char* name, nodeType type)
 	}
 	else
 	{
-		InsertBox(ret);
+		InsertNode(ret);
 	}
 	
 	CalcRect();
 	return ret;
 }
 
-void NodeGroup::InsertBox(NodeBox* box)
+void NodeGroup::InsertNode(CanvasNode* node)
 {
-	boxes.push_back(box);
-
-	for (std::list<CanvasNode*>::iterator it_n = box->nodes.begin(); it_n != box->nodes.end(); ++it_n)
+	if (node->type == EMITTER_NODE_BOX || node->type == PARTICLE_NODE_BOX) //Make sure it is a box
 	{
-		OnNodeAdded((*it_n));
+		NodeBox* box = (NodeBox*)node;		
+		boxes.push_back(box);
+
+		for (std::list<CanvasNode*>::iterator it_n = box->nodes.begin(); it_n != box->nodes.end(); ++it_n)
+		{
+			OnNodeAdded((*it_n));
+		}
+		box->parentGroup = this;
 	}
 }
 
@@ -168,6 +173,18 @@ void NodeGroup::RepositionBoxes(NodeBox* resizedBox, float prevBottom)
 				(*it_b)->position.y = boxBottom + ((*it_b)->position.y -prevBottom);
 				RepositionBoxes((*it_b), movingBoxPrevBottom);
 			}
+		}
+	}
+}
+
+void NodeGroup::AddNodes()
+{
+	for (std::list<NodeBox*>::iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
+	{
+		(*it_b)->calcSize();
+		for (std::list<CanvasNode*>::iterator it_n = (*it_b)->nodes.begin(); it_n != (*it_b)->nodes.end(); ++it_n)
+		{
+			OnNodeAdded((*it_n));
 		}
 	}
 }
@@ -380,12 +397,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 		}
 		if (createdNode != nullptr)
 		{
-			createdNode->movable = false;		
-			nodes.push_back(createdNode);
-			parentGroup->OnNodeAdded(createdNode);
-			float prevBottom = position.y + size.y;
-			calcSize();
-			parentGroup->RepositionBoxes(this, prevBottom);
+			InsertNode(createdNode);
 		}
 
 		ImGui::EndPopup();
@@ -420,6 +432,19 @@ float2 NodeBox::calcSize()
 	return size;
 }
 
+void NodeBox::InsertNode(CanvasNode* node)
+{
+	node->movable = false;
+	nodes.push_back(node);
+	if (parentGroup != nullptr)
+	{
+		parentGroup->OnNodeAdded(node);
+		float prevBottom = position.y + size.y;
+		calcSize();
+		parentGroup->RepositionBoxes(this, prevBottom);
+	}
+}
+
 bool NodeBox::OnConnection(NodeConnection* connection)
 {
 	if (connection->node->type == type)
@@ -435,7 +460,7 @@ bool NodeBox::OnConnection(NodeConnection* connection)
 					App->nodeCanvas->nodes.remove(this);
 
 				parentGroup = connectedBox->parentGroup;
-				parentGroup->InsertBox(this);
+				parentGroup->InsertNode(this);
 
 				if (bottomConnection->connected)
 				{

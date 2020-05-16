@@ -47,3 +47,9 @@ void SpeedParticleNode::SaveExtraInfo(JSON_Value* node)
 	node->addFloat("speed", speed);
 	node->addBool("overLifetime", overLifetime);
 }
+
+void SpeedParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	speed = nodeDef->getFloat("speed");
+	overLifetime = nodeDef->getBool("overLifetime");
+}

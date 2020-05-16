@@ -25,3 +25,8 @@ void MakeGlobalParticleNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addBool("active", active);
 }
+
+void MakeGlobalParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
+{
+	active = nodeDef->getBool("active");
+}

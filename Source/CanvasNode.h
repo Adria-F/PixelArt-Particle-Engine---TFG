@@ -95,15 +95,21 @@ public:
 
 	virtual void DisplayConfig() {}
 
+	virtual void InsertNode(CanvasNode* node) {}
+
 	void Save(JSON_Value* project, uint parent = 0);
 	virtual void SaveExtraInfo(JSON_Value* node) {}
 	virtual void SaveChildNodes(JSON_Value* project) {}
+	void Load(JSON_Value* nodeDef);
+	virtual void LoadExtraInfo(JSON_Value* nodeDef) {}
 
 public:
 
 	std::string name;
 	uint UID;
 	nodeType type;
+
+	uint parentUID = 0;
 
 	float2 position;
 	float2 size;

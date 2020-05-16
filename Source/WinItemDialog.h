@@ -19,19 +19,22 @@ std::string openFileWID(const char* extensionHint, const char* extension)
 
         if (SUCCEEDED(hr))
         {
-			std::string text = extensionHint;
-			wchar_t wtextA[20];
-			mbstowcs(wtextA, text.c_str(), text.length() + 1);//Plus null
-			LPCWSTR a = wtextA;
-			text = extension;
-			wchar_t wtextB[20];
-			mbstowcs(wtextB, text.c_str(), text.length() + 1);//Plus null
-			LPCWSTR b = wtextB;
-			static COMDLG_FILTERSPEC rgSpec[] =
+			std::string hint = extensionHint;
+			std::string ext = extension;
+			if (ext.length() > 0)
 			{
-				{ a, b }
-			};
-			pFileOpen->SetFileTypes(1, rgSpec);
+				wchar_t wtextA[20];
+				mbstowcs(wtextA, hint.c_str(), hint.length() + 1);//Plus null
+				LPCWSTR a = wtextA;
+				wchar_t wtextB[20];
+				mbstowcs(wtextB, ext.c_str(), ext.length() + 1);//Plus null
+				LPCWSTR b = wtextB;
+				static COMDLG_FILTERSPEC rgSpec[] =
+				{
+					{ a, b }
+				};
+				pFileOpen->SetFileTypes(1, rgSpec);
+			}
             // Show the Open dialog box.
             hr = pFileOpen->Show(NULL);
 

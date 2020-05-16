@@ -19,6 +19,9 @@ ModuleProjectManager::~ModuleProjectManager()
 
 bool ModuleProjectManager::Start()
 {
+	CreateDirectory(ASSETS_FOLDER, NULL);
+	CreateDirectory(PROJECTS_FOLDER, NULL);
+
 	return true;
 }
 

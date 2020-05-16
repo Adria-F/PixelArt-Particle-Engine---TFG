@@ -186,6 +186,7 @@
     <ClCompile Include="ModuleNodeCanvas.cpp" />
     <ClCompile Include="ModuleProjectManager.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
+    <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleParticles.cpp" />
     <ClCompile Include="NodeGroup.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="ModuleNodeCanvas.h" />
     <ClInclude Include="ModuleProjectManager.h" />
     <ClInclude Include="ModuleRender.h" />
+    <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleParticles.h" />
     <ClInclude Include="NodeGroup.h" />

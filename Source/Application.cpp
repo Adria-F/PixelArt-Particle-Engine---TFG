@@ -10,6 +10,7 @@
 #include "ModuleParticles.h"
 #include "ModuleNodeCanvas.h"
 #include "ModuleProjectManager.h"
+#include "ModuleTextures.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ Application::Application()
 	particles = new ModuleParticles();
 	nodeCanvas = new ModuleNodeCanvas();
 	projectManager = new ModuleProjectManager();
+	textures = new ModuleTextures();
 
 	// Add all modules to application
 	AddModule(window);
@@ -37,6 +39,7 @@ Application::Application()
 	AddModule(particles);
 	AddModule(nodeCanvas);
 	AddModule(projectManager);
+	AddModule(textures);
 
 	//Render module last
 	AddModule(render);

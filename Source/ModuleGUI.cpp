@@ -8,6 +8,7 @@
 #include "ModuleRender.h"
 #include "ModuleProjectManager.h"
 #include "ModuleParticles.h"
+#include "ModuleTextures.h"
 
 // Include all panels
 #include "PanelScene.h"
@@ -143,6 +144,19 @@ update_state ModuleGUI::Update(float dt)
 			if (ImGui::MenuItem("Stop"))
 			{
 				App->particles->Stop();
+			}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Sprites"))
+		{
+			if (ImGui::MenuItem("Import Sprites"))
+			{
+				std::string texture = App->projectManager->OpenFileDialog("","");
+				if (texture.length() > 0)
+				{
+					App->textures->ImportTexture(texture.c_str());
+				}
 			}
 
 			ImGui::EndMenu();

@@ -249,6 +249,17 @@ uint ModuleTextures::GetTextureUID(const char* name)
 	return ret;
 }
 
+std::string ModuleTextures::GetTextureName(uint textureUID)
+{
+	if (textures.find(textureUID) != textures.end())
+	{
+		Texture* tex = textures[textureUID];
+		return tex->name.c_str();
+	}
+
+	return std::string();
+}
+
 Texture::Texture(const char* path): path(path)
 {
 	UID = GENERATE_UID();

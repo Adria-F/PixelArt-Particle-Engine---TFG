@@ -405,9 +405,6 @@ void Particle::Update(float dt)
 	if (timeAlive >= lifeTime)
 		toDestroy = true;
 
-	if (sprite == nullptr)
-		App->render->defaultShader->sendTexture("sprite", whiteSprite);
-
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		if (data[i] != nullptr)
@@ -417,6 +414,9 @@ void Particle::Update(float dt)
 
 void Particle::Draw()
 {
+	if (sprite == nullptr)
+		App->render->defaultShader->sendTexture("sprite", whiteSprite);
+
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		if (data[i] != nullptr)

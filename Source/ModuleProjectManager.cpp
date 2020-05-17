@@ -120,6 +120,7 @@ void ModuleProjectManager::LoadProject(const char* path)
 
 		App->JSON_Manager->closeFile(projectFile);
 		workingDir = path;
+		App->particles->Play();
 	}
 }
 

@@ -45,6 +45,7 @@ public:
 	uint UseWhiteTexture();
 
 	uint GetTextureUID(const char* name);
+	std::string GetTextureName(uint textureUID);
 
 private:
 

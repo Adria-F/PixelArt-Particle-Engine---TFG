@@ -72,4 +72,5 @@ void TransformEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 
 	matrix.Decompose(position, rotation, scale);
 	rotationEuler = rotation.ToEulerXYZ();
+	changed = true;
 }

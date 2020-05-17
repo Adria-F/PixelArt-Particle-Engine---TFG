@@ -10,6 +10,11 @@ SpriteParticleNode::SpriteParticleNode(Particle * particle, const char * name, f
 	GL_id = App->textures->UseWhiteTexture();
 }
 
+SpriteParticleNode::~SpriteParticleNode()
+{
+	App->textures->UnuseTexture(spriteUID);
+}
+
 void SpriteParticleNode::PrepareRender()
 {
 	App->render->defaultShader->sendTexture("sprite", GL_id);
@@ -21,6 +26,8 @@ EntityData* SpriteParticleNode::Copy(Particle* particle) const
 
 	ret->spriteUID = spriteUID;
 	ret->GL_id = GL_id;
+
+	App->textures->UseTexture(spriteUID); //New node will be using it
 
 	return ret;
 }
@@ -58,8 +65,14 @@ void SpriteParticleNode::DisplayConfig()
 
 void SpriteParticleNode::SaveExtraInfo(JSON_Value* node)
 {
+	node->addString("sprite", App->textures->GetTextureName(spriteUID).c_str());
 }
 
 void SpriteParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
+	std::string spriteName = nodeDef->getString("sprite");
+
+	spriteUID = App->textures->GetTextureUID(spriteName.c_str());
+	GL_id = App->textures->UseTexture(spriteUID);
+	currentSprite = spriteName;
 }

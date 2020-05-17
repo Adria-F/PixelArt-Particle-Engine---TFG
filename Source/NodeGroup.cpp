@@ -392,8 +392,8 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 		}
 		else if (type == PARTICLE_NODE_BOX)
 		{
-			static nodeType particleNodes[4] = { PARTICLE_COLOR, PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_DEATHINSTANTIATION };
-			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, particleNodes, 4);
+			static nodeType particleNodes[5] = { PARTICLE_COLOR, PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_DEATHINSTANTIATION, PARTICLE_SPRITE };
+			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, particleNodes, 5);
 		}
 		if (createdNode != nullptr)
 		{

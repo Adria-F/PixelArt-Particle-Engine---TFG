@@ -5,6 +5,7 @@
 #include "ModuleCamera.h"
 #include "ModuleNodeCanvas.h"
 #include "ModuleGUI.h"
+#include "ModuleTextures.h"
 
 #include "EntityData.h"
 
@@ -17,6 +18,7 @@
 #include "SpeedParticleNode.h"
 #include "MakeGlobalParticleNode.h"
 #include "DeathInstantiationParticleNode.h"
+#include "SpriteParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -37,10 +39,11 @@ bool ModuleParticles::Start()
 {
 	//Create rectangle VAO
 	float vertices[] = {
-			 0.5f,  0.5f, 0.0f,  // top right
-			 0.5f, -0.5f, 0.0f,  // bottom right
-			-0.5f, -0.5f, 0.0f,  // bottom left
-			-0.5f,  0.5f, 0.0f   // top left 
+		// positions       
+		 0.5f,  0.5f, 0.0f, // top right
+		 0.5f, -0.5f, 0.0f, // bottom right
+		-0.5f, -0.5f, 0.0f, // bottom left
+		-0.5f,  0.5f, 0.0f // top left 
 	};
 	unsigned int indices[] = {
 		0, 3, 1,  // first Triangle
@@ -376,6 +379,8 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 	randLifeTime2 = templateParticle->randLifeTime2;
 	randomizeLifeTime = templateParticle->randomizeLifeTime;
 
+	whiteSprite = App->textures->UseWhiteTexture();
+
 	if (randomizeLifeTime)
 	{
 		lifeTime = Lerp(randLifeTime1, randLifeTime2, GET_RANDOM());
@@ -399,6 +404,9 @@ void Particle::Update(float dt)
 
 	if (timeAlive >= lifeTime)
 		toDestroy = true;
+
+	if (sprite == nullptr)
+		App->render->defaultShader->sendTexture("sprite", whiteSprite);
 
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -448,6 +456,10 @@ void Particle::OnNodeAdded(CanvasNode * node)
 		deathInstantiation = (DeathInstantiationParticleNode*)node;
 		deathInstantiation->particle = this;
 		break;
+	case PARTICLE_SPRITE:
+		sprite = (SpriteParticleNode*)node;
+		sprite->particle = this;
+		break;
 	};
 }
 
@@ -466,6 +478,9 @@ void Particle::OnNodeRemoved(CanvasNode * node)
 		break;
 	case PARTICLE_DEATHINSTANTIATION:
 		deathInstantiation = nullptr;
+		break;
+	case PARTICLE_SPRITE:
+		sprite = nullptr;
 		break;
 	}
 }

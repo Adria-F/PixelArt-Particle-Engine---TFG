@@ -262,6 +262,7 @@
     <ClCompile Include="ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteParticleNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -675,6 +676,7 @@
     <ClInclude Include="ModuleTextures.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteParticleNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

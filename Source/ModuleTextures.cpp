@@ -29,7 +29,13 @@ bool ModuleTextures::Init()
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
 
+	return true;
+}
+
+bool ModuleTextures::Start()
+{
 	GenerateResources();
+	CreateWhiteTexture();
 
 	return true;
 }
@@ -143,6 +149,9 @@ void ModuleTextures::LoadTexture(Texture* texture)
 		ILinfo ImageInfo;
 		iluGetImageInfo(&ImageInfo);
 
+		if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+			iluFlipImage();
+
 		success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 		if (!success)
 		{
@@ -153,8 +162,8 @@ void ModuleTextures::LoadTexture(Texture* texture)
 		glGenTextures(1, &texture->GL_id);
 		glBindTexture(GL_TEXTURE_2D, texture->GL_id);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
@@ -174,6 +183,27 @@ void ModuleTextures::LoadTexture(Texture* texture)
 void ModuleTextures::UnloadTexture(Texture* texture)
 {
 	glDeleteTextures(1, &texture->GL_id);
+}
+
+void ModuleTextures::CreateWhiteTexture()
+{
+	whiteTexture = new Texture("white");
+
+	glGenTextures(1, &whiteTexture->GL_id);
+
+	GLubyte data[] = { 255, 255, 255, 255};
+
+	glBindTexture(GL_TEXTURE_2D, whiteTexture->GL_id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+	whiteTexture->width = 1;
+	whiteTexture->height = 1;
 }
 
 uint ModuleTextures::UseTexture(uint textureUID)
@@ -197,6 +227,11 @@ void ModuleTextures::UnuseTexture(uint textureUID)
 		if (--tex->timesUsed == 0)
 			UnloadTexture(tex);
 	}
+}
+
+uint ModuleTextures::UseWhiteTexture()
+{
+	return whiteTexture->GL_id;
 }
 
 uint ModuleTextures::GetTextureUID(const char* name)

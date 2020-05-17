@@ -21,6 +21,7 @@ class ColorParticleNode;
 class SpeedParticleNode;
 class MakeGlobalParticleNode;
 class DeathInstantiationParticleNode;
+class SpriteParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -64,6 +65,7 @@ public:
 			SpeedParticleNode* speed;
 			MakeGlobalParticleNode* makeGlobal;
 			DeathInstantiationParticleNode* deathInstantiation;
+			SpriteParticleNode* sprite;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -79,6 +81,8 @@ public:
 
 	float randLifeTime1 = 3.0f;
 	float randLifeTime2 = 5.0f;
+
+	uint whiteSprite = 0;
 
 	bool toDestroy = false;
 

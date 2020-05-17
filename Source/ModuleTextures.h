@@ -31,6 +31,7 @@ public:
 	~ModuleTextures();
 
 	bool Init();
+	bool Start();
 
 	bool CleanUp();
 
@@ -38,20 +39,27 @@ public:
 	std::string NormalizePath(const char* path);
 	
 	bool ImportTexture(const char* path);
+	
+	uint UseTexture(uint textureUID);
+	void UnuseTexture(uint textureUID);
+	uint UseWhiteTexture();
+
+	uint GetTextureUID(const char* name);
+
+private:
+
 	void GenerateResources();
 
 	void LoadTexture(Texture* texture);
 	void UnloadTexture(Texture* texture);
-	
-	uint UseTexture(uint textureUID);
-	void UnuseTexture(uint textureUID);
 
-	uint GetTextureUID(const char* name);
+	void CreateWhiteTexture();
 
 public:
 
 	std::map<uint, Texture*> textures;
 
+	Texture* whiteTexture = nullptr;
 };
 
 #endif // !__MODULETEXTURES_H__

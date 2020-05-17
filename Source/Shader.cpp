@@ -57,7 +57,14 @@ void Shader::sendMat4(const char* name, float* value) const
 	glUniformMatrix4fv(glGetUniformLocation(programID, name), 1, GL_FALSE, value);
 }
 
-const char* Shader::getShaderCode(const char* shaderPath)
+void Shader::sendTexture(const char* name, uint texture) const
+{
+	//glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//glUniform1ui(glGetUniformLocation(programID, name), 0);
+}
+
+std::string Shader::getShaderCode(const char* shaderPath)
 {
 	std::string shaderCode;
 	std::ifstream shaderFile;

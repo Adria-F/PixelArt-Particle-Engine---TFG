@@ -13,10 +13,11 @@ public:
 
 	void sendColor(const char* name, float4 value) const;
 	void sendMat4(const char* name, float* value) const;
+	void sendTexture(const char* name, uint texture) const;
 
 private:
 
-	const char* getShaderCode(const char* shaderPath);
+	std::string getShaderCode(const char* shaderPath);
 	uint compileShader(const char* shaderCode, GLenum shaderType);
 
 public:

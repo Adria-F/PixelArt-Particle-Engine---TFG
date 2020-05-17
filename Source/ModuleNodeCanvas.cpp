@@ -13,6 +13,8 @@
 #include "SpeedParticleNode.h"
 #include "MakeGlobalParticleNode.h"
 #include "DeathInstantiationParticleNode.h"
+#include "SpriteParticleNode.h"
+
 #include "EmissionEmitterNode.h"
 #include "TransformEmitterNode.h"
 #include "InputParticleEmitterNode.h"
@@ -263,6 +265,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 		case PARTICLE_DEATHINSTANTIATION:
 			nodeList.insert(std::pair<std::string, nodeType>("Death Instantiate", nodes[i]));
 			break;
+		case PARTICLE_SPRITE:
+			nodeList.insert(std::pair<std::string, nodeType>("Sprite", nodes[i]));
+			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
 			break;
@@ -291,29 +296,32 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		node = new Particle(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		break;
 	case PARTICLE_COLOR:
-		node = new ColorParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new ColorParticleNode(nullptr, name, spawnPos);
 		break;
 	case PARTICLE_SPEED:
-		node = new SpeedParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new SpeedParticleNode(nullptr, name, spawnPos);
 		break;
 	case PARTICLE_MAKEGLOBAL:
-		node = new MakeGlobalParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new MakeGlobalParticleNode(nullptr, name, spawnPos);
 		break;
 	case PARTICLE_DEATHINSTANTIATION:
-		node = new DeathInstantiationParticleNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new DeathInstantiationParticleNode(nullptr, name, spawnPos);
+		break;
+	case PARTICLE_SPRITE:
+		node = new SpriteParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		App->particles->AddEmitter((ParticleEmitter*)node);
 		break;
 	case EMITTER_EMISSION:
-		node = new EmissionEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new EmissionEmitterNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER_TRANSFORM:
-		node = new TransformEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new TransformEmitterNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER_INPUTPARTICLE:
-		node = new InputParticleEmitterNode(nullptr, name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
+		node = new InputParticleEmitterNode(nullptr, name, spawnPos);
 		break;
 	case PARTICLE_NODE_BOX:
 	case EMITTER_NODE_BOX:

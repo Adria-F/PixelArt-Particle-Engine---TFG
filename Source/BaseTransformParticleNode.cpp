@@ -20,10 +20,13 @@ BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : Entit
 void BaseTransformParticleNode::PrepareRender()
 {
 	float4x4 matrix;
-	matrix.Set(float4x4::FromTRS(position, rotation, scale));
+	float3 globalPostion = position;
 
 	if (particle->makeGlobal == nullptr || !particle->makeGlobal->active) //Ignore emitter transform if make global node is active
-		matrix = particle->emitter->baseTransform->matrix*matrix;
+	{
+		globalPostion += particle->emitter->baseTransform->position;
+	}
+	matrix.Set(float4x4::FromTRS(position, rotation, scale));
 
 	App->render->defaultShader->sendMat4("model", (float*)matrix.Transposed().v);
 }

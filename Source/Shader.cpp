@@ -64,6 +64,16 @@ void Shader::sendTexture(const char* name, uint texture) const
 	//glUniform1ui(glGetUniformLocation(programID, name), 0);
 }
 
+void Shader::sendVec2(const char * name, float2 value) const
+{
+	glUniform2fv(glGetUniformLocation(programID, name), 1, value.ptr());
+}
+
+void Shader::sendUint(const char * name, uint value) const
+{
+	glUniform1uiv(glGetUniformLocation(programID, name), 1, &value);
+}
+
 std::string Shader::getShaderCode(const char* shaderPath)
 {
 	std::string shaderCode;

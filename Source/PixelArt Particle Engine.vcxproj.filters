@@ -262,7 +262,12 @@
     <ClCompile Include="ModuleTextures.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteParticleNode.cpp" />
+    <ClCompile Include="PanelPixelArt.cpp">
+      <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -676,7 +681,12 @@
     <ClInclude Include="ModuleTextures.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteParticleNode.h" />
+    <ClInclude Include="PanelPixelArt.h">
+      <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">
@@ -686,6 +696,12 @@
       <Filter>Sources\Shaders</Filter>
     </None>
     <None Include="..\Application\Shaders\default.vs">
+      <Filter>Sources\Shaders</Filter>
+    </None>
+    <None Include="..\Application\Shaders\pixelart.fs">
+      <Filter>Sources\Shaders</Filter>
+    </None>
+    <None Include="..\Application\Shaders\pixelart.vs">
       <Filter>Sources\Shaders</Filter>
     </None>
   </ItemGroup>

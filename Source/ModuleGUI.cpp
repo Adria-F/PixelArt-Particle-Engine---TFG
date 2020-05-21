@@ -14,6 +14,7 @@
 #include "PanelScene.h"
 #include "PanelPanelNodeConfiguration.h"
 #include "PanelNodeCanvas.h"
+#include "PanelPixelArt.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
 {
@@ -45,6 +46,7 @@ bool ModuleGUI::Init()
 	panels.push_back(new PanelScene("Scene"));
 	panels.push_back(new PanelNodeConfiguration("Node Configuration"));
 	panels.push_back(new PanelNodeCanvas("Node Canvas"));
+	panels.push_back(new PanelPixelArt("PixelArt"));
 
 	return true;
 }
@@ -72,7 +74,7 @@ update_state ModuleGUI::PreUpdate(float dt)
 	ImGui::SetNextWindowSize({ (float)App->window->width, (float)App->window->height });
 	//ImGui::SetNextWindowBgAlpha(0.0f);
 
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDocking;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 	window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
@@ -244,7 +246,7 @@ ImFont* ModuleGUI::GetFont(int fontPercent, int fontSize) const
 bool ModuleGUI::UsingMouse() const
 {
 	ImGuiIO& io = ImGui::GetIO();
-	return io.WantCaptureMouse && !mouseOnScene;
+	return io.WantCaptureMouse && !mouseOnScene && !mouseOnPixelScene;
 }
 
 bool ModuleGUI::UsingKeyboard() const

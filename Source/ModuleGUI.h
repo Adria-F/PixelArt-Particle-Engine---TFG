@@ -40,6 +40,7 @@ public:
 	std::list<Panel*> panels;
 
 	bool mouseOnScene = false;
+	bool mouseOnPixelScene = false;
 
 	float2 scenePosition;
 	float2 sceneSize;

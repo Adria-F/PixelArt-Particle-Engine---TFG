@@ -3,6 +3,12 @@
 
 #include "Module.h"
 
+enum cameraType
+{
+	CAMERA_2D,
+	CAMERA_3D
+};
+
 class ModuleCamera : public Module
 {
 public:
@@ -30,6 +36,8 @@ public:
 	vec reference = { 0.0f,0.0f,0.0f };
 
 	Frustum frustum;
+
+	cameraType type = CAMERA_2D;
 };
 
 #endif // !__MODULECAMERA_H__

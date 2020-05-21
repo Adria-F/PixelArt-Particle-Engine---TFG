@@ -1,0 +1,333 @@
+{
+    "project": [
+        {
+            "name": "Emitter",
+            "uid": 2246819043,
+            "type": 7,
+            "position": [
+                595.0,
+                265.0
+            ],
+            "size": [
+                235.0,
+                371.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": []
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 3602429955,
+            "type": 14,
+            "parent": 2246819043,
+            "position": [
+                615.0,
+                285.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 1055700256
+                }
+            ],
+            "topConnection": 0,
+            "bottomConnection": 1055700256
+        },
+        {
+            "name": "Emission",
+            "uid": 1664732076,
+            "type": 8,
+            "parent": 3602429955,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "frequency": 0.10000000149011612,
+            "burst": 10.0,
+            "repeat": true
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 1055700256,
+            "type": 14,
+            "parent": 2246819043,
+            "position": [
+                615.0,
+                413.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3602429955
+                },
+                {
+                    "connectedNode": 2314918141
+                }
+            ],
+            "topConnection": 3602429955,
+            "bottomConnection": 2314918141
+        },
+        {
+            "name": "Input Particle",
+            "uid": 2953917346,
+            "type": 10,
+            "parent": 1055700256,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 881891484
+                }
+            ],
+            "particle": 881891484
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 2314918141,
+            "type": 14,
+            "parent": 2246819043,
+            "position": [
+                615.0,
+                541.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1055700256
+                },
+                {
+                    "connectedNode": 0
+                }
+            ],
+            "topConnection": 1055700256,
+            "bottomConnection": 0
+        },
+        {
+            "name": "Particle",
+            "uid": 881891484,
+            "type": 0,
+            "position": [
+                888.0,
+                392.0
+            ],
+            "size": [
+                235.0,
+                371.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2953917346
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 1054878593,
+            "type": 13,
+            "parent": 881891484,
+            "position": [
+                908.0,
+                412.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 36187683
+                }
+            ],
+            "topConnection": 0,
+            "bottomConnection": 36187683
+        },
+        {
+            "name": "Sprite",
+            "uid": 1409752243,
+            "type": 5,
+            "parent": 1054878593,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "circle"
+        },
+        {
+            "name": "Particle Update",
+            "uid": 36187683,
+            "type": 13,
+            "parent": 881891484,
+            "position": [
+                908.0,
+                540.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1054878593
+                },
+                {
+                    "connectedNode": 1709759700
+                }
+            ],
+            "topConnection": 1054878593,
+            "bottomConnection": 1709759700
+        },
+        {
+            "name": "Particle Render",
+            "uid": 1709759700,
+            "type": 13,
+            "parent": 881891484,
+            "position": [
+                908.0,
+                635.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 36187683
+                },
+                {
+                    "connectedNode": 0
+                }
+            ],
+            "topConnection": 36187683,
+            "bottomConnection": 0
+        },
+        {
+            "name": "Color",
+            "uid": 2779949233,
+            "type": 1,
+            "parent": 1709759700,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "gradient": [
+                {
+                    "type": 0,
+                    "percent": 0.0,
+                    "color": [
+                        0.9950980544090271,
+                        0.7134692072868347,
+                        0.2585304081439972
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 0.2266666740179062,
+                    "color": [
+                        1.0,
+                        0.4762110710144043,
+                        0.15196079015731812
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 0.699999988079071,
+                    "color": [
+                        1.0,
+                        0.24740487337112428,
+                        0.11764705181121826
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 1.0,
+                    "color": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                {
+                    "type": 1,
+                    "percent": 0.0,
+                    "alpha": 0.36645960807800295
+                },
+                {
+                    "type": 1,
+                    "percent": 0.6200000047683716,
+                    "alpha": 0.5031055808067322
+                },
+                {
+                    "type": 1,
+                    "percent": 1.0,
+                    "alpha": 0.0
+                }
+            ],
+            "overLifetime": true
+        }
+    ]
+}

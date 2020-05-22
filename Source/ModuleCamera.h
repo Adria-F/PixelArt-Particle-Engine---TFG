@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#define PIXELS_PER_UNIT 100 //Orthographic default zoom
+
 enum cameraType
 {
 	CAMERA_2D,

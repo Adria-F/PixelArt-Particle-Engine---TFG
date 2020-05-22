@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ModuleCamera.h"
+
 #include "ModuleInput.h"
+#include "ModuleGUI.h"
 
 ModuleCamera::ModuleCamera(bool start_enabled): Module(start_enabled)
 {
@@ -23,7 +25,7 @@ ModuleCamera::ModuleCamera(bool start_enabled): Module(start_enabled)
 
 	orthographicFrustum.type = math::FrustumType::OrthographicFrustum;
 
-	orthographicFrustum.pos = { 0.0f, 0.0f, 0.0f };
+	orthographicFrustum.pos = { 0.0f, 0.0f, 1.0f };
 	orthographicFrustum.front = { 0.0f,0.0f,-1.0f };
 	orthographicFrustum.up = { 0.0f,1.0f,0.0f };
 
@@ -44,7 +46,7 @@ bool ModuleCamera::Init()
 
 update_state ModuleCamera::Update(float dt)
 {
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (type == CAMERA_3D && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		vec newPos(0, 0, 0);
 		float speed = 0.2f;
@@ -66,17 +68,41 @@ update_state ModuleCamera::Update(float dt)
 		position += newPos;
 		reference += newPos;
 
-		reference = position - getMovementFactor();
+		reference = position - getMovementFactor();	
 
-		float2 mouseDelta = { -App->input->GetMouseDeltaX()*0.01f, App->input->GetMouseDeltaY()*0.01f };
-		orthographicFrustum.pos += {mouseDelta.x * speed, mouseDelta.y * speed, 0.0f};
+		perspectiveFrustum.pos = position;
+
+		Z = -perspectiveFrustum.front;
+		Y = perspectiveFrustum.up;
+		X = perspectiveFrustum.WorldRight();
 	}
 
-	perspectiveFrustum.pos = position;
+	if (type == CAMERA_2D)
+	{
+		//Manage 2D camera movement
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
+		{
+			float speed = 0.25f;
+			float2 mouseDelta = { App->input->GetMouseDeltaX()*0.01f, -App->input->GetMouseDeltaY()*0.01f };
+			orthographicFrustum.pos += {mouseDelta.x * speed, mouseDelta.y * speed, 0.0f};
+		}
 
-	Z = -perspectiveFrustum.front;
-	Y = perspectiveFrustum.up;
-	X = perspectiveFrustum.WorldRight();
+		//Manage 2D camera zoom
+		float wheelDelta = App->input->GetMouseWheel();
+		if (wheelDelta != 0.0f)
+		{
+			//Update zoom and clamp
+			orthographicFrustum.pos.z += wheelDelta*0.1f;
+			if (orthographicFrustum.pos.z < 0.1f) //Min zoom
+				orthographicFrustum.pos.z = 0.1f;
+			else if (orthographicFrustum.pos.z > 3.0f) //Max zoom
+				orthographicFrustum.pos.z = 3.0f;
+
+			//Calculate new frustum size using new zoom value
+			orthographicFrustum.orthographicWidth = App->gui->sceneSize.x / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+			orthographicFrustum.orthographicHeight = App->gui->sceneSize.y / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+		}
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -91,8 +117,8 @@ void ModuleCamera::OnResize(int width, int height)
 	float newAR = (float)width / (float)height;
 	setAspectRatio(newAR);
 
-	orthographicFrustum.orthographicWidth = width;
-	orthographicFrustum.orthographicHeight = height;
+	orthographicFrustum.orthographicWidth = width / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+	orthographicFrustum.orthographicHeight = height / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
 }
 
 float* ModuleCamera::getProjectionMatrix()

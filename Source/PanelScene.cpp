@@ -35,6 +35,6 @@ void PanelScene::DrawContent()
 
 void PanelScene::OnResize()
 {
-	App->camera->setAspectRatio(size.x / size.y);
+	App->camera->OnResize(size.x, size.y);
 	App->render->OnResize(size.x, size.y);
 }

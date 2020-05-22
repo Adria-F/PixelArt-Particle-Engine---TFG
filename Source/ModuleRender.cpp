@@ -12,7 +12,7 @@
 
 ModuleRender::ModuleRender(bool start_enabled): Module(start_enabled)
 {
-	mode = RENDER_3D;
+	mode = RENDER_2D;
 }
 
 ModuleRender::~ModuleRender()
@@ -139,7 +139,7 @@ update_state ModuleRender::PostUpdate(float dt)
 	defaultShader->Use();
 
 	//Send Uniforms
-	float* projection = (mode == RENDER_2D)? (float*)float4x4::identity.Transposed().v : App->camera->getProjectionMatrix();
+	float* projection = App->camera->getProjectionMatrix();
 	defaultShader->sendMat4("projection", projection);
 	float* view = (mode == RENDER_2D) ? (float*)float4x4::identity.Transposed().v : App->camera->getViewMatrix();
 	defaultShader->sendMat4("view", view);

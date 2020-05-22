@@ -35,7 +35,8 @@ public:
 	vec position = { 0.0f,0.0f,10.0f };
 	vec reference = { 0.0f,0.0f,0.0f };
 
-	Frustum frustum;
+	Frustum perspectiveFrustum;
+	Frustum orthographicFrustum;
 
 	cameraType type = CAMERA_2D;
 };

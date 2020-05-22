@@ -27,8 +27,10 @@ class SpriteParticleNode;
 class ParticleEmitter;
 
 class BaseTransformEmitterNode;
+class BaseShapeEmitterNode;
 
 class EmissionEmitterNode;
+class ShapeEmitterNode;
 class TransformEmitterNode;
 class InputParticleEmitterNode;
 
@@ -109,7 +111,6 @@ public:
 
 	void SpawnParticle();
 	Particle* SpawnParticle(Particle* particle);
-	vec randomDirectionInCone(float radius, float height) const;
 
 	void SetTemplate(Particle* templateParticle);
 	Particle* GetTemplate() const;
@@ -126,11 +127,13 @@ public:
 		struct
 		{
 			EmissionEmitterNode* emission;
+			ShapeEmitterNode* shape;
 			TransformEmitterNode* transform;
 			InputParticleEmitterNode* inputParticle;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformEmitterNode* baseTransform;
+			BaseShapeEmitterNode* baseShape;
 		};
 		EntityData* data[MAX_ENTITY_DATA];
 	};

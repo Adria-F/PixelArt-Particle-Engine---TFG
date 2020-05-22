@@ -22,8 +22,10 @@
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
+#include "BaseShapeEmitterNode.h"
 
 #include "EmissionEmitterNode.h"
+#include "ShapeEmitterNode.h"
 #include "TransformEmitterNode.h"
 #include "InputParticleEmitterNode.h"
 
@@ -145,6 +147,7 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size,
 	}
 
 	baseTransform = new BaseTransformEmitterNode(this);
+	baseShape = new BaseShapeEmitterNode(this);
 	lastEmit = frequency;
 
 	//Node boxes
@@ -261,7 +264,8 @@ void ParticleEmitter::DrawParticles()
 void ParticleEmitter::SpawnParticle()
 {
 	Particle* part = new Particle(this, templateParticle);
-	part->baseMovement->direction = randomDirectionInCone(3.0f, 5.0f); //TODO: Get direction from shape node
+	vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
+	part->baseMovement->direction = direction;
 	particles.push_back(part);
 }
 
@@ -270,17 +274,6 @@ Particle* ParticleEmitter::SpawnParticle(Particle* particle)
 	Particle* ret = new Particle(this, particle);
 	particles.push_back(ret);
 	return ret;
-}
-
-vec ParticleEmitter::randomDirectionInCone(float radius, float height) const
-{
-	float angle = 2.0*PI * GET_RANDOM();
-	float x = Cos(angle)* radius*GET_RANDOM();
-	float z = Sin(angle)* radius*GET_RANDOM();
-
-	vec point = vec(x, height, z);
-
-	return point.Normalized();
 }
 
 void ParticleEmitter::SetTemplate(Particle* templateParticle)
@@ -311,6 +304,9 @@ void ParticleEmitter::OnNodeAdded(CanvasNode* node)
 		emission = (EmissionEmitterNode*)node;
 		emission->emitter = this;
 		break;
+	case EMITTER_SHAPE:
+		shape = (ShapeEmitterNode*)node;
+		shape->emitter = this;
 	case EMITTER_TRANSFORM:
 		transform = (TransformEmitterNode*)node;
 		transform->emitter = this;
@@ -329,6 +325,8 @@ void ParticleEmitter::OnNodeRemoved(CanvasNode* node)
 	case EMITTER_EMISSION:
 		emission = nullptr;
 		break;
+	case EMITTER_SHAPE:
+		shape = nullptr;
 	case EMITTER_TRANSFORM:
 		transform = nullptr;
 		break;

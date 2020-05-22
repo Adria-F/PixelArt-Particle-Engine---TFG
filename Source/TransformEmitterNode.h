@@ -13,6 +13,7 @@ public:
 
 	void Execute(float dt);
 
+	void DrawExtraInfo(float2 offset, int zoom);
 	void DisplayConfig();
 
 	void SaveExtraInfo(JSON_Value* node);

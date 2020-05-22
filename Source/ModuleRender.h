@@ -7,12 +7,6 @@
 
 class Shader;
 
-enum renderMode
-{
-	RENDER_2D,
-	RENDER_3D
-};
-
 class ModuleRender : public Module
 {
 public:
@@ -44,8 +38,6 @@ public:
 	uint VAO = 0;
 
 	uint pixelSize = 10; //TMP
-
-	renderMode mode = RENDER_2D;
 };
 
 #endif // !__MODULERENDER_H__

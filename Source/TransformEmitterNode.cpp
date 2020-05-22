@@ -4,6 +4,7 @@
 #include "ModuleGUI.h"
 #include "ModuleParticles.h"
 #include "BaseTransformEmitterNode.h"
+#include "ModuleCamera.h"
 
 TransformEmitterNode::TransformEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size) : EntityData(emitter), CanvasNode(name, EMITTER_TRANSFORM, position, size)
 {
@@ -22,6 +23,16 @@ void TransformEmitterNode::Execute(float dt)
 		matrix = emitter->baseTransform->matrix; //Only if just one transform node applies
 		//matrix.Set(float4x4::FromTRS(position, rotation, scale));
 		changed = false;
+	}
+}
+
+void TransformEmitterNode::DrawExtraInfo(float2 offset, int zoom)
+{
+	if (App->camera->type == CAMERA_2D)
+	{
+		float2 scaledSize = size * (zoom / 100.0f);
+		ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING * (zoom / 100.0f), gridPosition.y + scaledSize.y - 17.0f });
+		ImGui::TextColored({ 120.0f,0.0f,0.0f,1.0f }, "No guizmo in 2D mode");
 	}
 }
 

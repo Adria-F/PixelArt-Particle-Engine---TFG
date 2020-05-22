@@ -72,6 +72,8 @@ void CanvasNode::Draw(float2 offset, int zoom)
 	if (scaledFont != nullptr)
 		ImGui::PopFont();
 
+	DrawExtraInfo(offset, zoom);
+
 	//Draw connections
 	for (std::list<NodeConnection*>::iterator it_c = connections.begin(); it_c != connections.end(); ++it_c)
 	{

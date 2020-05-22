@@ -387,8 +387,8 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 		CanvasNode* createdNode = nullptr;
 		if (type == EMITTER_NODE_BOX)
 		{
-			static nodeType emitterNodes[3] = { EMITTER_EMISSION, EMITTER_TRANSFORM, EMITTER_INPUTPARTICLE };
-			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, emitterNodes, 3);
+			static nodeType emitterNodes[4] = { EMITTER_EMISSION, EMITTER_SHAPE, EMITTER_TRANSFORM, EMITTER_INPUTPARTICLE };
+			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, emitterNodes, 4);
 		}
 		else if (type == PARTICLE_NODE_BOX)
 		{

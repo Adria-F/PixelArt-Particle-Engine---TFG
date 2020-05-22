@@ -144,8 +144,15 @@ float* ModuleCamera::getProjectionMatrix()
 float* ModuleCamera::getViewMatrix()
 {
 	static float4x4 matrix;
-	matrix = perspectiveFrustum.ViewMatrix();
-	matrix.Transpose();
+	if (type == CAMERA_3D)
+	{
+		matrix = perspectiveFrustum.ViewMatrix();
+		matrix.Transpose();
+	}
+	else
+	{
+		matrix = float4x4::identity.Transposed();
+	}
 
 	return (float*)matrix.v;
 }

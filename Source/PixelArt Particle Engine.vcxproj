@@ -196,6 +196,7 @@
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="RNG.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShapeEmitterNode.cpp" />
     <ClCompile Include="SpeedParticleNode.cpp" />
     <ClCompile Include="SpriteParticleNode.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="BaseColorParticleNode.h" />
     <ClInclude Include="BaseMovementParticleNode.h" />
+    <ClInclude Include="BaseShapeEmitterNode.h" />
     <ClInclude Include="BaseTransformEmitterNode.h" />
     <ClInclude Include="BaseTransformParticleNode.h" />
     <ClInclude Include="CanvasNode.h" />
@@ -336,6 +338,7 @@
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\writer.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShapeEmitterNode.h" />
     <ClInclude Include="SpeedParticleNode.h" />
     <ClInclude Include="SpriteParticleNode.h" />
     <ClInclude Include="Timer.h" />

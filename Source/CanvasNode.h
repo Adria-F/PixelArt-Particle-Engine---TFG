@@ -69,13 +69,17 @@ enum nodeType
 	PARTICLE_MAKEGLOBAL,
 	PARTICLE_DEATHINSTANTIATION,
 	PARTICLE_SPRITE,
-	MAX_PARTICLE_NODE,
+	MAX_PARTICLE_NODE = 15,
+	
 	EMITTER,
 	EMITTER_EMISSION,
+	EMITTER_SHAPE,
 	EMITTER_TRANSFORM,
 	EMITTER_INPUTPARTICLE,
-	MAX_EMITTER_NODE,
+	MAX_EMITTER_NODE = 30,
+	
 	NODE_HOLDER,
+	NODE_BOX,
 	PARTICLE_NODE_BOX,
 	EMITTER_NODE_BOX
 };
@@ -89,6 +93,7 @@ public:
 	virtual ~CanvasNode();
 
 	virtual void Draw(float2 offset, int zoom);
+	virtual void DrawExtraInfo(float2 offset, int zoom) {}
 	bool Logic(float2 offset, int zoom);
 	virtual bool ElementLogic(float2 offset, int zoom) { return false; }
 

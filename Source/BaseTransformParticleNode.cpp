@@ -26,14 +26,14 @@ void BaseTransformParticleNode::PrepareRender()
 	{
 		globalPostion += particle->emitter->baseTransform->position;
 	}
-	matrix.Set(float4x4::FromTRS(position, rotation, scale));
+	matrix.Set(float4x4::FromTRS(globalPostion, rotation, scale));
 
 	App->render->defaultShader->sendMat4("model", (float*)matrix.Transposed().v);
 }
 
 void BaseTransformParticleNode::LookCamera()
 {
-	if (!billboard)
+	if (!billboard || App->camera->type == CAMERA_2D)
 		return;
 
 	vec cameraPos = App->camera->position;

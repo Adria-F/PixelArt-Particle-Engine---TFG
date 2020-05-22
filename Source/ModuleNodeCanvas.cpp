@@ -16,6 +16,7 @@
 #include "SpriteParticleNode.h"
 
 #include "EmissionEmitterNode.h"
+#include "ShapeEmitterNode.h"
 #include "TransformEmitterNode.h"
 #include "InputParticleEmitterNode.h"
 
@@ -128,7 +129,7 @@ bool ModuleNodeCanvas::CleanUp()
 
 void ModuleNodeCanvas::DrawGuizmo()
 {
-	if (selectedNode != nullptr && selectedNode->type == EMITTER_TRANSFORM)
+	if (selectedNode != nullptr && selectedNode->type == EMITTER_TRANSFORM && App->camera->type == CAMERA_3D)
 	{
 		TransformEmitterNode* transform = (TransformEmitterNode*)selectedNode;
 
@@ -167,8 +168,6 @@ void ModuleNodeCanvas::DrawGuizmo()
 
 		float4x4* ViewMatrix = (float4x4*)App->camera->getViewMatrix();
 		float4x4*ProjectionMatrix = (float4x4*)App->camera->getProjectionMatrix();
-
-		ImGuizmo::MODE mode;
 
 		float4x4* GlobalMat;
 		GlobalMat = &transform->matrix;
@@ -274,6 +273,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 		case EMITTER_EMISSION:
 			nodeList.insert(std::pair<std::string, nodeType>("Emission", nodes[i]));
 			break;
+		case EMITTER_SHAPE:
+			nodeList.insert(std::pair<std::string, nodeType>("Shape", nodes[i]));
+			break;
 		case EMITTER_TRANSFORM:
 			nodeList.insert(std::pair<std::string, nodeType>("Transform", nodes[i]));
 			break;
@@ -316,6 +318,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case EMITTER_EMISSION:
 		node = new EmissionEmitterNode(nullptr, name, spawnPos);
+		break;
+	case EMITTER_SHAPE:
+		node = new ShapeEmitterNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER_TRANSFORM:
 		node = new TransformEmitterNode(nullptr, name, spawnPos);

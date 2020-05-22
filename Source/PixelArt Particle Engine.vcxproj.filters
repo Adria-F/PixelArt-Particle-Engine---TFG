@@ -268,6 +268,9 @@
     <ClCompile Include="SpriteParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="ShapeEmitterNode.cpp">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -686,6 +689,12 @@
     </ClInclude>
     <ClInclude Include="SpriteParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseShapeEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeEmitterNode.h">
+      <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

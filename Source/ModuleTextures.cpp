@@ -114,6 +114,55 @@ bool ModuleTextures::ImportTexture(const char* path)
 	return success;
 }
 
+void ModuleTextures::ExportTexture(const char* path, Texture* texture) const
+{
+	ILuint ilImage;
+
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
+	ilTexImage(texture->width, texture->height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
+
+	uint* pixels = new uint[texture->width*texture->height];
+	glBindTexture(GL_TEXTURE_2D, texture->GL_id);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//ilSetPixels()
+	ilSetData(pixels);
+
+	ilSaveImage(path);
+
+	ilDeleteImages(1, &ilImage);
+	delete[] pixels;
+}
+
+void ModuleTextures::ExportTexture(const char* path, uint width, uint height, uint textureID) const
+{
+	ILuint ilImage;
+
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
+	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
+
+	uint* pixels = new uint[width*height];
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ilSetData(pixels);
+
+	ilSaveImage(path);
+
+	ilDeleteImages(1, &ilImage);
+	delete[] pixels;
+}
+
+void ModuleTextures::ExportImage(const char * path, uint imageID) const
+{
+	ilBindImage(imageID);
+	ilSaveImage(path);
+}
+
 void ModuleTextures::GenerateResources()
 {
 	for (auto& f : fs::recursive_directory_iterator(ASSETS_FOLDER))
@@ -258,6 +307,53 @@ std::string ModuleTextures::GetTextureName(uint textureUID)
 	}
 
 	return std::string();
+}
+
+uint ModuleTextures::CreateTextureImage(uint ID, int width, int height)
+{
+	ILuint ilImage;
+
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
+	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
+
+	uint* pixels = new uint[width*height];
+	glBindTexture(GL_TEXTURE_2D, ID);
+	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ilSetData(pixels);
+
+	delete[] pixels;
+
+	return ilImage;
+}
+
+uint ModuleTextures::GenerateImage(int width, int height)
+{
+	ILuint ilImage;
+
+	ilGenImages(1, &ilImage);
+	ilBindImage(ilImage);
+	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
+
+	return ilImage;
+}
+
+void ModuleTextures::InsertImage(uint target, uint source, int offsetX, int offsetY, int width, int height)
+{
+	//Retrieve source image pixel data
+	ilBindImage(source);
+	uint* pixels = (uint*)ilGetData();
+
+	//Insert pixel data into target image
+	ilBindImage(target);
+	ilSetPixels(offsetX, offsetY, 0, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+}
+
+void ModuleTextures::DeleteImage(uint imageID)
+{
+	ilDeleteImage(imageID);
 }
 
 Texture::Texture(const char* path): path(path)

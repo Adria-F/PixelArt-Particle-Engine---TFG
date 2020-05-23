@@ -221,9 +221,9 @@ void ParticleEmitter::Update(float dt)
 		{
 			lastEmit += dt;
 
-			if (lastEmit >= frequency)
+			while (lastEmit >= frequency)
 			{
-				lastEmit = 0.0f;
+				lastEmit -= frequency;
 				SpawnParticle();
 			}
 		}

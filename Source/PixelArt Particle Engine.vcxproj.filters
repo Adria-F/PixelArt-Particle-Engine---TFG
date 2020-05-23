@@ -271,6 +271,7 @@
     <ClCompile Include="ShapeEmitterNode.cpp">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteSheetExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -696,6 +697,7 @@
     <ClInclude Include="ShapeEmitterNode.h">
       <Filter>Sources\Nodes\Emitters</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteSheetExporter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

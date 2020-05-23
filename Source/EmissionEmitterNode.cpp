@@ -13,9 +13,9 @@ void EmissionEmitterNode::Execute(float dt)
 {
 	lastEmit += dt;
 
-	if (lastEmit >= frequency)
+	while (lastEmit >= frequency)
 	{
-		lastEmit = 0.0f;
+		lastEmit -= frequency;
 		switch (type)
 		{
 		case EmissionEmitterNode::CONSTANT:

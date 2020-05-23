@@ -39,6 +39,9 @@ public:
 	std::string NormalizePath(const char* path);
 	
 	bool ImportTexture(const char* path);
+	void ExportTexture(const char* path, Texture* texture) const;
+	void ExportTexture(const char* path, uint width, uint height, uint textureID) const;
+	void ExportImage(const char* path, uint imageID) const;
 	
 	uint UseTexture(uint textureUID);
 	void UnuseTexture(uint textureUID);
@@ -46,6 +49,11 @@ public:
 
 	uint GetTextureUID(const char* name);
 	std::string GetTextureName(uint textureUID);
+
+	uint CreateTextureImage(uint ID, int width, int height);
+	uint GenerateImage(int width, int height);
+	void InsertImage(uint target, uint source, int offsetX, int offsetY, int width, int height);
+	void DeleteImage(uint imageID);
 
 private:
 

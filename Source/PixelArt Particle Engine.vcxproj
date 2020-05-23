@@ -199,6 +199,7 @@
     <ClCompile Include="ShapeEmitterNode.cpp" />
     <ClCompile Include="SpeedParticleNode.cpp" />
     <ClCompile Include="SpriteParticleNode.cpp" />
+    <ClCompile Include="SpriteSheetExporter.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TransformEmitterNode.cpp" />
   </ItemGroup>
@@ -341,6 +342,7 @@
     <ClInclude Include="ShapeEmitterNode.h" />
     <ClInclude Include="SpeedParticleNode.h" />
     <ClInclude Include="SpriteParticleNode.h" />
+    <ClInclude Include="SpriteSheetExporter.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformEmitterNode.h" />
     <ClInclude Include="WinItemDialog.h" />

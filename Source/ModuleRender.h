@@ -19,6 +19,9 @@ public:
 	update_state PostUpdate(float dt);
 	bool CleanUp();
 
+	void DrawScene();
+	void DrawPixelArt();
+
 	uint generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices);
 
 	void OnResize(int width, int height);

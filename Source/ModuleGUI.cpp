@@ -11,6 +11,9 @@
 #include "ModuleTextures.h"
 #include "ModuleCamera.h"
 
+//TMP
+#include "SpriteSheetExporter.h"
+
 // Include all panels
 #include "PanelScene.h"
 #include "PanelPanelNodeConfiguration.h"
@@ -161,6 +164,14 @@ update_state ModuleGUI::Update(float dt)
 					App->textures->ImportTexture(texture.c_str());
 				}
 			}
+			if (ImGui::MenuItem("Export Screenshot"))
+			{
+				SpriteSheetExporter* spriteSheet = new SpriteSheetExporter(3.0f, 10, sceneSize, 10);
+				spriteSheet->CreateSpriteSheet();
+				spriteSheet->ExportSpriteSheet("spritesheet.png");
+				delete spriteSheet;
+				App->textures->ExportTexture("frame.png", sceneSize.x, sceneSize.y, App->render->pixelartTexture);
+			}
 
 			ImGui::EndMenu();
 		}
@@ -290,7 +301,7 @@ bool ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, 
 		float* modifyingValue = value;
 		if (alternativeValue != nullptr && condition)
 			modifyingValue = alternativeValue;
-		ret = ImGui::DragFloat(id, modifyingValue, step, 0.0f, 0.0f, "%.2f");
+		ret = ImGui::DragFloat(id, modifyingValue, step, step, 0.0f, "%.2f");
 		*value = *modifyingValue;
 		if (alternativeValue != nullptr)
 			*alternativeValue = *modifyingValue;

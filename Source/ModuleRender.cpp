@@ -102,6 +102,7 @@ bool ModuleRender::Init()
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_CULL_FACE);
+		//glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_BLEND);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -132,29 +133,38 @@ update_state ModuleRender::PostUpdate(float dt)
 	//Draw Scene
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
+	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Activate default shader
+	///Activate default shader
 	defaultShader->Use();
 
-	//Send Uniforms
+	///Send Uniforms
 	defaultShader->sendMat4("projection", App->camera->getProjectionMatrix());
 	defaultShader->sendMat4("view", App->camera->getViewMatrix());
 
-	//Draw Scene
+	///Draw Particles
 	glEnable(GL_BLEND);
 	App->particles->DrawParticles();
 
-	//Activate pixelart shader
-	glDisable(GL_BLEND);
+	//Draw result
+	glDrawBuffer(GL_COLOR_ATTACHMENT1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	///Activate pixelart shader
 	pixelartShader->Use();
+	
+	///Send Uniforms
 	pixelartShader->sendTexture("scene", texture);
 	float4x4 matrix;
 	matrix.Set(float4x4::FromTRS(vec(0.0,0.0,0.0), Quat::identity, vec(2.0,2.0,2.0)));
 	pixelartShader->sendMat4("model", (float*)matrix.Transposed().v);
 	pixelartShader->sendVec2("viewportSize", App->gui->sceneSize);
 	pixelartShader->sendUint("pixelSize", pixelSize);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //Draw screen-filling rect
+	
+	///Draw screen-filling rect
+	glDisable(GL_BLEND);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	App->gui->Draw(); // Draw GUI

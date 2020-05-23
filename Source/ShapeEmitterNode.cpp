@@ -31,6 +31,28 @@ void ShapeEmitterNode::DisplayConfig()
 
 		ImGui::EndCombo();
 	}
+
+	ImGui::NewLine();
+	ImGui::Text("Shape properties:");
+	switch (shape)
+	{
+	case CONE_SHAPE:
+		ImGui::InputFloat("Radius", &radius, 0.1f);
+		ImGui::InputFloat("Height", &height, 0.1f);
+		break;
+	case SPHERE_SHAPE:
+		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
+		break;
+	case BOX_SHAPE:
+		ImGui::InputFloat3("Box Size", boxSize.ptr());
+		break;
+	case CIRCLE_SHAPE:
+		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
+		break;
+	case QUAD_SHAPE:
+		ImGui::InputFloat2("Quad Size", boxSize.ptr());
+		break;
+	}
 }
 
 vec ShapeEmitterNode::GetDirection() const
@@ -61,9 +83,9 @@ vec ShapeEmitterNode::GetDirection() const
 
 vec ShapeEmitterNode::GetDirectionInCone() const
 {
-	float angle = 2.0*PI * GET_RANDOM();
-	float x = Cos(angle)* radius*GET_RANDOM();
-	float z = Sin(angle)* radius*GET_RANDOM();
+	float degrees = 2.0*PI * GET_RANDOM();
+	float x = Cos(degrees)* radius*GET_RANDOM();
+	float z = Sin(degrees)* radius*GET_RANDOM();
 
 	vec point = vec(x, height, z);
 
@@ -82,9 +104,9 @@ vec ShapeEmitterNode::GetDirectionInBox() const
 
 vec ShapeEmitterNode::GetDirectionInCircle() const
 {
-	float angle = 2.0*PI * GET_RANDOM();
-	float x = Cos(angle)* radius*GET_RANDOM();
-	float y = Sin(angle)* radius*GET_RANDOM();
+	float degrees = DEGTORAD*angle*0.5f * (GET_RANDOM()*2.0f-1.0f) + DEGTORAD*90.0f;
+	float x = Cos(degrees);
+	float y = Sin(degrees);
 
 	vec point = vec(x, y, 0.0f);
 
@@ -99,6 +121,7 @@ vec ShapeEmitterNode::GetDirectionInQuad() const
 void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addUint("shape", shape);
+	node->addString("currentShape", currentShape.c_str());
 
 	node->addFloat("radius", radius);
 	node->addFloat("height", height);
@@ -109,6 +132,7 @@ void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)
 void ShapeEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	shape = (emissionShape)nodeDef->getUint("shape");
+	currentShape = nodeDef->getString("currentShape");
 
 	radius = nodeDef->getFloat("radius");
 	height = nodeDef->getFloat("height");

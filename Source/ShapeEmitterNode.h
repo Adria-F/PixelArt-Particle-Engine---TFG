@@ -47,9 +47,12 @@ public:
 
 	emissionShape shape = CIRCLE_SHAPE;
 
-	//CONE - SPHERE - CIRCLE
-	float radius = 5.0f;
-	float height = 3.0f;
+	//CONE
+	float radius = 3.0f;
+	float height = 5.0f;
+
+	//CIRCLE - SPHERE
+	int angle = 360;
 
 	//BOX - QUAD
 	vec boxSize = vec::one;

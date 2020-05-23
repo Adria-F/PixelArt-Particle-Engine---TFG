@@ -9,6 +9,7 @@
 #include "ModuleProjectManager.h"
 #include "ModuleParticles.h"
 #include "ModuleTextures.h"
+#include "ModuleCamera.h"
 
 // Include all panels
 #include "PanelScene.h"
@@ -159,6 +160,19 @@ update_state ModuleGUI::Update(float dt)
 				{
 					App->textures->ImportTexture(texture.c_str());
 				}
+			}
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Camera"))
+		{
+			if (ImGui::MenuItem("Camera 2D", nullptr, App->camera->type == CAMERA_2D))
+			{
+				App->camera->type = CAMERA_2D;
+			}
+			if (ImGui::MenuItem("Camera 3D", nullptr, App->camera->type == CAMERA_3D))
+			{
+				App->camera->type = CAMERA_3D;
 			}
 
 			ImGui::EndMenu();

@@ -89,7 +89,7 @@ update_state ModuleCamera::Update(float dt)
 
 		//Manage 2D camera zoom
 		float wheelDelta = App->input->GetMouseWheel();
-		if (wheelDelta != 0.0f)
+		if (wheelDelta != 0.0f && (App->gui->mouseOnScene || App->gui->mouseOnPixelScene))
 		{
 			//Update zoom and clamp
 			orthographicFrustum.pos.z += wheelDelta*0.1f;

@@ -166,11 +166,9 @@ update_state ModuleGUI::Update(float dt)
 			}
 			if (ImGui::MenuItem("Export Screenshot"))
 			{
-				SpriteSheetExporter* spriteSheet = new SpriteSheetExporter(3.0f, 10, sceneSize, 10);
-				spriteSheet->CreateSpriteSheet();
-				spriteSheet->ExportSpriteSheet("spritesheet.png");
-				delete spriteSheet;
-				App->textures->ExportTexture("frame.png", sceneSize.x, sceneSize.y, App->render->pixelartTexture);
+				SpriteSheetExporter spriteSheet(5.0f, 30, sceneSize, 10, 5, 6);
+				spriteSheet.CreateSpriteSheet();
+				spriteSheet.ExportSpriteSheet("spritesheet.png");
 			}
 
 			ImGui::EndMenu();

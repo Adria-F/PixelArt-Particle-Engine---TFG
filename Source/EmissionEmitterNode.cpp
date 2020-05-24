@@ -9,67 +9,141 @@ EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter, const char* n
 	lastEmit = frequency;
 }
 
+EmissionEmitterNode::~EmissionEmitterNode()
+{
+	for (std::list<Burst*>::iterator it_b = bursts.begin(); it_b != bursts.end(); ++it_b)
+	{
+		RELEASE((*it_b));
+	}
+	bursts.clear();
+}
+
 void EmissionEmitterNode::Execute(float dt)
 {
+	time += dt;
+
+	if (time >= duration)
+	{
+		if (loop)
+			time = 0.0f;
+		else
+			return;
+	}
+
 	lastEmit += dt;
 
-	while (lastEmit >= frequency)
+	while (lastEmit >= frequency && frequency > 0.0f)
 	{
 		lastEmit -= frequency;
-		switch (type)
+
+		emitter->SpawnParticle();
+	}
+
+	for (std::list<Burst*>::iterator it_b = bursts.begin(); it_b != bursts.end(); ++it_b)
+	{
+		if (time >= (*it_b)->start)
 		{
-		case EmissionEmitterNode::CONSTANT:
-			emitter->SpawnParticle();
-			break;
-		case EmissionEmitterNode::BURST:
-			if (repeatBurst)
+			if ((*it_b)->repeat > 0.0f)
+				(*it_b)->lastEmit += dt;
+
+			if (((*it_b)->repeat == 0 && (*it_b)->lastEmit != -1.0f) || ((*it_b)->repeat > 0.0f && (*it_b)->lastEmit >= (*it_b)->repeat))
 			{
-				for (int i = 0; i < burst; ++i)
-				{
+				if ((*it_b)->repeat == 0)
+					(*it_b)->lastEmit = -1.0f;
+				else
+					(*it_b)->lastEmit -= (*it_b)->repeat;
+
+				for (int i = 0; i < (*it_b)->amount; i++)
 					emitter->SpawnParticle();
-				}
 			}
-			break;
 		}
 	}
 }
 
-void EmissionEmitterNode::Play()
+void EmissionEmitterNode::Stop()
 {
-	if (emitter && emitter->GetTemplate() != nullptr && type == BURST && !repeatBurst)
+	time = 0.0f;
+	lastEmit = frequency;
+
+	for (std::list<Burst*>::iterator it_b = bursts.begin(); it_b != bursts.end(); ++it_b)
 	{
-		for (int i = 0; i < burst; ++i)
-		{
-			emitter->SpawnParticle();
-		}
+		(*it_b)->lastEmit = (*it_b)->repeat;
 	}
 }
 
 void EmissionEmitterNode::DisplayConfig()
 {
-	ImGui::Text("Burst"); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("", "##burst", &burst, 1.0f, true);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Repeat", &repeatBurst);
+	App->gui->DrawInputFloat("Duration", "##duration", &duration, 0.1f, true);
+	ImGui::Checkbox("Loop", &loop);
+	App->gui->DrawInputFloat("Frequency", "##frequency", &frequency, 0.1f, true);
 
-	if (repeatBurst)
-		ImGui::Text("Frequency");
-	else
-		ImGui::TextDisabled("Frequency");
-	ImGui::SameLine(75.0f);
-	
-	App->gui->DrawInputFloat("", "##frequency", &frequency, 0.1f, repeatBurst);
+	ImGui::NewLine();
+	if (ImGui::CollapsingHeader("Bursts", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		int count = 0;
+		for (std::list<Burst*>::iterator it_b = bursts.begin(); it_b != bursts.end(); ++it_b)
+		{
+			if (ImGui::Selectable(("X##" + std::to_string(count)).c_str(), false, 0, { 7.0f,15.0f }))
+			{
+				it_b = bursts.erase(it_b);
+				if (it_b == bursts.end())
+					break;
+			}
+			ImGui::SameLine();
+			if (ImGui::TreeNode(("Burst " + std::to_string(count)).c_str()))
+			{
+				App->gui->DrawInputFloat("Start", "##start", &(*it_b)->start, 0.1f, true);
+				ImGui::DragInt("Amount", &(*it_b)->amount);
+				App->gui->DrawInputFloat("Repeat", "##repeat", &(*it_b)->repeat, 0.1f, true);
+
+				ImGui::TreePop();
+			}
+			ImGui::Separator();
+			count++;
+		}
+		if (ImGui::Button("Add Burst"))
+		{
+			bursts.push_back(new Burst());
+		}
+	}
 }
 
 void EmissionEmitterNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addFloat("frequency", frequency);
-	node->addFloat("burst", burst);
-	node->addBool("repeat", repeatBurst);
+	node->addFloat("duration", duration);
+	node->addBool("loop", loop);
+
+	JSON_Value* burstList = node->createValue();
+	burstList->convertToArray();
+
+	for (std::list<Burst*>::iterator it_b = bursts.begin(); it_b != bursts.end(); ++it_b)
+	{
+		JSON_Value* burst = burstList->createValue();
+		burst->addFloat("start", (*it_b)->start);
+		burst->addInt("amount", (*it_b)->amount);
+		burst->addFloat("repeat", (*it_b)->repeat);
+
+		burstList->addValue("", burst);
+	}
+
+	node->addValue("bursts", burstList);
 }
 
 void EmissionEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	frequency = nodeDef->getFloat("frequency");
-	burst = nodeDef->getFloat("burst");
-	repeatBurst = nodeDef->getBool("repeat");
+	duration = nodeDef->getFloat("duration");
+	loop = nodeDef->getBool("loop");
+
+	JSON_Value* burstList = nodeDef->getValue("bursts");
+	for (int i = 0; i < burstList->getRapidJSONValue()->Size(); ++i)
+	{
+		JSON_Value* burstDef = burstList->getValueFromArray(i);
+		Burst* burst = new Burst();
+		burst->start = burstDef->getFloat("start");
+		burst->amount = burstDef->getInt("amount");
+		burst->repeat = burstDef->getFloat("repeat");
+		bursts.push_back(burst);
+	}
 }

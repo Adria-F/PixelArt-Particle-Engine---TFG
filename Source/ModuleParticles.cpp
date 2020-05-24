@@ -177,11 +177,6 @@ void ParticleEmitter::Play()
 		//Grant spawn first particle at frame 0
 		lastEmit = frequency;
 	}
-	
-	if ((playing || restarted) && emission != nullptr)
-	{
-		emission->Play();
-	}
 
 	playing = true;
 }
@@ -195,6 +190,9 @@ void ParticleEmitter::Stop()
 {
 	playing = false;
 	restarted = true;
+
+	if (emission != nullptr)
+		emission->Stop();
 
 	//Delete all particles
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)

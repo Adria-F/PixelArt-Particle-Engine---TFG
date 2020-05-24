@@ -138,7 +138,7 @@ public:
 		EntityData* data[MAX_ENTITY_DATA];
 	};
 
-	float frequency = 0.0f;
+	float frequency = 0.5f;
 
 private:
 

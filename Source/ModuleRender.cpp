@@ -105,8 +105,7 @@ bool ModuleRender::Init()
 		//glEnable(GL_DEPTH_TEST);
 
 		glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE);
 
 		//Generate frame buffer
 		generateFrameBuffer(App->window->width, App->window->height);

@@ -126,6 +126,8 @@ void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)
 	node->addFloat("radius", radius);
 	node->addFloat("height", height);
 
+	node->addFloat("angle", angle);
+
 	node->addVector3("boxSize", boxSize);
 }
 
@@ -136,6 +138,8 @@ void ShapeEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 
 	radius = nodeDef->getFloat("radius");
 	height = nodeDef->getFloat("height");
+
+	angle = nodeDef->getFloat("angle");
 
 	boxSize = nodeDef->getVector3("boxSize");
 }

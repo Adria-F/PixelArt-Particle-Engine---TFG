@@ -9,7 +9,7 @@ class SpriteSheetExporter
 {
 public:
 
-	SpriteSheetExporter(float duration, uint frames, float2 frameSize, int pixelSize);
+	SpriteSheetExporter(float duration, uint frames, float2 frameSize, int pixelSize, int rows, int columns);
 	~SpriteSheetExporter();
 
 	void CreateSpriteSheet();
@@ -25,6 +25,10 @@ public:
 
 	float duration = 0.0f;
 	uint frameNum = 0;
+
+	int rows = 0;
+	int columns = 0;
+
 	float2 frameSize;
 	int pixelSize;
 };

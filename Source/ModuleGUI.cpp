@@ -19,6 +19,7 @@
 #include "PanelPanelNodeConfiguration.h"
 #include "PanelNodeCanvas.h"
 #include "PanelPixelArt.h"
+#include "PanelExportSpritesheet.h"
 
 ModuleGUI::ModuleGUI(bool start_enabled): Module(start_enabled)
 {
@@ -51,6 +52,7 @@ bool ModuleGUI::Init()
 	panels.push_back(new PanelNodeConfiguration("Node Configuration"));
 	panels.push_back(new PanelNodeCanvas("Node Canvas"));
 	panels.push_back(new PanelPixelArt("PixelArt"));
+	panels.push_back(new PanelExportSpritesheet("Export Spritesheet"));
 
 	return true;
 }

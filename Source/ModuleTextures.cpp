@@ -116,24 +116,7 @@ bool ModuleTextures::ImportTexture(const char* path)
 
 void ModuleTextures::ExportTexture(const char* path, Texture* texture) const
 {
-	ILuint ilImage;
-
-	ilGenImages(1, &ilImage);
-	ilBindImage(ilImage);
-	ilTexImage(texture->width, texture->height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
-
-	uint* pixels = new uint[texture->width*texture->height];
-	glBindTexture(GL_TEXTURE_2D, texture->GL_id);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//ilSetPixels()
-	ilSetData(pixels);
-
-	ilSaveImage(path);
-
-	ilDeleteImages(1, &ilImage);
-	delete[] pixels;
+	ExportTexture(path, texture->width, texture->height, texture->GL_id);
 }
 
 void ModuleTextures::ExportTexture(const char* path, uint width, uint height, uint textureID) const
@@ -144,7 +127,7 @@ void ModuleTextures::ExportTexture(const char* path, uint width, uint height, ui
 	ilBindImage(ilImage);
 	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
 
-	uint* pixels = new uint[width*height];
+	uint* pixels = new uint[width*height*4];
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -317,7 +300,7 @@ uint ModuleTextures::CreateTextureImage(uint ID, int width, int height)
 	ilBindImage(ilImage);
 	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
 
-	uint* pixels = new uint[width*height];
+	uint* pixels = new uint[width*height*4];
 	glBindTexture(GL_TEXTURE_2D, ID);
 	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	glBindTexture(GL_TEXTURE_2D, 0);

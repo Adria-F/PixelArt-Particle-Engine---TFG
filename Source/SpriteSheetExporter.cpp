@@ -37,7 +37,7 @@ void SpriteSheetExporter::CreateSpriteSheet()
 	float timeStep = duration / (frameNum-1);
 	float dt = 1.0f / 60.0f; //60 fps dt
 	float frameTime = 0.0f;
-	frames.push_back(App->textures->CreateTextureImage(App->render->texture, frameSize.x, frameSize.y)); //Attach empty texture for frame 0
+	frames.push_back(App->textures->CreateTextureImage(App->render->pixelartTexture, frameSize.x, frameSize.y)); //Attach empty texture for frame 0
 	for (float time = 0; time <= duration; time += dt)
 	{
 		App->particles->Update(dt); //Update particles
@@ -50,7 +50,7 @@ void SpriteSheetExporter::CreateSpriteSheet()
 			App->render->DrawScene(); //To draw the pixel art we first need the scene drawn
 			App->render->DrawPixelArt(); //Draw final frame result
 
-			frames.push_back(App->textures->CreateTextureImage(App->render->texture, frameSize.x, frameSize.y));
+			frames.push_back(App->textures->CreateTextureImage(App->render->pixelartTexture, frameSize.x, frameSize.y));
 		}
 	}
 
@@ -79,7 +79,8 @@ void SpriteSheetExporter::CreateSpriteSheet()
 
 void SpriteSheetExporter::ExportSpriteSheet(const char* path)
 {
-	App->textures->ExportImage(path, spritesheet);
+	if (spritesheet != 0)
+		App->textures->ExportImage(path, spritesheet);
 }
 
 void SpriteSheetExporter::ClearFrameList()

@@ -34,7 +34,7 @@ bool ModuleWindow::Init()
 		resizable = true;
 
 		//Create window
-		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_MAXIMIZED;
 
 		//Use OpenGL 3.1
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);

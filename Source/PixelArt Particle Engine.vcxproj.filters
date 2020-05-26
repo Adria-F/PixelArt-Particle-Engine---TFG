@@ -274,6 +274,7 @@
     <ClCompile Include="SpriteSheetExporter.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="PanelExportSpritesheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -702,6 +703,7 @@
     <ClInclude Include="SpriteSheetExporter.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="PanelExportSpritesheet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

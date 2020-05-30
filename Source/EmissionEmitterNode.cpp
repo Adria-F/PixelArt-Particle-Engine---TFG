@@ -25,7 +25,7 @@ void EmissionEmitterNode::Execute(float dt)
 	if (time >= duration)
 	{
 		if (loop)
-			time = 0.0f;
+			Stop(); //To reset all timers
 		else
 			return;
 	}

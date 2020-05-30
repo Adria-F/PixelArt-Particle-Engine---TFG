@@ -134,6 +134,7 @@ public:
 	};
 
 	float frequency = 0.5f;
+	float timeAlive = 0.0f;
 
 private:
 

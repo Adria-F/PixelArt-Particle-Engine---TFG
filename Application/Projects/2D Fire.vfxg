@@ -84,6 +84,9 @@
             "radius": 3.0,
             "height": 5.0,
             "angle": 45.0,
+            "direction": 0,
+            "speed": 1.0,
+            "currentDirection": "Random",
             "boxSize": [
                 1.0,
                 1.0,
@@ -174,7 +177,7 @@
             ],
             "size": [
                 235.0,
-                426.0
+                481.0
             ],
             "interactable": false,
             "movable": true,
@@ -211,24 +214,6 @@
             "bottomConnection": 3593085971
         },
         {
-            "name": "Sprite",
-            "uid": 3831917982,
-            "type": 5,
-            "parent": 504012982,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "sprite": "circle"
-        },
-        {
             "name": "Lifetime",
             "uid": 2550770412,
             "type": 6,
@@ -250,13 +235,31 @@
             "random": true
         },
         {
+            "name": "Sprite",
+            "uid": 3831917982,
+            "type": 5,
+            "parent": 504012982,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "circle"
+        },
+        {
             "name": "Particle Update",
             "uid": 3593085971,
             "type": 33,
             "parent": 4125537044,
             "position": [
                 478.0,
-                479.0
+                534.0
             ],
             "size": [
                 195.0,
@@ -282,7 +285,7 @@
             "parent": 4125537044,
             "position": [
                 478.0,
-                574.0
+                629.0
             ],
             "size": [
                 195.0,

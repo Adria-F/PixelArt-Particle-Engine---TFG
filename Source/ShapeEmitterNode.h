@@ -20,6 +20,13 @@ enum emissionShape
 	MAX_2D_SHAPES = 30
 };
 
+enum emissionDirection
+{
+	RANDOM_DIRECTION,
+	LOOP_DIRECTION,
+	PING_PONG
+};
+
 class ShapeEmitterNode : public EntityData, public CanvasNode
 {
 public:
@@ -46,6 +53,8 @@ private:
 public:
 
 	emissionShape shape = CIRCLE_SHAPE;
+	emissionDirection direction = RANDOM_DIRECTION;
+	float speed = 1.0f;
 
 	//CONE
 	float radius = 3.0f;
@@ -58,6 +67,7 @@ public:
 	vec boxSize = vec::one;
 
 	std::string currentShape = "Circle";
+	std::string currentDirection = "Random";
 };
 
 #endif // !__SHAPE_EMITTERNODE_H__

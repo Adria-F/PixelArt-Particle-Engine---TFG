@@ -1,6 +1,8 @@
 #include "Application.h"
 #include "ShapeEmitterNode.h"
 
+#include "ModuleParticles.h"
+
 ShapeEmitterNode::ShapeEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size) : EntityData(emitter), CanvasNode(name, EMITTER_SHAPE, position, size)
 {
 }
@@ -48,6 +50,30 @@ void ShapeEmitterNode::DisplayConfig()
 		break;
 	case CIRCLE_SHAPE:
 		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
+		if (ImGui::BeginCombo("Direction", currentDirection.c_str()))
+		{
+			if (ImGui::Selectable("Random", direction == RANDOM_DIRECTION))
+			{
+				direction = RANDOM_DIRECTION;
+				currentDirection = "Random";
+			}
+			if (ImGui::Selectable("Loop", direction == LOOP_DIRECTION))
+			{
+				direction = LOOP_DIRECTION;
+				currentDirection = "Loop";
+			}
+			if (ImGui::Selectable("Ping-Pong", direction == PING_PONG))
+			{
+				direction = PING_PONG;
+				currentDirection = "Ping-Pong";
+			}
+
+			ImGui::EndCombo();
+		}
+		if (direction == LOOP_DIRECTION || direction == PING_PONG)
+		{
+			ImGui::InputFloat("Speed", &speed);
+		}
 		break;
 	case QUAD_SHAPE:
 		ImGui::InputFloat2("Quad Size", boxSize.ptr());
@@ -104,7 +130,20 @@ vec ShapeEmitterNode::GetDirectionInBox() const
 
 vec ShapeEmitterNode::GetDirectionInCircle() const
 {
-	float degrees = DEGTORAD*angle*0.5f * (GET_RANDOM()*2.0f-1.0f) + DEGTORAD*90.0f;
+	float factor = 0.0f; //A number between -1 and 1
+	switch (direction)
+	{
+	case RANDOM_DIRECTION:
+		factor = (GET_RANDOM()*2.0f - 1.0f);
+		break;
+	case LOOP_DIRECTION:
+		factor = -Mod(emitter->timeAlive*speed*2.0f, 2.0f) + 1.0f;
+		break;
+	case PING_PONG:
+		factor = Cos(emitter->timeAlive*speed*3.0f);
+		break;
+	}
+	float degrees = DEGTORAD*angle*0.5f * factor + DEGTORAD*90.0f;
 	float x = Cos(degrees);
 	float y = Sin(degrees);
 
@@ -127,6 +166,9 @@ void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)
 	node->addFloat("height", height);
 
 	node->addFloat("angle", angle);
+	node->addUint("direction", direction);
+	node->addFloat("speed", speed);
+	node->addString("currentDirection", currentDirection.c_str());
 
 	node->addVector3("boxSize", boxSize);
 }
@@ -140,6 +182,9 @@ void ShapeEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 	height = nodeDef->getFloat("height");
 
 	angle = nodeDef->getFloat("angle");
+	direction = (emissionDirection)nodeDef->getUint("direction");
+	speed = nodeDef->getFloat("speed");
+	currentDirection = nodeDef->getString("currentDirection");
 
 	boxSize = nodeDef->getVector3("boxSize");
 }

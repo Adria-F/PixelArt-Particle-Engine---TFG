@@ -191,6 +191,7 @@ void ParticleEmitter::Stop()
 {
 	playing = false;
 	restarted = true;
+	timeAlive = 0.0f;
 
 	if (emission != nullptr)
 		emission->Stop();
@@ -210,6 +211,8 @@ void ParticleEmitter::Update(float dt)
 
 	if (playing && templateParticle != nullptr)
 	{
+		timeAlive += dt;
+
 		for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 		{
 			if (data[i] != nullptr)

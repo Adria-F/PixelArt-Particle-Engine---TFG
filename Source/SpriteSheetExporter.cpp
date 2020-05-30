@@ -9,12 +9,21 @@
 
 SpriteSheetExporter::SpriteSheetExporter(float duration, uint frames, float2 frameSize, int pixelSize, int rows, int columns): duration(duration), frameNum(frames), frameSize(frameSize), pixelSize(pixelSize), rows(rows), columns(columns)
 {
+	spritesheetTexture = new Texture("spritesheet");
+	spritesheetTexture->width = frameSize.x*columns;
+	spritesheetTexture->height = frameSize.y*rows;
+
+	camera = new ModuleCamera();
+	camera->OnResize(256, 256);
 }
 
 SpriteSheetExporter::~SpriteSheetExporter()
 {
 	ClearFrameList();
 	App->textures->DeleteImage(spritesheet);
+
+	RELEASE(spritesheetTexture);
+	RELEASE(camera);
 }
 
 void SpriteSheetExporter::CreateSpriteSheet()
@@ -27,17 +36,11 @@ void SpriteSheetExporter::CreateSpriteSheet()
 	App->particles->Stop();
 	App->particles->Play();
 
-	//Set frame and pixel size
-	uint prevPixelSize = App->render->pixelSize;
-	App->camera->OnResize(frameSize.x, frameSize.y);
-	App->render->OnResize(frameSize.x, frameSize.y);
-	App->render->pixelSize = pixelSize;
-
 	//Collect all frames images
 	float timeStep = duration / (frameNum-1);
 	float dt = 1.0f / 60.0f; //60 fps dt
 	float frameTime = 0.0f;
-	frames.push_back(App->textures->CreateTextureImage(App->render->pixelartTexture, frameSize.x, frameSize.y)); //Attach empty texture for frame 0
+	frames.push_back(App->textures->CreateTextureImage(App->render->exportPixelartTexture, frameSize.x, frameSize.y)); //Attach empty texture for frame 0
 	for (float time = 0; time <= duration; time += dt)
 	{
 		App->particles->Update(dt); //Update particles
@@ -47,10 +50,10 @@ void SpriteSheetExporter::CreateSpriteSheet()
 		{
 			frameTime -= timeStep;
 			//Render textures
-			App->render->DrawScene(); //To draw the pixel art we first need the scene drawn
-			App->render->DrawPixelArt(); //Draw final frame result
+			App->render->DrawScene(camera->getProjectionMatrix(), camera->getViewMatrix()); //To draw the pixel art we first need the scene drawn
+			App->render->DrawPixelArt(frameSize, pixelSize); //Draw final frame result
 
-			frames.push_back(App->textures->CreateTextureImage(App->render->pixelartTexture, frameSize.x, frameSize.y));
+			frames.push_back(App->textures->CreateTextureImage(App->render->exportPixelartTexture, frameSize.x, frameSize.y));
 		}
 	}
 
@@ -71,10 +74,19 @@ void SpriteSheetExporter::CreateSpriteSheet()
 			break;
 	}
 
-	//Restore previous values
-	App->camera->OnResize(App->gui->sceneSize.x, App->gui->sceneSize.y);
-	App->render->OnResize(App->gui->sceneSize.x, App->gui->sceneSize.y);
-	App->render->pixelSize = prevPixelSize;
+	//Convert to OpenGL texture
+	if (spritesheetTexture->GL_id == 0)
+	{
+		glGenTextures(1, &spritesheetTexture->GL_id);
+		glBindTexture(GL_TEXTURE_2D, spritesheetTexture->GL_id);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	App->textures->GetTextureFromImage(spritesheet, spritesheetTexture);
 }
 
 void SpriteSheetExporter::ExportSpriteSheet(const char* path)

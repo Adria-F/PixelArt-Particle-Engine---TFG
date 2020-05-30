@@ -52,7 +52,8 @@ bool ModuleGUI::Init()
 	panels.push_back(new PanelNodeConfiguration("Node Configuration"));
 	panels.push_back(new PanelNodeCanvas("Node Canvas"));
 	panels.push_back(new PanelPixelArt("PixelArt"));
-	panels.push_back(new PanelExportSpritesheet("Export Spritesheet"));
+	panelExport = new PanelExportSpritesheet("Export Spritesheet");
+	panels.push_back(panelExport);
 
 	return true;
 }
@@ -166,11 +167,9 @@ update_state ModuleGUI::Update(float dt)
 					App->textures->ImportTexture(texture.c_str());
 				}
 			}
-			if (ImGui::MenuItem("Export Screenshot"))
+			if (ImGui::MenuItem("Export Spritesheet", nullptr, panelExport->IsActive()))
 			{
-				SpriteSheetExporter spriteSheet(5.0f, 30, sceneSize, 10, 5, 6);
-				spriteSheet.CreateSpriteSheet();
-				spriteSheet.ExportSpriteSheet("spritesheet.png");
+				panelExport->ToggleActive();
 			}
 
 			ImGui::EndMenu();
@@ -271,13 +270,18 @@ ImFont* ModuleGUI::GetFont(int fontPercent, int fontSize) const
 bool ModuleGUI::UsingMouse() const
 {
 	ImGuiIO& io = ImGui::GetIO();
-	return io.WantCaptureMouse && !mouseOnScene && !mouseOnPixelScene;
+	return io.WantCaptureMouse && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene;
 }
 
 bool ModuleGUI::UsingKeyboard() const
 {
 	ImGuiIO& io = ImGui::GetIO();
-	return io.WantTextInput && !mouseOnScene;
+	return io.WantTextInput && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene;
+}
+
+bool ModuleGUI::IsExportPanelActive() const
+{
+	return panelExport->IsActive();
 }
 
 bool ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)
@@ -513,4 +517,30 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 	}
 
 	ImGui::SetCursorScreenPos(startPos); ImGui::Dummy({ 0.0f,0.0f });
+}
+
+bool ModuleGUI::DrawInputInt(const char* label, int* value, float indent)
+{
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+
+	ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	ImGui::PushItemWidth(50.0f);
+	bool ret = ImGui::InputInt(("##" + std::string(label)).c_str(), value, 0);
+	ImGui::PopItemWidth();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloat(const char * label, float * value, float indent)
+{
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+
+	ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	ImGui::PushItemWidth(50.0f);
+	bool ret = ImGui::InputFloat(("##" + std::string(label)).c_str(), value);
+	ImGui::PopItemWidth();
+
+	return ret;
 }

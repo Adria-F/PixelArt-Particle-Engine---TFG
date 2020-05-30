@@ -5,6 +5,9 @@
 
 #include <vector>
 
+class Texture;
+class ModuleCamera;
+
 class SpriteSheetExporter
 {
 public:
@@ -20,6 +23,7 @@ public:
 public:
 
 	uint spritesheet = 0;
+	Texture* spritesheetTexture = nullptr;
 
 	std::vector<uint> frames; //List of ilImages
 
@@ -31,6 +35,9 @@ public:
 
 	float2 frameSize;
 	int pixelSize;
+
+	ModuleCamera* camera = nullptr;
+
 };
 
 #endif // !__SPRITESHEET_EXPORTER_H__

@@ -19,19 +19,25 @@ public:
 	update_state PostUpdate(float dt);
 	bool CleanUp();
 
-	void DrawScene();
-	void DrawPixelArt();
+	void DrawScene(float* projectionMatrix, float* viewMatrix);
+	void DrawPixelArt(float2 viewportSize, uint pixelSize);
 
 	uint generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices);
 
 	void OnResize(int width, int height);
-	void generateFrameBuffer(int width, int height);
+	void GenerateFrameBuffer(int width, int height);
+
+	void GenerateExportFrameBuffer(int width, int height);
 
 public:
 	
 	GLuint frameBuffer = 0;
 	GLuint texture = 0;
 	GLuint pixelartTexture = 0;
+
+	GLuint exportFrameBuffer = 0;
+	GLuint exportTexture = 0;
+	GLuint exportPixelartTexture = 0;
 
 	SDL_GLContext context;
 
@@ -40,7 +46,7 @@ public:
 
 	uint VAO = 0;
 
-	uint pixelSize = 10; //TMP
+	uint pixelSize = 10;
 };
 
 #endif // !__MODULERENDER_H__

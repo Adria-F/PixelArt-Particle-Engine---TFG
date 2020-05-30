@@ -32,5 +32,5 @@ void main()
 		}
 	}
 
-	outPixelized = color/100.0;
+	outPixelized = color/(pixelSize*pixelSize);
 }

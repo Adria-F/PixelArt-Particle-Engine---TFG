@@ -339,6 +339,22 @@ void ModuleTextures::DeleteImage(uint imageID)
 	ilDeleteImage(imageID);
 }
 
+void ModuleTextures::GetTextureFromImage(uint imageID, Texture* targetTexture)
+{
+	ilBindImage(imageID);
+
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+
+	glBindTexture(GL_TEXTURE_2D, targetTexture->GL_id);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ImageInfo.Width, ImageInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+	targetTexture->width = ImageInfo.Width;
+	targetTexture->height = ImageInfo.Height;
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 Texture::Texture(const char* path): path(path)
 {
 	UID = GENERATE_UID();

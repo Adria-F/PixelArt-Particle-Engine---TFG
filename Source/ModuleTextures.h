@@ -55,6 +55,8 @@ public:
 	void InsertImage(uint target, uint source, int offsetX, int offsetY, int width, int height);
 	void DeleteImage(uint imageID);
 
+	void GetTextureFromImage(uint imageID, Texture* targetTexture);
+
 private:
 
 	void GenerateResources();

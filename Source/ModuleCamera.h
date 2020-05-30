@@ -31,9 +31,6 @@ public:
 
 public:
 
-	vec X = { 1.0f,0.0f,0.0f };
-	vec Y = { 0.0f,1.0f,0.0f };
-	vec Z = { 0.0f,0.0f,1.0f };
 	vec position = { 0.0f,0.0f,10.0f };
 	vec reference = { 0.0f,0.0f,0.0f };
 
@@ -41,6 +38,8 @@ public:
 	Frustum orthographicFrustum;
 
 	cameraType type = CAMERA_2D;
+
+	float2 viewportSize;
 };
 
 #endif // !__MODULECAMERA_H__

@@ -4,6 +4,7 @@
 #include "Panel.h"
 
 class SpriteSheetExporter;
+class ModuleCamera;
 
 enum spritesheetType
 {
@@ -23,6 +24,11 @@ public:
 	void SetFlags();
 	void DrawContent();
 
+	void RefreshSpriteSheet();
+
+	void OnOpen();
+	void OnClose();
+
 public:
 
 	SpriteSheetExporter* exporter = nullptr;
@@ -37,7 +43,7 @@ public:
 	int rows = 1;
 	int columns = 2;
 
-	float2 frameSize = { 32,32 };
+	float2 frameSize = { 256, 256 };
 	int pixelSize = 5;
 
 	bool multipleOf4 = false;

@@ -3,8 +3,12 @@
 
 #include "ModuleProjectManager.h"
 #include "SpriteSheetExporter.h"
+#include "ModuleGUI.h"
+#include "ModuleTextures.h"
+#include "ModuleRender.h"
+#include "ModuleCamera.h"
 
-PanelExportSpritesheet::PanelExportSpritesheet(const char* name): Panel(name)
+PanelExportSpritesheet::PanelExportSpritesheet(const char* name): Panel(name, false)
 {
 	exporter = new SpriteSheetExporter(duration, frames, frameSize, pixelSize, rows, columns);
 }
@@ -19,41 +23,54 @@ void PanelExportSpritesheet::SetFlags()
 }
 
 void PanelExportSpritesheet::DrawContent()
-{
-	ImGui::Text("Path:"); ImGui::SameLine();
-	if (ImGui::Button(path.c_str(), { ImGui::GetWindowContentRegionWidth() - 100, 0.0f }))
-	{
-		std::string newPath = App->projectManager->SaveFileDialog(SPRITESHEET_FORMAT_HINT, SPRITESHEET_EXTENSION);
-		if (newPath.length() > 0)
-			path = newPath;
-	}
-	
-	ImGui::Text("Effect duration:"); ImGui::SameLine();
-	ImGui::InputFloat("##duration", &duration, 0.1f); ImGui::SameLine();
+{	
+	//Update Camera and Render
+	bool cameraChanged = false;
+	exporter->camera->Update(-1.0f);
+	App->render->DrawScene(exporter->camera->getProjectionMatrix(), exporter->camera->getViewMatrix());
+	App->render->DrawPixelArt(frameSize, pixelSize);
+
+	float windowWidth = ImGui::GetWindowContentRegionWidth();
+
+	// Configuration --------------------------------------------
+	ImGui::BeginChild("configuration", { windowWidth*5.0f/8.0f, 150.0f }); // 5/8 of the screen width
+
+	App->gui->DrawInputFloat("Effect duration:", &duration, 130.0f); ImGui::SameLine();
 	ImGui::Text("seconds");
 
-	ImGui::Text("Frames:"); ImGui::SameLine();
-	ImGui::InputInt("##frames", &frames);
+	App->gui->DrawInputInt("Frames:", &frames, 130.0f);
 
-	ImGui::Text("Pixel size:"); ImGui::SameLine();
-	ImGui::InputInt("##pixelSize", &pixelSize);
+	App->gui->DrawInputInt("Pixel size:", &pixelSize, 130.0f);
 
-	ImGui::Text("Reoslution:"); ImGui::SameLine();
-	ImGui::InputFloat2("##resolution", frameSize.ptr());
+	if (App->gui->DrawInputFloat("Frame resolution:", &frameSize.x, 130.0f))
+		cameraChanged = true;
+	ImGui::SameLine();
+	ImGui::PushItemWidth(50.0f);
+	if (ImGui::InputFloat("##frameResY", &frameSize.y))
+		cameraChanged = true;
+	ImGui::PopItemWidth();
 	if ((int)frameSize.x % pixelSize != 0 || (int)frameSize.y%pixelSize != 0)
 	{
-		ImGui::SameLine();
 		ImGui::TextColored({ 0.75f,0.0f,0.0f,1.0f }, "Not multiple of pixel size"); ImGui::SameLine();
 		if (ImGui::Button("Fix"))
 		{
 			frameSize.x = (int)(frameSize.x / pixelSize) * pixelSize;
 			frameSize.y = (int)(frameSize.y / pixelSize) * pixelSize;
+			cameraChanged = true;
 		}
 	}
 
-	ImGui::Separator();
-	float section = ImGui::GetWindowContentRegionWidth() / 3.0f;
-	ImGui::BeginChild("imageDisposition", { section, 0.0f });
+	ImGui::EndChild(); ImGui::SameLine();
+
+	if (cameraChanged)
+	{
+		exporter->camera->OnResize(frameSize.x, frameSize.y);
+		App->render->GenerateExportFrameBuffer(frameSize.x, frameSize.y);
+	}
+
+	// Frames disposition ----------------------------------------
+	ImGui::BeginChild("dispositionConfig", { windowWidth*3.0f/8.0f, 150.0f }); // 3/8 of the screen width
+
 	ImGui::Text("Frames disposition");
 	static const char* types[] = { "Square", "Single row", "Single column", "Custom" };
 	if (ImGui::BeginCombo("##dispositionType", typeDisplay.c_str()))
@@ -70,29 +87,94 @@ void PanelExportSpritesheet::DrawContent()
 	}
 	if (disposition == CUSTOM)
 	{
-		ImGui::Text("Rows:"); ImGui::SameLine();
-		ImGui::InputInt("##rows", &rows);
-		ImGui::Text("Columns:"); ImGui::SameLine();
-		ImGui::InputInt("##columns", &columns);
+		App->gui->DrawInputInt("Rows:", &rows, 65.0f);
+		App->gui->DrawInputInt("Columns:", &columns, 65.0f);
 	}
-	ImGui::EndChild(); ImGui::SameLine();
-
-	ImGui::BeginChild("preview", { section, 0.0f });
-	ImGui::Text("Preview");
-	ImGui::Button("Refresh");
-	//ImGui::Image((ImTextureID)App->render->pixelartTexture, { section, imageSize.y }, { 0,1 }, { 1,0 });
-	ImGui::EndChild(); ImGui::SameLine();
-
-	ImGui::BeginChild("outputFile", { section, 0.0f });
-	ImGui::Text("Current spritesheet");
-	float2 resultSize = { columns*frameSize.x, rows*frameSize.y };
-	ImGui::Text(("Size: " + std::to_string(resultSize.x) + "x" + std::to_string(resultSize.y)).c_str());
-	ImGui::Checkbox("Make multiple of 4", &multipleOf4);
 	ImGui::EndChild();
 
-	if (ImGui::Button("Export Spritesheet"))
+	// Previews ---------------------------------------------------
+	ImGui::PushStyleColor(ImGuiCol_::ImGuiCol_ChildBg, { 0.1f,0.1,0.1f,1.0f });
+	float menuHeight = 400.0f;
+	ImGui::BeginChild("previews", { 0.0f, menuHeight });
+	/// Preview Spritesheet ---------------------------------------
+	ImGui::BeginChild("spritesheetPreview", { windowWidth *5.0f / 8.0f, menuHeight });
+
+	ImGui::Text("Preview:"); ImGui::SameLine();
+	if (ImGui::Button("Refresh"))
+	{
+		RefreshSpriteSheet();
+	}
+	float AR = (float)exporter->spritesheetTexture->width / (float)exporter->spritesheetTexture->height;
+	float2 textureSize;
+	textureSize.x = windowWidth * 5.0f / 8.0f;
+	textureSize.y = textureSize.x / AR;
+	if (textureSize.y > menuHeight-50.0f)
+	{
+		textureSize = { (menuHeight-50.0f)*AR, menuHeight-50.0f };
+	}
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::ImageButton((ImTextureID)exporter->spritesheetTexture->GL_id, { textureSize.x, textureSize.y }, { 0,1 }, { 1,0 }, 0, { 0.0f,0.0f,0.0f,1.0f });
+	ImGui::Text(("Size: " + std::to_string(exporter->spritesheetTexture->width) + "x" + std::to_string(exporter->spritesheetTexture->height)).c_str());
+	
+	ImGui::EndChild(); ImGui::SameLine();
+
+	/// Preview camera --------------------------------------------
+	ImGui::BeginChild("cameraPreview", { windowWidth*3.0f/8.0f, menuHeight });
+	ImGui::Text("Center effect on camera");
+	AR = frameSize.x / frameSize.y;
+	textureSize.x = windowWidth * 3.0f / 8.0f;
+	textureSize.y = textureSize.x / AR;
+	if (textureSize.y > menuHeight - 50.0f)
+	{
+		textureSize = { (menuHeight - 50.0f)*AR, menuHeight - 50.0f };
+	}
+	ImGui::ImageButton((ImTextureID)App->render->exportPixelartTexture, { textureSize.x, textureSize.y }, { 0,1 }, { 1,0 }, 0, { 0.0f,0.0f,0.0f,1.0f });
+	App->gui->mouseOnExportScene = ImGui::IsItemHovered();
+
+	ImGui::EndChild();
+
+	ImGui::EndChild();
+	ImGui::PopStyleColor();
+
+	// Export menu ---------------------------------------------------
+	ImGui::Text("Path:"); ImGui::SameLine();
+	if (ImGui::Button(path.c_str(), { ImGui::GetWindowContentRegionWidth() - 150, 0.0f }))
+	{
+		std::string newPath = App->projectManager->SaveFileDialog(SPRITESHEET_FORMAT_HINT, SPRITESHEET_EXTENSION);
+		if (newPath.length() > 0)
+			path = newPath;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Export"))
 	{
 		if (path.length() > 0)
+		{
+			RefreshSpriteSheet();
 			exporter->ExportSpriteSheet(path.c_str());
+			ToggleActive();
+		}
 	}
+}
+
+void PanelExportSpritesheet::RefreshSpriteSheet()
+{
+	exporter->duration = duration;
+	exporter->frameNum = frames;
+	exporter->rows = rows;
+	exporter->columns = columns;
+	exporter->frameSize = frameSize;
+	exporter->pixelSize = pixelSize;
+
+	exporter->CreateSpriteSheet();
+}
+
+void PanelExportSpritesheet::OnOpen()
+{
+	exporter->camera->OnResize(frameSize.x, frameSize.y);
+	App->render->GenerateExportFrameBuffer(frameSize.x, frameSize.y);
+}
+
+void PanelExportSpritesheet::OnClose()
+{
+	App->render->OnResize(App->gui->sceneSize.x, App->gui->sceneSize.y);
 }

@@ -8,6 +8,8 @@ union SDL_Event;
 class Panel;
 class ImFont;
 
+class PanelExportSpritesheet;
+
 class ModuleGUI : public Module
 {
 public:
@@ -31,9 +33,14 @@ public:
 	bool UsingMouse() const;
 	bool UsingKeyboard() const;
 
+	bool IsExportPanelActive() const;
+
 	bool DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue = nullptr, bool condition = false);
 	void DrawColorBox(Color& color);
 	void DrawGradientBox(Gradient& gradient);
+
+	bool DrawInputInt(const char* label, int* value, float indent);
+	bool DrawInputFloat(const char* label, float* value, float indent);
 
 public:
 
@@ -41,6 +48,7 @@ public:
 
 	bool mouseOnScene = false;
 	bool mouseOnPixelScene = false;
+	bool mouseOnExportScene = false;
 
 	float2 scenePosition;
 	float2 sceneSize;
@@ -49,6 +57,8 @@ private:
 
 	ImFont* defaultFont;
 	std::map<int, ImFont*> fonts;
+
+	PanelExportSpritesheet* panelExport = nullptr;
 };
 
 #endif // !__MODULEGUI_H__

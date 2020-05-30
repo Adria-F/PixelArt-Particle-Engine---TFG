@@ -7,7 +7,7 @@ class Panel
 {
 public:
 
-	Panel(const char* name): name(name)
+	Panel(const char* name, bool startActive = true): name(name), active(startActive)
 	{
 		flags = ImGuiWindowFlags_None;
 	}
@@ -38,7 +38,10 @@ public:
 	const char* GetName() { return name.c_str(); }
 	float2 GetSize() { return size; }
 	bool IsActive() { return active; }
-	void ToggleActive() { active = !active; }
+	void ToggleActive() { active = !active; if (active) OnOpen(); else OnClose(); }
+
+	virtual void OnOpen() {}
+	virtual void OnClose() {}
 
 protected:
 

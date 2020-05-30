@@ -108,7 +108,11 @@ bool ModuleRender::Init()
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE);
 
 		//Generate frame buffer
-		generateFrameBuffer(App->window->width, App->window->height);
+		GenerateFrameBuffer(App->window->width, App->window->height);
+		GenerateExportFrameBuffer(256, 256);
+
+		GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, DrawBuffers);
 
 		//Create Shader program
 		defaultShader = new Shader("Shaders/default.vs", "Shaders/default.fs");
@@ -130,10 +134,10 @@ update_state ModuleRender::PreUpdate(float dt)
 update_state ModuleRender::PostUpdate(float dt)
 {
 	//Draw Scene
-	DrawScene();
+	DrawScene(App->camera->getProjectionMatrix(), App->camera->getViewMatrix());
 
 	//Draw result
-	DrawPixelArt();
+	DrawPixelArt(App->gui->sceneSize, pixelSize);
 
 	// Draw GUI
 	App->gui->Draw(); 
@@ -152,9 +156,9 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::DrawScene()
+void ModuleRender::DrawScene(float* projectionMatrix, float* viewMatrix)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, (App->gui->IsExportPanelActive())? exportFrameBuffer : frameBuffer);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,8 +167,8 @@ void ModuleRender::DrawScene()
 	defaultShader->Use();
 
 	//Send Uniforms
-	defaultShader->sendMat4("projection", App->camera->getProjectionMatrix());
-	defaultShader->sendMat4("view", App->camera->getViewMatrix());
+	defaultShader->sendMat4("projection", projectionMatrix);
+	defaultShader->sendMat4("view", viewMatrix);
 
 	//Draw Particles
 	glEnable(GL_BLEND);
@@ -173,9 +177,9 @@ void ModuleRender::DrawScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ModuleRender::DrawPixelArt()
+void ModuleRender::DrawPixelArt(float2 viewportSize, uint pixelSize)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, (App->gui->IsExportPanelActive())? exportFrameBuffer : frameBuffer);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -184,11 +188,11 @@ void ModuleRender::DrawPixelArt()
 	pixelartShader->Use();
 
 	//Send Uniforms
-	pixelartShader->sendTexture("scene", texture);
+	pixelartShader->sendTexture("scene", (App->gui->IsExportPanelActive())? exportTexture : texture);
 	float4x4 matrix;
 	matrix.Set(float4x4::FromTRS(vec(0.0, 0.0, 0.0), Quat::identity, vec(2.0, 2.0, 2.0)));
 	pixelartShader->sendMat4("model", (float*)matrix.Transposed().v);
-	pixelartShader->sendVec2("viewportSize", App->gui->sceneSize);
+	pixelartShader->sendVec2("viewportSize", viewportSize);
 	pixelartShader->sendUint("pixelSize", pixelSize);
 
 	//Draw screen-filling rect
@@ -229,10 +233,10 @@ uint ModuleRender::generateVAO(uint verticesSize, float* vertices, uint indicesS
 
 void ModuleRender::OnResize(int width, int height)
 {
-	generateFrameBuffer(width, height);
+	GenerateFrameBuffer(width, height);
 }
 
-void ModuleRender::generateFrameBuffer(int width, int height)
+void ModuleRender::GenerateFrameBuffer(int width, int height)
 {
 	glDeleteFramebuffers(1, &frameBuffer);
 	glDeleteTextures(1, &texture);
@@ -261,8 +265,45 @@ void ModuleRender::generateFrameBuffer(int width, int height)
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, pixelartTexture, 0);
 
-	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, DrawBuffers);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		LOG("Error while creating framebuffer");
+	}
+
+	glViewport(0, 0, width, height);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ModuleRender::GenerateExportFrameBuffer(int width, int height)
+{
+	glDeleteFramebuffers(1, &exportFrameBuffer);
+	glDeleteTextures(1, &exportTexture);
+	glDeleteTextures(1, &exportPixelartTexture);
+
+	glGenFramebuffers(1, &exportFrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, exportFrameBuffer);
+
+	glGenTextures(1, &exportTexture);
+	glBindTexture(GL_TEXTURE_2D, exportTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, exportTexture, 0);
+
+	glGenTextures(1, &exportPixelartTexture);
+	glBindTexture(GL_TEXTURE_2D, exportPixelartTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, exportPixelartTexture, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{

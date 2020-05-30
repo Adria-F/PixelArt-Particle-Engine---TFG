@@ -46,6 +46,9 @@ bool ModuleCamera::Init()
 
 update_state ModuleCamera::Update(float dt)
 {
+	if (App->gui->IsExportPanelActive() && dt >= 0.0f) //Do not update camera while exporting
+		return UPDATE_CONTINUE;
+
 	if (type == CAMERA_3D && App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		vec newPos(0, 0, 0);
@@ -71,10 +74,6 @@ update_state ModuleCamera::Update(float dt)
 		reference = position - getMovementFactor();	
 
 		perspectiveFrustum.pos = position;
-
-		Z = -perspectiveFrustum.front;
-		Y = perspectiveFrustum.up;
-		X = perspectiveFrustum.WorldRight();
 	}
 
 	if (type == CAMERA_2D)
@@ -89,7 +88,7 @@ update_state ModuleCamera::Update(float dt)
 
 		//Manage 2D camera zoom
 		float wheelDelta = App->input->GetMouseWheel();
-		if (wheelDelta != 0.0f && (App->gui->mouseOnScene || App->gui->mouseOnPixelScene))
+		if (wheelDelta != 0.0f && (App->gui->mouseOnScene || App->gui->mouseOnPixelScene || App->gui->mouseOnExportScene))
 		{
 			//Update zoom and clamp
 			orthographicFrustum.pos.z += wheelDelta*0.1f;
@@ -99,8 +98,8 @@ update_state ModuleCamera::Update(float dt)
 				orthographicFrustum.pos.z = 3.0f;
 
 			//Calculate new frustum size using new zoom value
-			orthographicFrustum.orthographicWidth = App->gui->sceneSize.x / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
-			orthographicFrustum.orthographicHeight = App->gui->sceneSize.y / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+			orthographicFrustum.orthographicWidth = viewportSize.x / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+			orthographicFrustum.orthographicHeight = viewportSize.y / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
 		}
 	}
 
@@ -119,6 +118,7 @@ void ModuleCamera::OnResize(int width, int height)
 
 	orthographicFrustum.orthographicWidth = width / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
 	orthographicFrustum.orthographicHeight = height / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+	viewportSize = { (float)width, (float)height };
 }
 
 float* ModuleCamera::getProjectionMatrix()

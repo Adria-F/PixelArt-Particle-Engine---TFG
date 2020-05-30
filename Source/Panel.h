@@ -17,6 +17,8 @@ public:
 	{
 		SetFlags();
 		ImGui::Begin(name.c_str(), &active, flags);
+		if (!active)
+			OnClose();
 
 		//Check for resize
 		ImVec2 wSize = ImGui::GetWindowSize();

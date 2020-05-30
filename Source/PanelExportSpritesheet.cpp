@@ -24,8 +24,10 @@ void PanelExportSpritesheet::SetFlags()
 
 void PanelExportSpritesheet::DrawContent()
 {	
-	//Update Camera and Render
+	// To detect changes that require extra operations
 	bool cameraChanged = false;
+
+	//Update Camera and Render	
 	exporter->camera->Update(-1.0f);
 	App->render->DrawScene(exporter->camera->getProjectionMatrix(), exporter->camera->getViewMatrix());
 	App->render->DrawPixelArt(frameSize, pixelSize);
@@ -87,8 +89,8 @@ void PanelExportSpritesheet::DrawContent()
 	}
 	if (disposition == CUSTOM)
 	{
-		App->gui->DrawInputInt("Rows:", &rows, 65.0f);
-		App->gui->DrawInputInt("Columns:", &columns, 65.0f);
+		App->gui->DrawInputInt("Rows:", &customRows, 65.0f);
+		App->gui->DrawInputInt("Columns:", &customColumns, 65.0f);
 	}
 	ImGui::EndChild();
 
@@ -158,6 +160,42 @@ void PanelExportSpritesheet::DrawContent()
 
 void PanelExportSpritesheet::RefreshSpriteSheet()
 {
+	exporter->forceSquared = false;
+	switch (disposition)
+	{
+	case SINGLE_ROW:
+		rows = 1;
+		columns = frames;
+		break;
+	case SINGLE_COLUMN:
+		rows = frames;
+		columns = 1;
+		break;
+	case CUSTOM:
+		rows = customRows;
+		columns = customColumns;
+		break;
+	case SQUARE:
+		float maxValue = max(frames*frameSize.x, frameSize.y);
+		float prevArea = maxValue * maxValue;
+		int i;
+		for (i = frames; i >= 1; i--)
+		{
+			columns = i;
+			rows = ceil((float)frames / (float)i);
+			float maxValue = max(columns*frameSize.x, rows*frameSize.y);
+			float area = maxValue * maxValue;
+			if (area <= prevArea)
+				prevArea = area;
+			else
+				break;
+		}
+		columns = i + 1;
+		rows = ceil((float)frames / (float)columns);
+		exporter->forceSquared = true;
+		break;
+	}
+
 	exporter->duration = duration;
 	exporter->frameNum = frames;
 	exporter->rows = rows;

@@ -40,8 +40,10 @@ public:
 
 	spritesheetType disposition = SQUARE;
 	std::string typeDisplay = "Square";
-	int rows = 1;
-	int columns = 2;
+	int customRows = 3;
+	int customColumns = 3;
+	int rows = 3;
+	int columns = 3;
 
 	float2 frameSize = { 256, 256 };
 	int pixelSize = 5;

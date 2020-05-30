@@ -316,9 +316,12 @@ uint ModuleTextures::GenerateImage(int width, int height)
 {
 	ILuint ilImage;
 
+	uint* pixels = new uint[width*height * 4];
+	memset(pixels, 0, width*height * 4);
+
 	ilGenImages(1, &ilImage);
 	ilBindImage(ilImage);
-	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, nullptr);
+	ilTexImage(width, height, 0, 4, IL_RGBA, IL_UNSIGNED_BYTE, pixels);
 
 	return ilImage;
 }

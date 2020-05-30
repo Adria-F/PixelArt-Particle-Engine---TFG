@@ -37,11 +37,10 @@ void SpriteSheetExporter::CreateSpriteSheet()
 	App->particles->Play();
 
 	//Collect all frames images
-	float timeStep = duration / (frameNum-1);
+	float timeStep = duration / frameNum;
 	float dt = 1.0f / 60.0f; //60 fps dt
 	float frameTime = 0.0f;
-	frames.push_back(App->textures->CreateTextureImage(App->render->exportPixelartTexture, frameSize.x, frameSize.y)); //Attach empty texture for frame 0
-	for (float time = 0; time <= duration; time += dt)
+	while (frames.size() < frameNum)
 	{
 		App->particles->Update(dt); //Update particles
 		
@@ -58,7 +57,13 @@ void SpriteSheetExporter::CreateSpriteSheet()
 	}
 
 	//Create spritesheet
-	spritesheet = App->textures->GenerateImage(frameSize.x*columns, frameSize.y*rows); //TODO: Now spritesheet is a single row
+	float2 spritesheetSize = { frameSize.x*columns, frameSize.y*rows };
+	if (forceSquared)
+	{
+		float maxValue = max(spritesheetSize.x, spritesheetSize.y);
+		spritesheetSize = { maxValue, maxValue };
+	}
+	spritesheet = App->textures->GenerateImage(spritesheetSize.x, spritesheetSize.y); //TODO: Now spritesheet is a single row
 
 	//Attach all the frames
 	int count = 0;
@@ -66,7 +71,7 @@ void SpriteSheetExporter::CreateSpriteSheet()
 	{
 		for (int j = 0; j < columns; j++)
 		{
-			App->textures->InsertImage(spritesheet, frames[count++], j*frameSize.x, i*frameSize.y, frameSize.x, frameSize.y);
+			App->textures->InsertImage(spritesheet, frames[count++], j*frameSize.x, spritesheetSize.y - ((i+1)*frameSize.y), frameSize.x, frameSize.y);
 			if (count == frameNum)
 				break;
 		}

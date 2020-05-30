@@ -10,7 +10,7 @@
             ],
             "size": [
                 235.0,
-                426.0
+                481.0
             ],
             "interactable": false,
             "movable": true,
@@ -43,6 +43,27 @@
             "bottomConnection": 1909164134
         },
         {
+            "name": "Emission",
+            "uid": 3318323176,
+            "type": 17,
+            "parent": 149985403,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "frequency": 0.009999999776482582,
+            "duration": 5.0,
+            "loop": true,
+            "bursts": []
+        },
+        {
             "name": "Shape",
             "uid": 3385904855,
             "type": 18,
@@ -70,34 +91,13 @@
             ]
         },
         {
-            "name": "Emission",
-            "uid": 3318323176,
-            "type": 17,
-            "parent": 149985403,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "frequency": 0.009999999776482582,
-            "duration": 5.0,
-            "loop": true,
-            "bursts": []
-        },
-        {
             "name": "Emitting Particle",
             "uid": 1909164134,
             "type": 34,
             "parent": 515825199,
             "position": [
                 104.0,
-                327.0
+                382.0
             ],
             "size": [
                 195.0,
@@ -145,7 +145,7 @@
             "parent": 515825199,
             "position": [
                 104.0,
-                455.0
+                510.0
             ],
             "size": [
                 195.0,

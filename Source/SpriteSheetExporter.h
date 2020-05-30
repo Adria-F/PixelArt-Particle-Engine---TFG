@@ -32,6 +32,7 @@ public:
 
 	int rows = 0;
 	int columns = 0;
+	bool forceSquared = false;
 
 	float2 frameSize;
 	int pixelSize;

@@ -274,7 +274,10 @@
     <ClCompile Include="SpriteSheetExporter.cpp">
       <Filter>Sources\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="PanelExportSpritesheet.cpp" />
+    <ClCompile Include="PanelExportSpritesheet.cpp">
+      <Filter>Sources\Panels</Filter>
+    </ClCompile>
+    <ClCompile Include="LifetimeParticleNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -703,7 +706,10 @@
     <ClInclude Include="SpriteSheetExporter.h">
       <Filter>Sources\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="PanelExportSpritesheet.h" />
+    <ClInclude Include="PanelExportSpritesheet.h">
+      <Filter>Sources\Panels</Filter>
+    </ClInclude>
+    <ClInclude Include="LifetimeParticleNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

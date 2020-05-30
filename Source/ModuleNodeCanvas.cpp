@@ -14,6 +14,7 @@
 #include "MakeGlobalParticleNode.h"
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
+#include "LifetimeParticleNode.h"
 
 #include "EmissionEmitterNode.h"
 #include "ShapeEmitterNode.h"
@@ -267,6 +268,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 		case PARTICLE_SPRITE:
 			nodeList.insert(std::pair<std::string, nodeType>("Sprite", nodes[i]));
 			break;
+		case PARTICLE_LIFETIME:
+			nodeList.insert(std::pair<std::string, nodeType>("Lifetime", nodes[i]));
+			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
 			break;
@@ -311,6 +315,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case PARTICLE_SPRITE:
 		node = new SpriteParticleNode(nullptr, name, spawnPos);
+		break;
+	case PARTICLE_LIFETIME:
+		node = new LifetimeParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);

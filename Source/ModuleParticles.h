@@ -22,6 +22,7 @@ class SpeedParticleNode;
 class MakeGlobalParticleNode;
 class DeathInstantiationParticleNode;
 class SpriteParticleNode;
+class LifetimeParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -45,7 +46,6 @@ public:
 	void Update(float dt);
 	void Draw();
 
-	void SetRandomLifeTime(bool random);
 	float GetLifePercent() const;
 
 	//Canvas
@@ -54,8 +54,6 @@ public:
 
 	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
-
-	void DisplayConfig();
 
 public:
 
@@ -68,6 +66,7 @@ public:
 			MakeGlobalParticleNode* makeGlobal;
 			DeathInstantiationParticleNode* deathInstantiation;
 			SpriteParticleNode* sprite;
+			LifetimeParticleNode* lifetimeNode;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -81,9 +80,6 @@ public:
 
 	float lifeTime = 5.0f;
 
-	float randLifeTime1 = 3.0f;
-	float randLifeTime2 = 5.0f;
-
 	uint whiteSprite = 0;
 
 	bool toDestroy = false;
@@ -91,7 +87,6 @@ public:
 private:
 
 	float timeAlive = 0.0f;
-	bool randomizeLifeTime = false;
 };
 
 class ParticleEmitter: public NodeGroup

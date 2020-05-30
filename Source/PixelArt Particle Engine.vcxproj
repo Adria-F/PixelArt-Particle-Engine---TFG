@@ -147,6 +147,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InputParticleEmitterNode.cpp" />
     <ClCompile Include="JSONManager.cpp" />
+    <ClCompile Include="LifetimeParticleNode.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeGlobalParticleNode.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputParticleEmitterNode.h" />
     <ClInclude Include="JSONManager.h" />
+    <ClInclude Include="LifetimeParticleNode.h" />
     <ClInclude Include="MakeGlobalParticleNode.h" />
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\Geometry\AABB.h" />

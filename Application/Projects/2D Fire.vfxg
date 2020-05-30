@@ -174,7 +174,7 @@
             ],
             "size": [
                 235.0,
-                371.0
+                426.0
             ],
             "interactable": false,
             "movable": true,
@@ -195,7 +195,7 @@
             ],
             "size": [
                 195.0,
-                108.0
+                163.0
             ],
             "interactable": true,
             "movable": true,
@@ -229,13 +229,34 @@
             "sprite": "circle"
         },
         {
+            "name": "Lifetime",
+            "uid": 2550770412,
+            "type": 6,
+            "parent": 504012982,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "lifetime": 5.0,
+            "randLifetime1": 4.0,
+            "randLifetime2": 5.0,
+            "random": true
+        },
+        {
             "name": "Particle Update",
             "uid": 3593085971,
             "type": 33,
             "parent": 4125537044,
             "position": [
                 478.0,
-                424.0
+                479.0
             ],
             "size": [
                 195.0,
@@ -261,7 +282,7 @@
             "parent": 4125537044,
             "position": [
                 478.0,
-                519.0
+                574.0
             ],
             "size": [
                 195.0,

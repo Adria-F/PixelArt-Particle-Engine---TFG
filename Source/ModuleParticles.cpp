@@ -19,6 +19,7 @@
 #include "MakeGlobalParticleNode.h"
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
+#include "LifetimeParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -370,17 +371,10 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 		}
 	}
 
-	lifeTime = templateParticle->lifeTime;
-	randLifeTime1 = templateParticle->randLifeTime1;
-	randLifeTime2 = templateParticle->randLifeTime2;
-	randomizeLifeTime = templateParticle->randomizeLifeTime;
+	if (lifetimeNode == nullptr)
+		lifeTime = templateParticle->lifeTime;
 
 	whiteSprite = App->textures->UseWhiteTexture();
-
-	if (randomizeLifeTime)
-	{
-		lifeTime = Lerp(randLifeTime1, randLifeTime2, GET_RANDOM());
-	}
 }
 
 Particle::~Particle()
@@ -422,17 +416,12 @@ void Particle::Draw()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void Particle::SetRandomLifeTime(bool random)
-{
-	randomizeLifeTime = random;
-}
-
 float Particle::GetLifePercent() const
 {
 	return timeAlive/lifeTime;
 }
 
-void Particle::OnNodeAdded(CanvasNode * node)
+void Particle::OnNodeAdded(CanvasNode* node)
 {
 	switch (node->type)
 	{
@@ -456,6 +445,9 @@ void Particle::OnNodeAdded(CanvasNode * node)
 		sprite = (SpriteParticleNode*)node;
 		sprite->particle = this;
 		break;
+	case PARTICLE_LIFETIME:
+		lifetimeNode = (LifetimeParticleNode*)node;
+		lifetimeNode->particle = this;
 	};
 }
 
@@ -478,6 +470,8 @@ void Particle::OnNodeRemoved(CanvasNode * node)
 	case PARTICLE_SPRITE:
 		sprite = nullptr;
 		break;
+	case PARTICLE_LIFETIME:
+		lifetimeNode = nullptr;
 	}
 }
 
@@ -504,47 +498,4 @@ bool Particle::OnConnection(NodeConnection* connection)
 void Particle::OnDisconnection(NodeConnection* connection)
 {
 	emitter = nullptr; //Only connection with Input Particle node
-}
-
-void Particle::DisplayConfig()
-{
-	//Lifetime
-	ImGui::Text("Lifetime"); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("", "##lifetime", &lifeTime, 0.1f, true, &randLifeTime1, randomizeLifeTime); ImGui::SameLine();
-	App->gui->DrawInputFloat("", "##randLifetime", &randLifeTime2, 0.1f, randomizeLifeTime);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth()-70.0f);  ImGui::Checkbox("Random##lifetime", &randomizeLifeTime);
-	ImGui::Separator();
-
-	//Base transform
-	///Billboard
-	ImGui::Checkbox("Billboard", &baseTransform->billboard);
-	///Rotation
-	ImGui::Text("Rotation"); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("", "##rotationZ", &baseTransform->angleZ, 1.0f, true, &baseTransform->randRotation1, baseTransform->randomizeRotation); ImGui::SameLine();
-	App->gui->DrawInputFloat("", "##randRotationZ", &baseTransform->randRotation2, 1.0f, baseTransform->randomizeRotation);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##rotation", &baseTransform->randomizeRotation);
-	///Scale
-	ImGui::Text("Scale"); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("X", "##scaleX", &baseTransform->scale.x, 0.1f, true, &baseTransform->randScaleX1, baseTransform->randomizeScale); ImGui::SameLine();
-	App->gui->DrawInputFloat("Y", "##scaleY", &baseTransform->scale.y, 0.1f, true, &baseTransform->randScaleY1, baseTransform->randomizeScale);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##scale", &baseTransform->randomizeScale);
-	ImGui::Text(""); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("X", "##randScaleX", &baseTransform->randScaleX2, 0.1f, baseTransform->randomizeScale); ImGui::SameLine();
-	App->gui->DrawInputFloat("Y", "##randScaleY", &baseTransform->randScaleY2, 0.1f, baseTransform->randomizeScale);
-	ImGui::Separator();
-
-	//Base movement
-	ImGui::Text("Spped"); ImGui::SameLine(75.0f);
-	App->gui->DrawInputFloat("", "##speed", &baseMovement->speed, 0.1f, true, &baseMovement->randSpeed1, baseMovement->randomizeSpeed); ImGui::SameLine();
-	App->gui->DrawInputFloat("", "##randSpeed", &baseMovement->randSpeed2, 0.1f, baseMovement->randomizeSpeed);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##speed", &baseMovement->randomizeSpeed);
-	ImGui::Separator();
-
-	//Base color
-	ImGui::Text("Color"); ImGui::SameLine(75.0f);
-	if (!baseColor->randomize)
-		App->gui->DrawColorBox(baseColor->color);
-	else
-		App->gui->DrawGradientBox(baseColor->random);
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);  ImGui::Checkbox("Random##color", &baseColor->randomize);
 }

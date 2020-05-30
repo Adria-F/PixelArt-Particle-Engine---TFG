@@ -41,6 +41,7 @@ public:
 
 	bool DrawInputInt(const char* label, int* value, float indent);
 	bool DrawInputFloat(const char* label, float* value, float indent);
+	bool DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random);
 
 public:
 

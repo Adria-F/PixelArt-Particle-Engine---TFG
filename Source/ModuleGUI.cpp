@@ -532,7 +532,7 @@ bool ModuleGUI::DrawInputInt(const char* label, int* value, float indent)
 	return ret;
 }
 
-bool ModuleGUI::DrawInputFloat(const char * label, float * value, float indent)
+bool ModuleGUI::DrawInputFloat(const char* label, float* value, float indent)
 {
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImGui::Text(label);
@@ -541,6 +541,31 @@ bool ModuleGUI::DrawInputFloat(const char * label, float * value, float indent)
 	ImGui::PushItemWidth(50.0f);
 	bool ret = ImGui::InputFloat(("##" + std::string(label)).c_str(), value);
 	ImGui::PopItemWidth();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random)
+{
+	bool ret = false;
+
+	ret = DrawInputFloat(label, (*random) ? rand1 : value, 50.0f);
+	ImGui::SameLine();
+
+	ImGui::PushItemWidth(50.0f);
+	if (*random)
+		ret |= ImGui::InputFloat(("##rand2"+std::string(label)).c_str(), rand2);
+	else
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+		char str[1] = "";
+		ImGui::InputText(("##rand2" + std::string(label)).c_str(), &str[0], 1, ImGuiInputTextFlags_ReadOnly);
+		ImGui::PopStyleVar();
+	}
+	ImGui::PopItemWidth();
+	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);
+
+	ImGui::Checkbox("Random", random);
 
 	return ret;
 }

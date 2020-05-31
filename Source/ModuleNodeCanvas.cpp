@@ -15,6 +15,7 @@
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
+#include "RotationParticleNode.h"
 
 #include "EmissionEmitterNode.h"
 #include "ShapeEmitterNode.h"
@@ -204,10 +205,42 @@ void ModuleNodeCanvas::DrawGuizmo()
 	}
 }
 
-CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, nodeType* allowedNodes, int numElements)
+std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(nodeType nodeContainer) const
+{
+	std::vector<nodeType> ret;
+
+	switch (nodeContainer)
+	{
+	case CANVAS:
+		ret = { PARTICLE, EMITTER };
+		break;
+	case PARTICLE_NODE_BOX_INIT:
+		ret = { PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_SPRITE, PARTICLE_LIFETIME, PARTICLE_ROTATION };
+		break;
+	case PARTICLE_NODE_BOX_UPDATE:
+		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_ROTATION };
+		break;
+	case PARTICLE_NODE_BOX_RENDER:
+		ret = { PARTICLE_COLOR };
+		break;
+	case EMITTER_NODE_BOX_INIT:
+		ret = { EMITTER_SHAPE, EMITTER_TRANSFORM };
+		break;
+	case EMITTER_NODE_BOX_INPUT:
+		ret = { EMITTER_INPUTPARTICLE };
+		break;
+	case EMITTER_NODE_BOX_UPDATE:
+		ret = { EMITTER_EMISSION };
+		break;
+	}
+
+	return ret;
+}
+
+CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, nodeType nodeContainer)
 {
 	drawingNodeList = true;
-	std::map<std::string, int> nodes = RequestNodeList(allowedNodes, numElements);
+	std::map<std::string, int> nodes = RequestNodeList(nodeContainer);
 
 	//Filter
 	ImGui::PushItemWidth(100.0f);
@@ -242,11 +275,13 @@ CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, nodeType* allowedNod
 	return ret;
 }
 
-std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, int numElements) const
+std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContainer) const
 {
 	std::map<std::string, int> nodeList;
 
-	for (int i = 0; i < numElements; ++i)
+	std::vector<nodeType> nodes = GetAllowedNodes(nodeContainer);
+
+	for (int i = 0; i < nodes.size(); ++i)
 	{
 		switch (nodes[i])
 		{
@@ -270,6 +305,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType* nodes, in
 			break;
 		case PARTICLE_LIFETIME:
 			nodeList.insert(std::pair<std::string, nodeType>("Lifetime", nodes[i]));
+			break;
+		case PARTICLE_ROTATION:
+			nodeList.insert(std::pair<std::string, nodeType>("Rotation", nodes[i]));
 			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
@@ -319,6 +357,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 	case PARTICLE_LIFETIME:
 		node = new LifetimeParticleNode(nullptr, name, spawnPos);
 		break;
+	case PARTICLE_ROTATION:
+		node = new RotationParticleNode(nullptr, name, spawnPos);
+		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		App->particles->AddEmitter((ParticleEmitter*)node);
@@ -335,8 +376,12 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 	case EMITTER_INPUTPARTICLE:
 		node = new InputParticleEmitterNode(nullptr, name, spawnPos);
 		break;
-	case PARTICLE_NODE_BOX:
-	case EMITTER_NODE_BOX:
+	case PARTICLE_NODE_BOX_INIT: //The same for all node boxes types
+	case PARTICLE_NODE_BOX_RENDER:
+	case PARTICLE_NODE_BOX_UPDATE:
+	case EMITTER_NODE_BOX_INIT:
+	case EMITTER_NODE_BOX_INPUT:
+	case EMITTER_NODE_BOX_UPDATE:
 		node = new NodeBox(name, type, spawnPos, { NODE_DEFAULT_WIDTH + NODE_BOX_PADDING * 2.0f, NODE_BOX_MIN_HEIGHT }, nullptr);
 		break;
 	}

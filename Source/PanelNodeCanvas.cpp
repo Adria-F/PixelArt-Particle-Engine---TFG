@@ -127,8 +127,7 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##addNode"))
 	{
-		static nodeType allowedNodes[2] = { PARTICLE, EMITTER };
-		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), allowedNodes, 2);
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), CANVAS);
 		if (createdNode != nullptr)
 			App->nodeCanvas->nodes.push_back(createdNode);
 

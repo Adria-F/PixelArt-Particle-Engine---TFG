@@ -18,6 +18,7 @@ EntityData* SpeedParticleNode::Copy(Particle* particle) const
 {
 	SpeedParticleNode* ret = new SpeedParticleNode(particle, name.c_str(), position, size);
 
+	ret->update = update;
 	ret->speed = speed;
 
 	return ret;
@@ -44,12 +45,14 @@ void SpeedParticleNode::DisplayConfig()
 
 void SpeedParticleNode::SaveExtraInfo(JSON_Value* node)
 {
+	node->addBool("update", update);
 	node->addFloat("speed", speed);
 	node->addBool("overLifetime", overLifetime);
 }
 
 void SpeedParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
+	update = nodeDef->getBool("update");
 	speed = nodeDef->getFloat("speed");
 	overLifetime = nodeDef->getBool("overLifetime");
 }

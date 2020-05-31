@@ -7,6 +7,7 @@
 
 ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_COLOR, position, size)
 {
+	update = true;
 	fixColor = White;
 }
 

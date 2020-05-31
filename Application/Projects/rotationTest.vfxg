@@ -1,0 +1,244 @@
+{
+    "project": [
+        {
+            "name": "Emitter",
+            "uid": 1395307718,
+            "type": 16,
+            "position": [
+                45.0,
+                118.0
+            ],
+            "size": [
+                235.0,
+                338.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": []
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 3163413503,
+            "type": 41,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                138.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 2055533379
+                }
+            ]
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 2055533379,
+            "type": 42,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                233.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3163413503
+                },
+                {
+                    "connectedNode": 2230114514
+                }
+            ]
+        },
+        {
+            "name": "Input Particle",
+            "uid": 1637294531,
+            "type": 20,
+            "parent": 2055533379,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 473584570
+                }
+            ],
+            "particle": 473584570
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 2230114514,
+            "type": 43,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                361.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2055533379
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Particle",
+            "uid": 473584570,
+            "type": 1,
+            "position": [
+                460.0,
+                275.0
+            ],
+            "size": [
+                235.0,
+                404.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1637294531
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 1490965053,
+            "type": 33,
+            "parent": 473584570,
+            "position": [
+                480.0,
+                295.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 1898920513
+                }
+            ]
+        },
+        {
+            "name": "Rotation",
+            "uid": 1083957356,
+            "type": 8,
+            "parent": 1490965053,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "angle": 45.0
+        },
+        {
+            "name": "Particle Update",
+            "uid": 1898920513,
+            "type": 34,
+            "parent": 473584570,
+            "position": [
+                480.0,
+                456.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1490965053
+                },
+                {
+                    "connectedNode": 2467373570
+                }
+            ]
+        },
+        {
+            "name": "Rotation",
+            "uid": 2156445429,
+            "type": 8,
+            "parent": 1898920513,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": true,
+            "angle": 30.0
+        },
+        {
+            "name": "Particle Render",
+            "uid": 2467373570,
+            "type": 35,
+            "parent": 473584570,
+            "position": [
+                480.0,
+                584.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1898920513
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        }
+    ]
+}

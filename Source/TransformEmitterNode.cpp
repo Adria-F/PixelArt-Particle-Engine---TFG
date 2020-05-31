@@ -8,6 +8,7 @@
 
 TransformEmitterNode::TransformEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size) : EntityData(emitter), CanvasNode(name, EMITTER_TRANSFORM, position, size)
 {
+	update = true;
 	matrix.Set(float4x4::FromTRS(this->position, rotation, scale));
 }
 

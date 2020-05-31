@@ -24,8 +24,9 @@ public:
 
 	void DrawGuizmo();
 
-	CanvasNode* DrawNodeList(float2 spawnPos, nodeType* allowedNodes, int numElements);
-	std::map<std::string, int> RequestNodeList(nodeType* nodes, int numElements) const;
+	std::vector<nodeType> GetAllowedNodes(nodeType nodeContainer) const;
+	CanvasNode* DrawNodeList(float2 spawnPos, nodeType nodeContainer);
+	std::map<std::string, int> RequestNodeList(nodeType nodeContainer) const;
 	CanvasNode* CreateNode(const char* name, nodeType type, float2 spawnPos, bool empty = false) const;
 
 	void StartConnection(NodeConnection* connection);

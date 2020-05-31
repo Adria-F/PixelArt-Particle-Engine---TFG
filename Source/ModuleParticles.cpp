@@ -20,6 +20,7 @@
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
+#include "RotationParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -154,9 +155,9 @@ ParticleEmitter::ParticleEmitter(const char* name, float2 position, float2 size,
 	//Node boxes
 	if (!empty)
 	{
-		AddNodeBox("Emitter SetUp", EMITTER_NODE_BOX);
-		AddNodeBox("Emitting Particle", EMITTER_NODE_BOX);
-		AddNodeBox("Emitter Update", EMITTER_NODE_BOX);
+		AddNodeBox("Emitter SetUp", EMITTER_NODE_BOX_INIT);
+		AddNodeBox("Emitting Particle", EMITTER_NODE_BOX_INPUT);
+		AddNodeBox("Emitter Update", EMITTER_NODE_BOX_UPDATE);
 	}
 }
 
@@ -215,7 +216,7 @@ void ParticleEmitter::Update(float dt)
 
 		for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 		{
-			if (data[i] != nullptr)
+			if (data[i] != nullptr && data[i]->update)
 				data[i]->Execute(dt);
 		}
 
@@ -298,7 +299,7 @@ int ParticleEmitter::GetParticleCount() const
 	return particles.size();
 }
 
-void ParticleEmitter::OnNodeAdded(CanvasNode* node)
+void ParticleEmitter::OnNodeAdded(CanvasNode* node, bool update)
 {
 	switch (node->type)
 	{
@@ -354,9 +355,9 @@ Particle::Particle(const char* name, float2 position, float2 size, bool empty): 
 
 	if (!empty)
 	{
-		AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX);
-		AddNodeBox("Particle Update", PARTICLE_NODE_BOX);
-		AddNodeBox("Particle Render", PARTICLE_NODE_BOX);
+		AddNodeBox("Particle Set Up", PARTICLE_NODE_BOX_INIT);
+		AddNodeBox("Particle Update", PARTICLE_NODE_BOX_UPDATE);
+		AddNodeBox("Particle Render", PARTICLE_NODE_BOX_RENDER);
 	}
 
 	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { -CONNECTIONTRIANGLE_SIZE*0.5f, 25.0f }, TRIANGLE, ImGuiDir_Left);
@@ -372,6 +373,12 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 		{
 			data[i] = templateParticle->data[i]->Copy(this);
 		}
+	}
+
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	{
+		if (data[i] != nullptr && !data[i]->update)
+			data[i]->Init(); //Initialize when this node does not update (must be called only once)
 	}
 
 	if (lifetimeNode == nullptr)
@@ -400,7 +407,7 @@ void Particle::Update(float dt)
 
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
-		if (data[i] != nullptr)
+		if (data[i] != nullptr && data[i]->update)
 			data[i]->Execute(dt);
 	}
 }
@@ -424,7 +431,7 @@ float Particle::GetLifePercent() const
 	return timeAlive/lifeTime;
 }
 
-void Particle::OnNodeAdded(CanvasNode* node)
+void Particle::OnNodeAdded(CanvasNode* node, bool update)
 {
 	switch (node->type)
 	{
@@ -435,6 +442,7 @@ void Particle::OnNodeAdded(CanvasNode* node)
 	case PARTICLE_SPEED:
 		speed = (SpeedParticleNode*)node;
 		speed->particle = this;
+		speed->update = update;
 		break;
 	case PARTICLE_MAKEGLOBAL:
 		makeGlobal = (MakeGlobalParticleNode*)node;
@@ -451,10 +459,23 @@ void Particle::OnNodeAdded(CanvasNode* node)
 	case PARTICLE_LIFETIME:
 		lifetimeNode = (LifetimeParticleNode*)node;
 		lifetimeNode->particle = this;
+	case PARTICLE_ROTATION:
+		if (update)
+		{
+			rotationUpdate = (RotationParticleNode*)node;
+			rotationUpdate->particle = this;
+			rotationUpdate->update = true;
+		}
+		else
+		{
+			rotationInit = (RotationParticleNode*)node;
+			rotationInit->particle = this;
+			rotationInit->update = false;
+		}
 	};
 }
 
-void Particle::OnNodeRemoved(CanvasNode * node)
+void Particle::OnNodeRemoved(CanvasNode* node)
 {
 	switch (node->type)
 	{
@@ -475,6 +496,11 @@ void Particle::OnNodeRemoved(CanvasNode * node)
 		break;
 	case PARTICLE_LIFETIME:
 		lifetimeNode = nullptr;
+	case PARTICLE_ROTATION:
+		if (rotationInit == node)
+			rotationInit = nullptr;
+		else if (rotationUpdate == node)
+			rotationUpdate = nullptr;
 	}
 }
 

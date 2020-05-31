@@ -23,6 +23,7 @@ class MakeGlobalParticleNode;
 class DeathInstantiationParticleNode;
 class SpriteParticleNode;
 class LifetimeParticleNode;
+class RotationParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -49,7 +50,7 @@ public:
 	float GetLifePercent() const;
 
 	//Canvas
-	void OnNodeAdded(CanvasNode* node);
+	void OnNodeAdded(CanvasNode* node, bool update);
 	void OnNodeRemoved(CanvasNode* node);
 
 	bool OnConnection(NodeConnection* connection);
@@ -67,6 +68,8 @@ public:
 			DeathInstantiationParticleNode* deathInstantiation;
 			SpriteParticleNode* sprite;
 			LifetimeParticleNode* lifetimeNode;
+			RotationParticleNode* rotationInit;
+			RotationParticleNode* rotationUpdate;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -112,7 +115,7 @@ public:
 	int GetParticleCount() const;
 
 	//Canvas
-	void OnNodeAdded(CanvasNode* node);
+	void OnNodeAdded(CanvasNode* node, bool update);
 	void OnNodeRemoved(CanvasNode* node);
 
 public:

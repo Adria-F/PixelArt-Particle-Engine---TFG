@@ -87,7 +87,7 @@ enum update_state
 #define CONNECTIONCIRCLE_SIZE 5.0f
 
 //Particle Data Order
-#define MAX_ENTITY_DATA 10
+#define MAX_ENTITY_DATA 15
 
 //Node Canvas objects
 #define NODE_PADDING 10.0f

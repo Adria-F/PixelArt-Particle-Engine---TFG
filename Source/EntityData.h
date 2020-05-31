@@ -16,6 +16,7 @@ public:
 	{}
 	virtual ~EntityData() {}
 
+	virtual void Init() {}
 	virtual void Execute(float dt) {}
 	virtual void PrepareRender() {}
 
@@ -28,6 +29,8 @@ public:
 		Particle* particle = nullptr;
 		ParticleEmitter* emitter;
 	};
+
+	bool update = false;
 };
 
 #endif // !__ENTITYDATA_H__

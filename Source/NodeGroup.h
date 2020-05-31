@@ -23,7 +23,6 @@ public:
 	bool OnConnection(NodeConnection* connection);
 	void OnDisconnection(NodeConnection* connection);
 
-	void SaveExtraInfo(JSON_Value* node);
 	void SaveChildNodes(JSON_Value* project);
 
 public:
@@ -57,7 +56,7 @@ public:
 
 	void RepositionBoxes(NodeBox* resizedBox, float prevBottom);
 
-	virtual void OnNodeAdded(CanvasNode* node) {}
+	virtual void OnNodeAdded(CanvasNode* node, bool update) {}
 	virtual void OnNodeRemoved(CanvasNode* node) {}
 	void AddNodes();
 	

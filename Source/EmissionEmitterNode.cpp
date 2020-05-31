@@ -6,6 +6,7 @@
 
 EmissionEmitterNode::EmissionEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size): EntityData(emitter), CanvasNode(name, EMITTER_EMISSION, position, size)
 {
+	update = true;
 	lastEmit = frequency;
 }
 

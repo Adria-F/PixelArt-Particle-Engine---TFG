@@ -5,7 +5,7 @@
 
 BaseMovementParticleNode::BaseMovementParticleNode(Particle* particle) : EntityData(particle)
 {
-	
+	update = true;
 }
 
 void BaseMovementParticleNode::Execute(float dt)

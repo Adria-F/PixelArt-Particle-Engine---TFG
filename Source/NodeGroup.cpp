@@ -136,14 +136,14 @@ NodeBox* NodeGroup::AddNodeBox(const char* name, nodeType type)
 
 void NodeGroup::InsertNode(CanvasNode* node)
 {
-	if (node->type == EMITTER_NODE_BOX || node->type == PARTICLE_NODE_BOX) //Make sure it is a box
+	if (node->type > NODE_BOXES_START) //Make sure it is a box
 	{
 		NodeBox* box = (NodeBox*)node;		
 		boxes.push_back(box);
 
 		for (std::list<CanvasNode*>::iterator it_n = box->nodes.begin(); it_n != box->nodes.end(); ++it_n)
 		{
-			OnNodeAdded((*it_n));
+			OnNodeAdded((*it_n), box->type == PARTICLE_NODE_BOX_UPDATE || box->type == PARTICLE_NODE_BOX_RENDER || box->type == EMITTER_NODE_BOX_UPDATE);
 		}
 		box->parentGroup = this;
 	}
@@ -184,7 +184,7 @@ void NodeGroup::AddNodes()
 		(*it_b)->calcSize();
 		for (std::list<CanvasNode*>::iterator it_n = (*it_b)->nodes.begin(); it_n != (*it_b)->nodes.end(); ++it_n)
 		{
-			OnNodeAdded((*it_n));
+			OnNodeAdded((*it_n), (*it_b)->type == PARTICLE_NODE_BOX_UPDATE || (*it_b)->type == PARTICLE_NODE_BOX_RENDER || (*it_b)->type == EMITTER_NODE_BOX_UPDATE);
 		}
 	}
 }
@@ -384,17 +384,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##node list"))
 	{
-		CanvasNode* createdNode = nullptr;
-		if (type == EMITTER_NODE_BOX)
-		{
-			static nodeType emitterNodes[4] = { EMITTER_EMISSION, EMITTER_SHAPE, EMITTER_TRANSFORM, EMITTER_INPUTPARTICLE };
-			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, emitterNodes, 4);
-		}
-		else if (type == PARTICLE_NODE_BOX)
-		{
-			static nodeType particleNodes[6] = { PARTICLE_COLOR, PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_DEATHINSTANTIATION, PARTICLE_SPRITE, PARTICLE_LIFETIME };
-			createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, particleNodes, 6);
-		}
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, type);
 		if (createdNode != nullptr)
 		{
 			InsertNode(createdNode);
@@ -438,7 +428,7 @@ void NodeBox::InsertNode(CanvasNode* node)
 	nodes.push_back(node);
 	if (parentGroup != nullptr)
 	{
-		parentGroup->OnNodeAdded(node);
+		parentGroup->OnNodeAdded(node, type == PARTICLE_NODE_BOX_UPDATE || type == PARTICLE_NODE_BOX_RENDER || type == EMITTER_NODE_BOX_UPDATE);
 		float prevBottom = position.y + size.y;
 		calcSize();
 		parentGroup->RepositionBoxes(this, prevBottom);
@@ -447,7 +437,7 @@ void NodeBox::InsertNode(CanvasNode* node)
 
 bool NodeBox::OnConnection(NodeConnection* connection)
 {
-	if (connection->node->type == type)
+	if ((connection->node->type < NODE_BOXES_EMITTERS && type < NODE_BOXES_EMITTERS) || ((connection->node->type > NODE_BOXES_EMITTERS && type > NODE_BOXES_EMITTERS)))
 	{
 		if (connection->type == NODE_OUTPUT)
 		{
@@ -489,12 +479,6 @@ void NodeBox::OnDisconnection(NodeConnection* connection)
 			bottomConnection->connected->node->OnDisconnection(bottomConnection);
 		}
 	}
-}
-
-void NodeBox::SaveExtraInfo(JSON_Value* node)
-{
-	node->addUint("topConnection", (topConnection->connected != nullptr) ? topConnection->connected->node->UID : 0);
-	node->addUint("bottomConnection", (bottomConnection->connected != nullptr) ? bottomConnection->connected->node->UID : 0);
 }
 
 void NodeBox::SaveChildNodes(JSON_Value* project)

@@ -17,6 +17,11 @@ void PanelPixelArt::DrawContent()
 {
 	App->gui->mouseOnPixelScene = ImGui::IsWindowHovered(); //This bool is used to enable scene navigation using input
 
+	if (App->gui->mouseOnPixelScene && ImGui::IsMouseClicked(2))
+		App->gui->clickedScene = true;
+	if (!ImGui::IsMouseDown(2))
+		App->gui->clickedScene = false;
+
 	float2 imageSize = App->gui->sceneSize;
 	float AR = imageSize.x / imageSize.y;
 	imageSize.x = ImGui::GetWindowContentRegionWidth();

@@ -79,7 +79,7 @@ update_state ModuleCamera::Update(float dt)
 	if (type == CAMERA_2D)
 	{
 		//Manage 2D camera movement
-		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT)
+		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_REPEAT && App->gui->clickedScene)
 		{
 			float speed = 0.25f;
 			float2 mouseDelta = { App->input->GetMouseDeltaX()*0.01f, -App->input->GetMouseDeltaY()*0.01f };

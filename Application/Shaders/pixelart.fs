@@ -13,7 +13,7 @@ void main()
 
 	vec2 topLeft = tile*pixelSize;
 
-	vec4 color = vec4(1.0);
+	vec4 color = vec4(0.0);
 	for (float i = topLeft.x; i < topLeft.x+pixelSize; i++)
 	{
 		if (i >= viewportSize.x)

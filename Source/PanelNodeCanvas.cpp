@@ -78,9 +78,16 @@ void PanelNodeCanvas::DrawContent()
 	}
 
 	//Drag window
-	if (ImGui::IsWindowHovered() && (ImGui::IsMouseDragging(2, 0.0f) || (ImGui::IsMouseDown(0) && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)))
+	if (ImGui::IsWindowHovered())
+	{
+		if (ImGui::IsMouseClicked(2))
+			midClicked = true;
+	}
+	if (!ImGui::IsMouseDown(2))
+		midClicked = false;
+	if ((midClicked && ImGui::IsMouseDragging(2, 0.0f) || (ImGui::IsMouseDown(0) && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)))
 		scrolling = { scrolling.x + ImGui::GetIO().MouseDelta.x, scrolling.y + ImGui::GetIO().MouseDelta.y };
-
+	
 	//Draw content
 	CanvasNode* newHoveredNode = nullptr;
 	CanvasNode* newSelectedNode = nullptr;

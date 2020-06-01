@@ -20,6 +20,11 @@ void PanelScene::DrawContent()
 {
 	App->gui->mouseOnScene = ImGui::IsWindowHovered(); //This bool is used to enable scene navigation using input
 
+	if (App->gui->mouseOnScene && ImGui::IsMouseClicked(2))
+		App->gui->clickedScene = true;
+	if (!ImGui::IsMouseDown(2))
+		App->gui->clickedScene = false;
+
 	ImGui::SetCursorPos({ 0,0 }); //Set image position at top left corner
 	
 	//Store position and size for accessing from other modules

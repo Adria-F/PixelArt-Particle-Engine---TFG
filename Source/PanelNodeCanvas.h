@@ -21,6 +21,7 @@ private:
 
 	float2 scrolling = { 0.0f,0.0f };
 	bool showGrid = true;
+	bool midClicked = false;
 
 	int zoom = 100;
 };

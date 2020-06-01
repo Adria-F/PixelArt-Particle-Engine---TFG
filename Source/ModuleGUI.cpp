@@ -270,13 +270,13 @@ ImFont* ModuleGUI::GetFont(int fontPercent, int fontSize) const
 bool ModuleGUI::UsingMouse() const
 {
 	ImGuiIO& io = ImGui::GetIO();
-	return io.WantCaptureMouse && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene;
+	return io.WantCaptureMouse && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene && !clickedScene;
 }
 
 bool ModuleGUI::UsingKeyboard() const
 {
 	ImGuiIO& io = ImGui::GetIO();
-	return io.WantTextInput && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene;
+	return io.WantTextInput && !mouseOnScene && !mouseOnPixelScene && !mouseOnExportScene && !clickedScene;
 }
 
 bool ModuleGUI::IsExportPanelActive() const

@@ -51,6 +51,8 @@ public:
 	bool mouseOnPixelScene = false;
 	bool mouseOnExportScene = false;
 
+	bool clickedScene = false;
+
 	float2 scenePosition;
 	float2 sceneSize;
 

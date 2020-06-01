@@ -63,7 +63,8 @@ public:
 		struct
 		{
 			ColorParticleNode* color;
-			SpeedParticleNode* speed;
+			SpeedParticleNode* speedInit;
+			SpeedParticleNode* speedUpdate;
 			MakeGlobalParticleNode* makeGlobal;
 			DeathInstantiationParticleNode* deathInstantiation;
 			SpriteParticleNode* sprite;

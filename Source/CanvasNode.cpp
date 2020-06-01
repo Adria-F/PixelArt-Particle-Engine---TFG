@@ -462,5 +462,6 @@ inline bool PointInsideRect(float2 A, float2 B, float2 point)
 	float2 bottomLeft = { Min(A.x, B.x), Max(A.y, B.y) };
 	float2 topRight = { Max(A.x, B.x), Min(A.y, B.y) };
 
-	return point.x > bottomLeft.x && point.x < topRight.x && point.y < bottomLeft.y && point.y > topRight.y;
+	bool inside = point.x > bottomLeft.x && point.x < topRight.x && point.y < bottomLeft.y && point.y > topRight.y;
+	return inside || Abs(bottomLeft.x - point.x) < 5.0f || Abs(bottomLeft.y - point.y) < 5.0f; //In case the line is in 0º or 90º
 }

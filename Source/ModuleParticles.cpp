@@ -440,9 +440,18 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 		color->particle = this;
 		break;
 	case PARTICLE_SPEED:
-		speed = (SpeedParticleNode*)node;
-		speed->particle = this;
-		speed->update = update;
+		if (update)
+		{
+			speedUpdate = (SpeedParticleNode*)node;
+			speedUpdate->particle = this;
+			speedUpdate->update = update;
+		}
+		else
+		{
+			speedInit = (SpeedParticleNode*)node;
+			speedInit->particle = this;
+			speedInit->update = update;
+		}
 		break;
 	case PARTICLE_MAKEGLOBAL:
 		makeGlobal = (MakeGlobalParticleNode*)node;
@@ -459,6 +468,7 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 	case PARTICLE_LIFETIME:
 		lifetimeNode = (LifetimeParticleNode*)node;
 		lifetimeNode->particle = this;
+		break;
 	case PARTICLE_ROTATION:
 		if (update)
 		{
@@ -472,6 +482,7 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 			rotationInit->particle = this;
 			rotationInit->update = false;
 		}
+		break;
 	};
 }
 
@@ -483,7 +494,10 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 		color = nullptr;
 		break;
 	case PARTICLE_SPEED:
-		speed = nullptr;
+		if (speedInit == node)
+			speedInit = nullptr;
+		else if (speedUpdate == node)
+			speedUpdate = nullptr;
 		break;
 	case PARTICLE_MAKEGLOBAL:
 		makeGlobal = nullptr;
@@ -496,11 +510,13 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 		break;
 	case PARTICLE_LIFETIME:
 		lifetimeNode = nullptr;
+		break;
 	case PARTICLE_ROTATION:
 		if (rotationInit == node)
 			rotationInit = nullptr;
 		else if (rotationUpdate == node)
 			rotationUpdate = nullptr;
+		break;
 	}
 }
 

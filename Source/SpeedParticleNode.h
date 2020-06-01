@@ -11,6 +11,7 @@ public:
 	SpeedParticleNode(Particle* particle, const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT });
 	~SpeedParticleNode() {}
 
+	void Init();
 	void Execute(float dt);
 
 	EntityData* Copy(Particle* particle) const;
@@ -23,8 +24,6 @@ public:
 public:
 
 	float speed = 0.0f;
-
-	bool overLifetime = false;
 };
 
 #endif // !__SPEED_PARTICLENODE_H__

@@ -9,9 +9,14 @@ SpeedParticleNode::SpeedParticleNode(Particle* particle, const char* name, float
 {
 }
 
-void SpeedParticleNode::Execute(float dt)
+void SpeedParticleNode::Init()
 {
 	particle->baseMovement->speed = speed;
+}
+
+void SpeedParticleNode::Execute(float dt)
+{
+	particle->baseMovement->speed += speed*dt;
 }
 
 EntityData* SpeedParticleNode::Copy(Particle* particle) const
@@ -26,33 +31,18 @@ EntityData* SpeedParticleNode::Copy(Particle* particle) const
 
 void SpeedParticleNode::DisplayConfig()
 {
-	if (ImGui::RadioButton("Fix", !overLifetime))
-		overLifetime = false;
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Over Lifetime", overLifetime))
-		overLifetime = true;
-
-	if (!overLifetime)
-	{
-		ImGui::Text("Speed"); ImGui::SameLine();
-		App->gui->DrawInputFloat("", "##speed", &speed, 0.1f, true);
-	}
-	else
-	{
-		ImGui::Text("Curve system is work in progress");
-	}
+	ImGui::Text("Speed"); ImGui::SameLine();
+	App->gui->DrawInputFloat("", "##speed", &speed, 0.1f, true);
 }
 
 void SpeedParticleNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addBool("update", update);
 	node->addFloat("speed", speed);
-	node->addBool("overLifetime", overLifetime);
 }
 
 void SpeedParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	update = nodeDef->getBool("update");
 	speed = nodeDef->getFloat("speed");
-	overLifetime = nodeDef->getBool("overLifetime");
 }

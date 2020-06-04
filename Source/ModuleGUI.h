@@ -9,6 +9,7 @@ class Panel;
 class ImFont;
 
 class PanelExportSpritesheet;
+class PanelNodeCanvas;
 
 class ModuleGUI : public Module
 {
@@ -24,6 +25,9 @@ public:
 	update_state PostUpdate(float dt);
 	bool CleanUp();
 
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
+
 	void Draw();
 
 	void handleInput(SDL_Event* event);
@@ -34,6 +38,7 @@ public:
 	bool UsingKeyboard() const;
 
 	bool IsExportPanelActive() const;
+	void ResetCanvas();
 
 	bool DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue = nullptr, bool condition = false);
 	void DrawColorBox(Color& color);
@@ -62,6 +67,7 @@ private:
 	std::map<int, ImFont*> fonts;
 
 	PanelExportSpritesheet* panelExport = nullptr;
+	PanelNodeCanvas* panelCanvas = nullptr;
 };
 
 #endif // !__MODULEGUI_H__

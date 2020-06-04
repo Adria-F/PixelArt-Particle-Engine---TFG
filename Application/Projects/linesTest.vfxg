@@ -1,5 +1,129 @@
 {
+    "settings": {
+        "panels": {
+            "Scene": {},
+            "Node Configuration": {},
+            "Node Canvas": {
+                "scrolling": [
+                    -18.67041015625,
+                    67.05484008789063
+                ],
+                "zoom": 100
+            },
+            "PixelArt": {},
+            "Export Spritesheet": {}
+        },
+        "cameraType": 0,
+        "position": [
+            0.0,
+            10.0,
+            10.0
+        ],
+        "reference": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "orthographicPosition": [
+            0.017500024288892747,
+            -0.7349997758865356,
+            0.3999999761581421
+        ],
+        "pixelSize": 12
+    },
     "project": [
+        {
+            "name": "Particle",
+            "uid": 829634683,
+            "type": 1,
+            "position": [
+                640.3731689453125,
+                243.281494140625
+            ],
+            "size": [
+                235.0,
+                338.6842041015625
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 821225142
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 3697828537,
+            "type": 33,
+            "parent": 829634683,
+            "position": [
+                660.3731689453125,
+                263.281494140625
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 3487695317
+                }
+            ]
+        },
+        {
+            "name": "Particle Update",
+            "uid": 3487695317,
+            "type": 34,
+            "parent": 829634683,
+            "position": [
+                660.3731689453125,
+                391.9656982421875
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3697828537
+                },
+                {
+                    "connectedNode": 3656284353
+                }
+            ]
+        },
+        {
+            "name": "Particle Render",
+            "uid": 3656284353,
+            "type": 35,
+            "parent": 829634683,
+            "position": [
+                660.3731689453125,
+                486.9656982421875
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3487695317
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
         {
             "name": "Emitter",
             "uid": 2460926719,
@@ -107,98 +231,6 @@
                 },
                 {
                     "connectedNode": 0
-                }
-            ]
-        },
-        {
-            "name": "Particle",
-            "uid": 829634683,
-            "type": 1,
-            "position": [
-                640.3731689453125,
-                243.281494140625
-            ],
-            "size": [
-                235.0,
-                338.6842041015625
-            ],
-            "interactable": false,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 821225142
-                }
-            ]
-        },
-        {
-            "name": "Particle Update",
-            "uid": 3487695317,
-            "type": 34,
-            "parent": 829634683,
-            "position": [
-                660.3731689453125,
-                391.9656982421875
-            ],
-            "size": [
-                195.0,
-                75.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 3697828537
-                },
-                {
-                    "connectedNode": 3656284353
-                }
-            ]
-        },
-        {
-            "name": "Particle Render",
-            "uid": 3656284353,
-            "type": 35,
-            "parent": 829634683,
-            "position": [
-                660.3731689453125,
-                486.9656982421875
-            ],
-            "size": [
-                195.0,
-                75.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 3487695317
-                },
-                {
-                    "connectedNode": 0
-                }
-            ]
-        },
-        {
-            "name": "Particle Set Up",
-            "uid": 3697828537,
-            "type": 33,
-            "parent": 829634683,
-            "position": [
-                660.3731689453125,
-                263.281494140625
-            ],
-            "size": [
-                195.0,
-                75.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 0
-                },
-                {
-                    "connectedNode": 3487695317
                 }
             ]
         }

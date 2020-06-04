@@ -142,3 +142,19 @@ void Application::AddModule(Module* module)
 {
 	modules.push_back(module);
 }
+
+void Application::SaveSettings(JSON_Value* settings)
+{
+	for (std::list<Module*>::iterator it_m = modules.begin(); it_m != modules.end(); ++it_m)
+	{
+		(*it_m)->SaveSettings(settings);
+	}
+}
+
+void Application::LoadSettings(JSON_Value* settings)
+{
+	for (std::list<Module*>::iterator it_m = modules.begin(); it_m != modules.end(); ++it_m)
+	{
+		(*it_m)->LoadSettings(settings);
+	}
+}

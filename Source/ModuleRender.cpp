@@ -156,6 +156,16 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
+void ModuleRender::SaveSettings(JSON_Value* settings)
+{
+	settings->addUint("pixelSize", pixelSize);
+}
+
+void ModuleRender::LoadSettings(JSON_Value* settings)
+{
+	pixelSize = settings->getUint("pixelSize");
+}
+
 void ModuleRender::DrawScene(float* projectionMatrix, float* viewMatrix)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, (App->gui->IsExportPanelActive())? exportFrameBuffer : frameBuffer);

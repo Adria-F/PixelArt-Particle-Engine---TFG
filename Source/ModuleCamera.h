@@ -21,6 +21,9 @@ public:
 	update_state Update(float dt);
 	bool CleanUp();
 
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
+
 	void OnResize(int width, int height);
 
 	float* getProjectionMatrix();
@@ -28,6 +31,8 @@ public:
 	void LookAt(const vec &Spot);
 	vec getMovementFactor();
 	void setAspectRatio(float aspectRatio);
+
+	void ResetCamera();
 
 public:
 

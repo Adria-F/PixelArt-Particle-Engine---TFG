@@ -19,6 +19,9 @@ public:
 	update_state PostUpdate(float dt);
 	bool CleanUp();
 
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
+
 	void DrawScene(float* projectionMatrix, float* viewMatrix);
 	void DrawPixelArt(float2 viewportSize, uint pixelSize);
 

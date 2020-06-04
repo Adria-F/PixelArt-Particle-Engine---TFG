@@ -17,6 +17,11 @@ public:
 	void SetFlags();
 	void DrawContent();
 
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
+
+	void Reset();
+
 private:
 
 	float2 scrolling = { 0.0f,0.0f };

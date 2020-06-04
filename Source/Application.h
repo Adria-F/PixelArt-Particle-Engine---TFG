@@ -20,6 +20,8 @@ class ModuleNodeCanvas;
 class ModuleProjectManager;
 class ModuleTextures;
 
+class JSON_Value;
+
 class Application
 {
 public:
@@ -60,6 +62,9 @@ public:
 	bool CleanUp();
 
 	void AddModule(Module* module);
+
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
 };
 
 extern Application* App;

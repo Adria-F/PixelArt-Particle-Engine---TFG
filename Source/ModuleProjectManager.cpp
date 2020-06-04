@@ -4,6 +4,8 @@
 #include "JSONManager.h"
 #include "ModuleNodeCanvas.h"
 #include "ModuleParticles.h"
+#include "ModuleCamera.h"
+#include "ModuleGUI.h"
 #include "CanvasNode.h"
 #include "NodeGroup.h"
 
@@ -50,12 +52,20 @@ void ModuleProjectManager::NewProject()
 
 	App->particles->ClearAll();
 
+	App->camera->ResetCamera();
+	App->gui->ResetCanvas();
+
 	workingDir.clear();
 }
 
 void ModuleProjectManager::SaveProject(const char* path)
 {
 	JSON_File* projectFile = App->JSON_Manager->openWriteFile(path);
+
+	JSON_Value* settings = projectFile->createValue();
+	App->SaveSettings(settings);
+	projectFile->addValue("settings", settings);
+
 	JSON_Value* project = projectFile->createValue();
 	project->convertToArray();
 
@@ -76,6 +86,10 @@ void ModuleProjectManager::LoadProject(const char* path)
 	if (projectFile)
 	{
 		NewProject(); //Clear current project
+		JSON_Value* settings = projectFile->getValue("settings");
+		if (settings) //TMP
+			App->LoadSettings(settings);
+
 		JSON_Value* project = projectFile->getValue("project");
 
 		//Load sequence

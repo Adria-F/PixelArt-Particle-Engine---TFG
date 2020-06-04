@@ -3,6 +3,8 @@
 
 #include "Globals.h"
 
+class JSON_Value;
+
 class Panel
 {
 public:
@@ -44,6 +46,9 @@ public:
 
 	virtual void OnOpen() {}
 	virtual void OnClose() {}
+
+	virtual void SaveSettings(JSON_Value* settings) {}
+	virtual void LoadSettings(JSON_Value* settings) {}
 
 protected:
 

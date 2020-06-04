@@ -111,6 +111,30 @@ bool ModuleCamera::CleanUp()
 	return true;
 }
 
+void ModuleCamera::SaveSettings(JSON_Value* settings)
+{
+	settings->addUint("cameraType", type);
+
+	settings->addVector3("position", position);
+	settings->addVector3("reference", reference);
+
+	settings->addVector3("orthographicPosition", orthographicFrustum.pos);
+}
+
+void ModuleCamera::LoadSettings(JSON_Value* settings)
+{
+	type = (cameraType)settings->getUint("cameraType");
+
+	position = settings->getVector3("position");
+	reference = settings->getVector3("reference");
+	perspectiveFrustum.pos = position;
+	LookAt(reference);
+
+	orthographicFrustum.pos = settings->getVector3("orthographicPosition");
+	orthographicFrustum.orthographicWidth = viewportSize.x / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+	orthographicFrustum.orthographicHeight = viewportSize.y / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+}
+
 void ModuleCamera::OnResize(int width, int height)
 {
 	float newAR = (float)width / (float)height;
@@ -207,4 +231,24 @@ vec ModuleCamera::getMovementFactor()
 void ModuleCamera::setAspectRatio(float aspectRatio)
 {
 	perspectiveFrustum.horizontalFov = 2.f * atanf(tanf(perspectiveFrustum.verticalFov*0.5f)*aspectRatio);
+}
+
+void ModuleCamera::ResetCamera()
+{
+	//3D
+	position = { 0.0f,10.0f,10.0f };
+	reference = { 0.0f,0.0f,0.0f };
+	perspectiveFrustum.pos = position;
+	perspectiveFrustum.front = { 0.0f,0.0f,-1.0f };
+	perspectiveFrustum.up = { 0.0f,1.0f,0.0f };
+
+	LookAt(reference);
+
+	//2D
+	orthographicFrustum.pos = { 0.0f, 0.0f, 1.0f };
+	orthographicFrustum.front = { 0.0f,0.0f,-1.0f };
+	orthographicFrustum.up = { 0.0f,1.0f,0.0f };
+
+	orthographicFrustum.orthographicWidth = viewportSize.x / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
+	orthographicFrustum.orthographicHeight = viewportSize.y / (PIXELS_PER_UNIT * orthographicFrustum.pos.z);
 }

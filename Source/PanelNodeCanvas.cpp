@@ -147,3 +147,22 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::PopStyleColor();
 	ImGui::PopStyleVar(2);
 }
+
+void PanelNodeCanvas::SaveSettings(JSON_Value* settings)
+{
+	settings->addVector2("scrolling", scrolling);
+	settings->addInt("zoom", zoom);
+}
+
+void PanelNodeCanvas::LoadSettings(JSON_Value* settings)
+{
+	scrolling = settings->getVector2("scrolling");
+	zoom = settings->getInt("zoom");
+}
+
+void PanelNodeCanvas::Reset()
+{
+	scrolling = { 0.0f, 0.0f };
+	midClicked = false;
+	zoom = 100;
+}

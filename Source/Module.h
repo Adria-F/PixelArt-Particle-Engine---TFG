@@ -3,6 +3,8 @@
 
 #include "Globals.h"
 
+class JSON_Value;
+
 class Module
 {
 private:
@@ -42,6 +44,9 @@ public:
 	{
 		return true;
 	}
+
+	virtual void SaveSettings(JSON_Value* settings) {}
+	virtual void LoadSettings(JSON_Value* settings) {}
 };
 
 #endif // !__MODULE_H__

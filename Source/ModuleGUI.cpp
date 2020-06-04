@@ -50,7 +50,8 @@ bool ModuleGUI::Init()
 	//Add all panels
 	panels.push_back(new PanelScene("Scene"));
 	panels.push_back(new PanelNodeConfiguration("Node Configuration"));
-	panels.push_back(new PanelNodeCanvas("Node Canvas"));
+	panelCanvas = new PanelNodeCanvas("Node Canvas");
+	panels.push_back(panelCanvas);
 	panels.push_back(new PanelPixelArt("PixelArt"));
 	panelExport = new PanelExportSpritesheet("Export Spritesheet");
 	panels.push_back(panelExport);
@@ -214,6 +215,35 @@ bool ModuleGUI::CleanUp()
 	return true;
 }
 
+void ModuleGUI::SaveSettings(JSON_Value* settings)
+{
+	JSON_Value* panelsValue = settings->createValue();
+
+	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
+	{
+		JSON_Value* panel = panelsValue->createValue();
+		(*it_p)->SaveSettings(panel);
+		panelsValue->addValue((*it_p)->GetName(), panel);
+	}
+
+	settings->addValue("panels", panelsValue);
+}
+
+void ModuleGUI::LoadSettings(JSON_Value* settings)
+{
+	JSON_Value* panelsValue = settings->getValue("panels");
+
+	if (panelsValue)
+	{
+		for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
+		{
+			JSON_Value* panel = panelsValue->getValue((*it_p)->GetName());
+			if (panel)
+				(*it_p)->LoadSettings(panel);
+		}
+	}
+}
+
 void ModuleGUI::Draw()
 {
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
@@ -282,6 +312,11 @@ bool ModuleGUI::UsingKeyboard() const
 bool ModuleGUI::IsExportPanelActive() const
 {
 	return panelExport->IsActive();
+}
+
+void ModuleGUI::ResetCanvas()
+{
+	panelCanvas->Reset();
 }
 
 bool ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)

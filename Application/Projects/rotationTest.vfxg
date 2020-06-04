@@ -1,115 +1,37 @@
 {
+    "settings": {
+        "panels": {
+            "Scene": {},
+            "Node Configuration": {},
+            "Node Canvas": {
+                "scrolling": [
+                    212.99627685546876,
+                    26.388168334960939
+                ],
+                "zoom": 100
+            },
+            "PixelArt": {},
+            "Export Spritesheet": {}
+        },
+        "cameraType": 0,
+        "position": [
+            0.0,
+            10.0,
+            10.0
+        ],
+        "reference": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "orthographicPosition": [
+            0.017500024288892747,
+            -0.7349997758865356,
+            0.3999999761581421
+        ],
+        "pixelSize": 12
+    },
     "project": [
-        {
-            "name": "Emitter",
-            "uid": 1395307718,
-            "type": 16,
-            "position": [
-                45.0,
-                118.0
-            ],
-            "size": [
-                235.0,
-                338.0
-            ],
-            "interactable": false,
-            "movable": true,
-            "connections": []
-        },
-        {
-            "name": "Emitter SetUp",
-            "uid": 3163413503,
-            "type": 41,
-            "parent": 1395307718,
-            "position": [
-                65.0,
-                138.0
-            ],
-            "size": [
-                195.0,
-                75.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 0
-                },
-                {
-                    "connectedNode": 2055533379
-                }
-            ]
-        },
-        {
-            "name": "Emitting Particle",
-            "uid": 2055533379,
-            "type": 42,
-            "parent": 1395307718,
-            "position": [
-                65.0,
-                233.0
-            ],
-            "size": [
-                195.0,
-                108.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 3163413503
-                },
-                {
-                    "connectedNode": 2230114514
-                }
-            ]
-        },
-        {
-            "name": "Input Particle",
-            "uid": 1637294531,
-            "type": 20,
-            "parent": 2055533379,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [
-                {
-                    "connectedNode": 473584570
-                }
-            ],
-            "particle": 473584570
-        },
-        {
-            "name": "Emitter Update",
-            "uid": 2230114514,
-            "type": 43,
-            "parent": 1395307718,
-            "position": [
-                65.0,
-                361.0
-            ],
-            "size": [
-                195.0,
-                75.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 2055533379
-                },
-                {
-                    "connectedNode": 0
-                }
-            ]
-        },
         {
             "name": "Particle",
             "uid": 473584570,
@@ -234,6 +156,116 @@
             "connections": [
                 {
                     "connectedNode": 1898920513
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Emitter",
+            "uid": 1395307718,
+            "type": 16,
+            "position": [
+                45.0,
+                118.0
+            ],
+            "size": [
+                235.0,
+                338.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": []
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 3163413503,
+            "type": 41,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                138.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 2055533379
+                }
+            ]
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 2055533379,
+            "type": 42,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                233.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3163413503
+                },
+                {
+                    "connectedNode": 2230114514
+                }
+            ]
+        },
+        {
+            "name": "Input Particle",
+            "uid": 1637294531,
+            "type": 20,
+            "parent": 2055533379,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 473584570
+                }
+            ],
+            "particle": 473584570
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 2230114514,
+            "type": 43,
+            "parent": 1395307718,
+            "position": [
+                65.0,
+                361.0
+            ],
+            "size": [
+                195.0,
+                75.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2055533379
                 },
                 {
                     "connectedNode": 0

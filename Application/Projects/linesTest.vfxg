@@ -134,7 +134,7 @@
             ],
             "size": [
                 235.0,
-                338.0
+                371.0
             ],
             "interactable": false,
             "movable": true,
@@ -221,7 +221,7 @@
             ],
             "size": [
                 195.0,
-                75.0
+                108.0
             ],
             "interactable": true,
             "movable": true,
@@ -233,6 +233,27 @@
                     "connectedNode": 0
                 }
             ]
+        },
+        {
+            "name": "Emission",
+            "uid": 1673222658,
+            "type": 17,
+            "parent": 506918063,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "frequency": 0.10000000149011612,
+            "duration": 5.0,
+            "loop": true,
+            "bursts": []
         }
     ]
 }

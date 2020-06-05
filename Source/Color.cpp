@@ -133,3 +133,9 @@ void Gradient::RemoveAlphaKey(float percent)
 {
 	alphaList.erase(percent);
 }
+
+void Gradient::RemoveAllKeys()
+{
+	colorList.clear();
+	alphaList.clear();
+}

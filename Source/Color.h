@@ -57,6 +57,8 @@ struct Gradient
 	void RemoveColorKey(float percent);
 	void RemoveAlphaKey(float percent);
 
+	void RemoveAllKeys();
+
 	std::map<float, vec> colorList;
 	std::map<float, float> alphaList;
 };

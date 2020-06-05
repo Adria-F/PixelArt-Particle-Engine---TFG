@@ -73,6 +73,9 @@ void ShapeEmitterNode::DisplayConfig()
 		if (direction == LOOP_DIRECTION || direction == PING_PONG)
 		{
 			ImGui::InputFloat("Speed", &speed);
+			ImGui::DragInt("Phase", &phase, 1.0f, 0, angle);
+			if (phase > angle)
+				phase = angle;
 		}
 		break;
 	case QUAD_SHAPE:
@@ -137,10 +140,10 @@ vec ShapeEmitterNode::GetDirectionInCircle() const
 		factor = (GET_RANDOM()*2.0f - 1.0f);
 		break;
 	case LOOP_DIRECTION:
-		factor = -Mod(emitter->timeAlive*speed*2.0f, 2.0f) + 1.0f;
+		factor = -Mod(emitter->timeAlive*speed*2.0f+(float)phase/(float)angle*2.0f, 2.0f) + 1.0f;
 		break;
 	case PING_PONG:
-		factor = Cos(emitter->timeAlive*speed*3.0f);
+		factor = Cos(emitter->timeAlive*speed*3.0f+(float)phase/(float)angle*180.0f*DEGTORAD);
 		break;
 	}
 	float degrees = DEGTORAD*angle*0.5f * factor + DEGTORAD*90.0f;

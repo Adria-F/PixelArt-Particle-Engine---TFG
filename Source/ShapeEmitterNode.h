@@ -55,6 +55,7 @@ public:
 	emissionShape shape = CIRCLE_SHAPE;
 	emissionDirection direction = RANDOM_DIRECTION;
 	float speed = 1.0f;
+	int phase = 0.0f;
 
 	//CONE
 	float radius = 3.0f;

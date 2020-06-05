@@ -197,7 +197,7 @@
     <ClCompile Include="PanelPixelArt.cpp" />
     <ClCompile Include="PanelScene.cpp" />
     <ClCompile Include="RNG.cpp" />
-    <ClCompile Include="RotationParticleNode.cpp" />
+    <ClCompile Include="TransformParticleNode.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeEmitterNode.cpp" />
     <ClCompile Include="SpeedParticleNode.cpp" />
@@ -343,7 +343,7 @@
     <ClInclude Include="rapidjson\stream.h" />
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\writer.h" />
-    <ClInclude Include="RotationParticleNode.h" />
+    <ClInclude Include="TransformParticleNode.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeEmitterNode.h" />
     <ClInclude Include="SpeedParticleNode.h" />

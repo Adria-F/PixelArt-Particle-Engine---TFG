@@ -15,7 +15,7 @@
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
-#include "RotationParticleNode.h"
+#include "TransformParticleNode.h"
 
 #include "EmissionEmitterNode.h"
 #include "ShapeEmitterNode.h"
@@ -215,10 +215,10 @@ std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(nodeType nodeContainer) 
 		ret = { PARTICLE, EMITTER };
 		break;
 	case PARTICLE_NODE_BOX_INIT:
-		ret = { PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_SPRITE, PARTICLE_LIFETIME, PARTICLE_ROTATION };
+		ret = { PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_SPRITE, PARTICLE_LIFETIME, PARTICLE_TRANSFORM };
 		break;
 	case PARTICLE_NODE_BOX_UPDATE:
-		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_ROTATION };
+		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_TRANSFORM };
 		break;
 	case PARTICLE_NODE_BOX_RENDER:
 		ret = { PARTICLE_COLOR };
@@ -306,8 +306,8 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContai
 		case PARTICLE_LIFETIME:
 			nodeList.insert(std::pair<std::string, nodeType>("Lifetime", nodes[i]));
 			break;
-		case PARTICLE_ROTATION:
-			nodeList.insert(std::pair<std::string, nodeType>("Rotation", nodes[i]));
+		case PARTICLE_TRANSFORM:
+			nodeList.insert(std::pair<std::string, nodeType>("Transform", nodes[i]));
 			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
@@ -357,8 +357,8 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 	case PARTICLE_LIFETIME:
 		node = new LifetimeParticleNode(nullptr, name, spawnPos);
 		break;
-	case PARTICLE_ROTATION:
-		node = new RotationParticleNode(nullptr, name, spawnPos);
+	case PARTICLE_TRANSFORM:
+		node = new TransformParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);

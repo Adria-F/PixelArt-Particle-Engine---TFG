@@ -20,7 +20,7 @@
 #include "DeathInstantiationParticleNode.h"
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
-#include "RotationParticleNode.h"
+#include "TransformParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -237,7 +237,8 @@ void ParticleEmitter::UpdateParticles(float dt)
 {
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		(*it_p)->baseTransform->LookCamera();
+		if (!(*it_p)->baseTransform->billboard && App->camera->type == CAMERA_3D)
+			(*it_p)->baseTransform->LookCamera();
 		if (playing)
 			(*it_p)->Update(dt);
 	}
@@ -469,16 +470,16 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 		lifetimeNode = (LifetimeParticleNode*)node;
 		lifetimeNode->particle = this;
 		break;
-	case PARTICLE_ROTATION:
+	case PARTICLE_TRANSFORM:
 		if (update)
 		{
-			rotationUpdate = (RotationParticleNode*)node;
+			rotationUpdate = (TransformParticleNode*)node;
 			rotationUpdate->particle = this;
 			rotationUpdate->update = true;
 		}
 		else
 		{
-			rotationInit = (RotationParticleNode*)node;
+			rotationInit = (TransformParticleNode*)node;
 			rotationInit->particle = this;
 			rotationInit->update = false;
 		}
@@ -511,7 +512,7 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 	case PARTICLE_LIFETIME:
 		lifetimeNode = nullptr;
 		break;
-	case PARTICLE_ROTATION:
+	case PARTICLE_TRANSFORM:
 		if (rotationInit == node)
 			rotationInit = nullptr;
 		else if (rotationUpdate == node)

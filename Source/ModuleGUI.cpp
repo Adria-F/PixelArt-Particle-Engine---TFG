@@ -319,45 +319,6 @@ void ModuleGUI::ResetCanvas()
 	panelCanvas->Reset();
 }
 
-bool ModuleGUI::DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue, bool condition)
-{
-	bool ret = false;
-
-	if (!enabled)
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
-	
-	if (std::string(label).size() > 0)
-	{
-		if (enabled)
-			ImGui::Text(label);
-		else
-			ImGui::TextDisabled(label);
-		ImGui::SameLine();
-	}
-	ImGui::PushItemWidth(50.0f);
-	if (enabled)
-	{
-		float* modifyingValue = value;
-		if (alternativeValue != nullptr && condition)
-			modifyingValue = alternativeValue;
-		ret = ImGui::DragFloat(id, modifyingValue, step, step, 0.0f, "%.2f");
-		*value = *modifyingValue;
-		if (alternativeValue != nullptr)
-			*alternativeValue = *modifyingValue;
-	}
-	else
-	{
-		char str[1] = "";
-		ImGui::InputText(id, &str[0], 1, ImGuiInputTextFlags_ReadOnly);
-	}
-	ImGui::PopItemWidth();
-
-	if (!enabled)
-		ImGui::PopStyleVar();
-
-	return ret;
-}
-
 void ModuleGUI::DrawColorBox(Color& color)
 {
 	ImGui::PushItemWidth(150.0f);
@@ -559,7 +520,10 @@ bool ModuleGUI::DrawInputInt(const char* label, int* value, float indent)
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImGui::Text(label);
 
-	ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
 	ImGui::PushItemWidth(50.0f);
 	bool ret = ImGui::InputInt(("##" + std::string(label)).c_str(), value, 0);
 	ImGui::PopItemWidth();
@@ -567,40 +531,167 @@ bool ModuleGUI::DrawInputInt(const char* label, int* value, float indent)
 	return ret;
 }
 
-bool ModuleGUI::DrawInputFloat(const char* label, float* value, float indent)
+bool ModuleGUI::DrawInputFloat(const char* label, float* value, float indent, bool enabled)
 {
+	bool ret = false;
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImGui::Text(label);
 
-	ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
+	
 	ImGui::PushItemWidth(50.0f);
-	bool ret = ImGui::InputFloat(("##" + std::string(label)).c_str(), value);
+	if (enabled)
+		ret = ImGui::InputFloat(("##" + std::string(label)).c_str(), value);
+	else
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
+		char str[1] = "";
+		ImGui::InputText(("##" + std::string(label)).c_str(), &str[0], 1, ImGuiInputTextFlags_ReadOnly);
+		ImGui::PopStyleVar();
+	}
+	
 	ImGui::PopItemWidth();
 
 	return ret;
 }
 
-bool ModuleGUI::DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random)
+bool ModuleGUI::DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent)
 {
 	bool ret = false;
 
-	ret = DrawInputFloat(label, (*random) ? rand1 : value, 50.0f);
-	ImGui::SameLine();
-
-	ImGui::PushItemWidth(50.0f);
-	if (*random)
-		ret |= ImGui::InputFloat(("##rand2"+std::string(label)).c_str(), rand2);
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
 	else
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.5f);
-		char str[1] = "";
-		ImGui::InputText(("##rand2" + std::string(label)).c_str(), &str[0], 1, ImGuiInputTextFlags_ReadOnly);
-		ImGui::PopStyleVar();
-	}
-	ImGui::PopItemWidth();
-	ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.0f);
+		ImGui::SameLine();
+	float X = ImGui::GetCursorPosX();
 
+	ImGui::PushID(("Value" + std::string(label)).c_str());
+	ret |= DrawInputFloat(" ", (*random) ? rand1 : value);
+	ImGui::SameLine();
+	ImGui::PushID(("Rand" + std::string(label)).c_str());
+	ret |= DrawInputFloat(" ", rand2, 0.0f, *random);
+	ImGui::PopID();
+
+	ImGui::SameLine(max(ImGui::GetWindowContentRegionWidth() - 70.0f, 300.0f));
 	ImGui::Checkbox("Random", random);
+	ImGui::PopID();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloat2(const char* label, float* value, float indent, bool enabled)
+{
+	bool ret = false;
+
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
+
+	ImGui::PushID(("Value" + std::string(label)).c_str());
+	ret |= DrawInputFloat("X", &value[0]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", &value[1]);
+	ImGui::PopID();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloat2RandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent)
+{
+	bool ret = false;
+
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
+	float X = ImGui::GetCursorPosX();
+
+	ImGui::PushID(("Value" + std::string(label)).c_str());
+	ret |= DrawInputFloat("X", (*random) ? &rand1[0] : &value[0]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", (*random) ? &rand1[1] : &value[1]);
+
+	ImGui::SameLine(max(ImGui::GetWindowContentRegionWidth() - 70.0f, 300.0f));
+	ImGui::Checkbox("Random", random);
+	ImGui::PopID();
+
+	ImGui::PushID(("Rand" + std::string(label)).c_str());
+	ImGui::SetCursorPosX(X);
+
+	ret |= DrawInputFloat("X", &rand2[0], 0.0f, *random);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", &rand2[1], 0.0f, *random);
+	
+	ImGui::PopID();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloat3(const char* label, float* value, float indent, bool enabled)
+{
+	bool ret = false;
+
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
+
+	ImGui::PushID(("Value" + std::string(label)).c_str());
+	ret |= DrawInputFloat("X", &value[0]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", &value[1]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Z", &value[2]);
+	ImGui::PopID();
+
+	return ret;
+}
+
+bool ModuleGUI::DrawInputFloat3RandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent)
+{
+	bool ret = false;
+
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::Text(label);
+	if (indent > 0.0f)
+		ImGui::SetCursorPos({ cursor.x + indent, cursor.y });
+	else
+		ImGui::SameLine();
+	float X = ImGui::GetCursorPosX();
+
+	ImGui::PushID(("Value" + std::string(label)).c_str());
+	ret |= DrawInputFloat("X", (*random) ? &rand1[0] : &value[0]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", (*random) ? &rand1[1] : &value[1]);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Z", (*random) ? &rand1[2] : &value[2]);
+
+	ImGui::SameLine(max(ImGui::GetWindowContentRegionWidth() - 70.0f, 300.0f));
+	ImGui::Checkbox("Random", random);
+	ImGui::PopID();
+
+	ImGui::PushID(("Rand" + std::string(label)).c_str());
+	ImGui::SetCursorPosX(X);
+
+	ret |= DrawInputFloat("X", &rand2[0], 0.0f, *random);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Y", &rand2[1], 0.0f, *random);
+	ImGui::SameLine();
+	ret |= DrawInputFloat("Z", &rand2[2], 0.0f, *random);
+
+	ImGui::PopID();
 
 	return ret;
 }

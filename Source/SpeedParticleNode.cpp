@@ -31,8 +31,7 @@ EntityData* SpeedParticleNode::Copy(Particle* particle) const
 
 void SpeedParticleNode::DisplayConfig()
 {
-	ImGui::Text("Speed"); ImGui::SameLine();
-	App->gui->DrawInputFloat("", "##speed", &speed, 0.1f, true);
+	App->gui->DrawInputFloat("Speed", &speed);
 }
 
 void SpeedParticleNode::SaveExtraInfo(JSON_Value* node)

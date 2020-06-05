@@ -280,7 +280,7 @@
     <ClCompile Include="LifetimeParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="RotationParticleNode.cpp">
+    <ClCompile Include="TransformParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
   </ItemGroup>
@@ -717,7 +717,7 @@
     <ClInclude Include="LifetimeParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="RotationParticleNode.h">
+    <ClInclude Include="TransformParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
   </ItemGroup>

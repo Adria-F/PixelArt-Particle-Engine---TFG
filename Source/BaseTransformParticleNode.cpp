@@ -33,9 +33,6 @@ void BaseTransformParticleNode::PrepareRender()
 
 void BaseTransformParticleNode::LookCamera()
 {
-	if (!billboard || App->camera->type == CAMERA_2D)
-		return;
-
 	vec cameraPos = App->camera->position;
 	//caluclate direction to look
 	vec dir = cameraPos - position;

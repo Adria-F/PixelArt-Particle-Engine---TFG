@@ -41,35 +41,35 @@ void TransformEmitterNode::DisplayConfig()
 {
 	//Position
 	ImGui::Text("Position"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##posX", &position.x, 0.1f, true))
+	if (App->gui->DrawInputFloat("X##posX", &position.x))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##posY", &position.y, 0.1f, true))
+	if (App->gui->DrawInputFloat("Y##posY", &position.y))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##posZ", &position.z, 0.1f, true))
+	if (App->gui->DrawInputFloat("Z##posZ", &position.z))
 		changed = true;
 	
 	//Rotation
 	ImGui::Text("Rotation"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##rotX", &rotationEuler.x, 0.1f, true))
+	if (App->gui->DrawInputFloat("X##rotX", &rotationEuler.x))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##rotY", &rotationEuler.y, 0.1f, true))
+	if (App->gui->DrawInputFloat("Y##rotY", &rotationEuler.y))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##rotZ", &rotationEuler.z, 0.1f, true))
+	if (App->gui->DrawInputFloat("Z##rotZ", &rotationEuler.z))
 		changed = true;
 	
 	//Scale
 	ImGui::Text("Scale"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X", "##scaleX", &scale.x, 0.1f, true))
+	if (App->gui->DrawInputFloat("X##scaleX", &scale.x))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y", "##scaleY", &scale.y, 0.1f, true))
+	if (App->gui->DrawInputFloat("Y##scaleY", &scale.y))
 		changed = true;
 	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z", "##scaleZ", &scale.z, 0.1f, true))
+	if (App->gui->DrawInputFloat("Z##scaleZ", &scale.z))
 		changed = true;
 }
 

@@ -40,13 +40,16 @@ public:
 	bool IsExportPanelActive() const;
 	void ResetCanvas();
 
-	bool DrawInputFloat(const char* label, const char* id, float* value, float step, bool enabled, float* alternativeValue = nullptr, bool condition = false);
 	void DrawColorBox(Color& color);
 	void DrawGradientBox(Gradient& gradient);
 
-	bool DrawInputInt(const char* label, int* value, float indent);
-	bool DrawInputFloat(const char* label, float* value, float indent);
-	bool DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random);
+	bool DrawInputInt(const char* label, int* value, float indent = 0.0f);
+	bool DrawInputFloat(const char* label, float* value, float indent = 0.0f, bool enabled = true);
+	bool DrawInputFloatRandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent = 0.0f);
+	bool DrawInputFloat2(const char* label, float* value, float indent = 0.0f, bool enabled = true);
+	bool DrawInputFloat2RandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent = 0.0f);
+	bool DrawInputFloat3(const char* label, float* value, float indent = 0.0f, bool enabled = true);
+	bool DrawInputFloat3RandomOption(const char* label, float* value, float* rand1, float* rand2, bool* random, float indent = 0.0f);
 
 public:
 

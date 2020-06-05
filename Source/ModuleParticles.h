@@ -23,7 +23,7 @@ class MakeGlobalParticleNode;
 class DeathInstantiationParticleNode;
 class SpriteParticleNode;
 class LifetimeParticleNode;
-class RotationParticleNode;
+class TransformParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -69,8 +69,8 @@ public:
 			DeathInstantiationParticleNode* deathInstantiation;
 			SpriteParticleNode* sprite;
 			LifetimeParticleNode* lifetimeNode;
-			RotationParticleNode* rotationInit;
-			RotationParticleNode* rotationUpdate;
+			TransformParticleNode* rotationInit;
+			TransformParticleNode* rotationUpdate;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;

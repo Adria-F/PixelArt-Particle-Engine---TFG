@@ -74,9 +74,9 @@ void EmissionEmitterNode::Stop()
 
 void EmissionEmitterNode::DisplayConfig()
 {
-	App->gui->DrawInputFloat("Duration", "##duration", &duration, 0.1f, true);
+	App->gui->DrawInputFloat("Duration", &duration);
 	ImGui::Checkbox("Loop", &loop);
-	App->gui->DrawInputFloat("Frequency", "##frequency", &frequency, 0.1f, true);
+	App->gui->DrawInputFloat("Frequency", &frequency);
 
 	ImGui::NewLine();
 	if (ImGui::CollapsingHeader("Bursts", ImGuiTreeNodeFlags_DefaultOpen))
@@ -93,9 +93,9 @@ void EmissionEmitterNode::DisplayConfig()
 			ImGui::SameLine();
 			if (ImGui::TreeNode(("Burst " + std::to_string(count)).c_str()))
 			{
-				App->gui->DrawInputFloat("Start", "##start", &(*it_b)->start, 0.1f, true);
+				App->gui->DrawInputFloat("Start", &(*it_b)->start);
 				ImGui::DragInt("Amount", &(*it_b)->amount);
-				App->gui->DrawInputFloat("Repeat", "##repeat", &(*it_b)->repeat, 0.1f, true);
+				App->gui->DrawInputFloat("Repeat", &(*it_b)->repeat);
 
 				ImGui::TreePop();
 			}

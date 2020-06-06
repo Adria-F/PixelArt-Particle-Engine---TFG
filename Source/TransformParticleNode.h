@@ -4,6 +4,13 @@
 #include "EntityData.h"
 #include "CanvasNode.h"
 
+enum particleSpawnPoint
+{
+	SPAWN_ORIGIN,
+	SPAWN_EDGE,
+	SPAWN_RANDOM
+};
+
 class TransformParticleNode : public EntityData, public CanvasNode
 {
 public:
@@ -20,6 +27,8 @@ public:
 
 	void SaveExtraInfo(JSON_Value* node);
 	void LoadExtraInfo(JSON_Value* nodeDef);
+
+	void SetSpawnPoint(vec direction);
 
 public:
 
@@ -39,6 +48,8 @@ public:
 	bool randomScale = false;
 
 	bool billboard = true;
+
+	particleSpawnPoint spawnPoint = SPAWN_ORIGIN;
 };
 
 #endif // !__TRANSFORM_PARTICLENODE_H__

@@ -66,6 +66,8 @@ EntityData* TransformParticleNode::Copy(Particle* particle) const
 	ret->update = update;
 	ret->billboard = billboard;
 
+	ret->spawnPoint = spawnPoint;
+
 	ret->partPosition = partPosition;
 	ret->randPosition1 = randPosition1;
 	ret->randPosition2 = randPosition2;
@@ -110,15 +112,29 @@ void TransformParticleNode::DisplayConfig()
 	}
 	else
 	{
-		if (App->camera->type == CAMERA_3D)
+		static const char* spawnOptions[] = { "Origin", "Edge", "Random" };
+		ImGui::Text("Spawn point:"); ImGui::SameLine();
+		if (ImGui::BeginCombo("##spawnPosition", spawnOptions[spawnPoint]))
 		{
-			ImGui::Text("Spawn point:"); ImGui::SameLine();
-			if (ImGui::BeginCombo("##spawnPosition", "Origin"))
+			if (ImGui::Selectable("Origin", spawnPoint == SPAWN_ORIGIN))
 			{
-				ImGui::Selectable("Origin", true);
-				ImGui::EndCombo();
+				spawnPoint = SPAWN_ORIGIN;
 			}
-			ImGui::Separator();
+			if (ImGui::Selectable("Edge", spawnPoint == SPAWN_EDGE))
+			{
+				spawnPoint = SPAWN_EDGE;
+			}
+			if (ImGui::Selectable("Random", spawnPoint == SPAWN_RANDOM))
+			{
+				spawnPoint = SPAWN_RANDOM;
+			}
+
+			ImGui::EndCombo();
+		}
+		ImGui::Separator();
+
+		if (App->camera->type == CAMERA_3D)
+		{			
 			if (billboard)
 				App->gui->DrawInputFloatRandomOption("Rotation:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
 			else
@@ -129,13 +145,6 @@ void TransformParticleNode::DisplayConfig()
 		}
 		else
 		{
-			ImGui::Text("Spawn point:"); ImGui::SameLine();
-			if (ImGui::BeginCombo("##spawnPosition", "Origin"))
-			{
-				ImGui::Selectable("Origin", true);
-				ImGui::EndCombo();
-			}
-			ImGui::Separator();
 			App->gui->DrawInputFloatRandomOption("Rotation:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
 			ImGui::Separator();
 			App->gui->DrawInputFloat2RandomOption("Scale:", scale.ptr(), randScale1.ptr(), randScale2.ptr(), &randomScale, 75.0f);
@@ -147,6 +156,8 @@ void TransformParticleNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addBool("update", update);
 	node->addBool("billboard", billboard);
+
+	node->addUint("spawnPoint", spawnPoint);
 
 	node->addVector3("partPosition", partPosition);
 	node->addVector3("randPosition1", randPosition1);
@@ -169,6 +180,8 @@ void TransformParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 	update = nodeDef->getBool("update");
 	billboard = nodeDef->getBool("billboard");
 
+	spawnPoint = (particleSpawnPoint)nodeDef->getUint("spawnPoint");
+
 	partPosition = nodeDef->getVector3("partPosition");
 	randPosition1 = nodeDef->getVector3("randPosition1");
 	randPosition2 = nodeDef->getVector3("randPosition2");
@@ -183,4 +196,17 @@ void TransformParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 	randScale1 = nodeDef->getVector2("randScale1");
 	randScale2 = nodeDef->getVector2("randScale2");
 	randomScale = nodeDef->getBool("randomScale");
+}
+
+void TransformParticleNode::SetSpawnPoint(vec direction)
+{
+	switch (spawnPoint)
+	{
+	case SPAWN_EDGE:
+		particle->baseTransform->position += direction;
+		break;
+	case SPAWN_RANDOM:
+		particle->baseTransform->position += direction * Lerp(0.0f, 1.0f, GET_RANDOM());
+		break;
+	}
 }

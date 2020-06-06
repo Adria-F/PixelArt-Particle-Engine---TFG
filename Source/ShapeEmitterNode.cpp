@@ -46,6 +46,7 @@ void ShapeEmitterNode::DisplayConfig()
 		break;
 	case SPHERE_SHAPE:
 		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
+		ImGui::InputFloat("Radius", &radius, 0.1f);
 		break;
 	case BOX_SHAPE:
 		ImGui::InputFloat3("Box Size", boxSize.ptr());
@@ -79,6 +80,7 @@ void ShapeEmitterNode::DisplayConfig()
 			if (phase > angle)
 				phase = angle;
 		}
+		ImGui::InputFloat("Radius", &radius, 0.1f);
 		break;
 	case QUAD_SHAPE:
 		ImGui::InputFloat2("Quad Size", boxSize.ptr());
@@ -131,17 +133,17 @@ vec ShapeEmitterNode::GetDirectionInCone() const
 
 	vec point = vec(x, height, z);
 
-	return point.Normalized();
+	return point;
 }
 
 vec ShapeEmitterNode::GetDirectionInSphere() const
 {
-	return vec(0.0f,1.0f,0.0f);
+	return vec(0.0f,1.0f,0.0f); //TODO
 }
 
 vec ShapeEmitterNode::GetDirectionInBox() const
 {
-	return vec(0.0f,1.0f,0.0f);
+	return vec(0.0f,1.0f,0.0f); //TODO
 }
 
 vec ShapeEmitterNode::GetDirectionInCircle() const
@@ -165,12 +167,12 @@ vec ShapeEmitterNode::GetDirectionInCircle() const
 
 	vec point = vec(x, y, 0.0f);
 
-	return point.Normalized();
+	return point.Normalized()*radius;
 }
 
 vec ShapeEmitterNode::GetDirectionInQuad() const
 {
-	return vec(0.0f,1.0f,0.0f);
+	return vec(0.0f,1.0f,0.0f); //TODO
 }
 
 void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)

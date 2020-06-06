@@ -310,7 +310,11 @@ void ParticleEmitter::SpawnParticle()
 	{
 		Particle* part = new Particle(this, templateParticle);
 		vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
-		part->baseMovement->direction = direction;
+		part->baseMovement->direction = direction.Normalized();
+		if (part->transformInit != nullptr)
+		{
+			part->transformInit->SetSpawnPoint(direction);
+		}
 		particles.push_back(part);
 	}
 }
@@ -522,15 +526,15 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 	case PARTICLE_TRANSFORM:
 		if (update)
 		{
-			rotationUpdate = (TransformParticleNode*)node;
-			rotationUpdate->particle = this;
-			rotationUpdate->update = true;
+			transformUpdate = (TransformParticleNode*)node;
+			transformUpdate->particle = this;
+			transformUpdate->update = true;
 		}
 		else
 		{
-			rotationInit = (TransformParticleNode*)node;
-			rotationInit->particle = this;
-			rotationInit->update = false;
+			transformInit = (TransformParticleNode*)node;
+			transformInit->particle = this;
+			transformInit->update = false;
 		}
 		break;
 	case PARTICLE_BLENDMODE:
@@ -566,10 +570,10 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 		lifetimeNode = nullptr;
 		break;
 	case PARTICLE_TRANSFORM:
-		if (rotationInit == node)
-			rotationInit = nullptr;
-		else if (rotationUpdate == node)
-			rotationUpdate = nullptr;
+		if (transformInit == node)
+			transformInit = nullptr;
+		else if (transformUpdate == node)
+			transformUpdate = nullptr;
 		break;
 	case PARTICLE_BLENDMODE:
 		blendMode = nullptr;

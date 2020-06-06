@@ -70,8 +70,8 @@ public:
 			DeathInstantiationParticleNode* deathInstantiation;
 			SpriteParticleNode* sprite;
 			LifetimeParticleNode* lifetimeNode;
-			TransformParticleNode* rotationInit;
-			TransformParticleNode* rotationUpdate;
+			TransformParticleNode* transformInit;
+			TransformParticleNode* transformUpdate;
 			BlendModeParticleNode* blendMode;
 
 			//Base nodes last as other nodes can modify their information

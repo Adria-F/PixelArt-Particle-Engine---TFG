@@ -184,6 +184,7 @@ void ShapeEmitterNode::SaveExtraInfo(JSON_Value* node)
 	node->addFloat("angle", angle);
 	node->addUint("direction", direction);
 	node->addFloat("speed", speed);
+	node->addFloat("phase", phase);
 	node->addString("currentDirection", currentDirection.c_str());
 
 	node->addVector3("boxSize", boxSize);
@@ -200,6 +201,7 @@ void ShapeEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 	angle = nodeDef->getFloat("angle");
 	direction = (emissionDirection)nodeDef->getUint("direction");
 	speed = nodeDef->getFloat("speed");
+	phase = nodeDef->getFloat("phase");
 	currentDirection = nodeDef->getString("currentDirection");
 
 	boxSize = nodeDef->getVector3("boxSize");

@@ -16,6 +16,7 @@
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
 #include "TransformParticleNode.h"
+#include "BlendModeParticleNode.h"
 
 #include "EmissionEmitterNode.h"
 #include "ShapeEmitterNode.h"
@@ -199,7 +200,7 @@ void ModuleNodeCanvas::DrawGuizmo()
 		if (ImGuizmo::IsUsing())
 		{
 			transform->matrix.Decompose(transform->position, transform->rotation, transform->scale);
-			transform->rotationEuler = transform->rotation.ToEulerXYZ();
+			transform->rotationEuler = transform->rotation.ToEulerXYZ()*RADTODEG;
 			transform->changed = true;
 		}
 	}
@@ -221,7 +222,7 @@ std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(nodeType nodeContainer) 
 		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_TRANSFORM };
 		break;
 	case PARTICLE_NODE_BOX_RENDER:
-		ret = { PARTICLE_COLOR };
+		ret = { PARTICLE_COLOR, PARTICLE_BLENDMODE };
 		break;
 	case EMITTER_NODE_BOX_INIT:
 		ret = { EMITTER_SHAPE, EMITTER_TRANSFORM };
@@ -309,6 +310,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContai
 		case PARTICLE_TRANSFORM:
 			nodeList.insert(std::pair<std::string, nodeType>("Transform", nodes[i]));
 			break;
+		case PARTICLE_BLENDMODE:
+			nodeList.insert(std::pair<std::string, nodeType>("Blend Mode", nodes[i]));
+			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
 			break;
@@ -359,6 +363,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case PARTICLE_TRANSFORM:
 		node = new TransformParticleNode(nullptr, name, spawnPos);
+		break;
+	case PARTICLE_BLENDMODE:
+		node = new BlendModeParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);

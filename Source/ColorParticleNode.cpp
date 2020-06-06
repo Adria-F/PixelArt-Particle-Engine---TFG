@@ -11,16 +11,15 @@ ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float
 	fixColor = White;
 }
 
+void ColorParticleNode::Init()
+{
+	particle->baseColor->color = fixColor;
+}
+
 void ColorParticleNode::Execute(float dt)
 {
-	if (overLifetime)
-	{
-		particle->baseColor->color = overLifetimeColor.GetColor(particle->GetLifePercent());
-	}
-	else
-	{
-		particle->baseColor->color = fixColor;
-	}
+
+	particle->baseColor->color = overLifetimeColor.GetColor(particle->GetLifePercent());
 }
 
 EntityData* ColorParticleNode::Copy(Particle* particle) const
@@ -30,20 +29,20 @@ EntityData* ColorParticleNode::Copy(Particle* particle) const
 	ret->fixColor = fixColor;
 	ret->overLifetimeColor = overLifetimeColor;
 
-	ret->overLifetime = overLifetime;
+	ret->update = update;
 
 	return ret;
 }
 
 void ColorParticleNode::DisplayConfig()
 {
-	if (ImGui::RadioButton("Fix", !overLifetime))
-		overLifetime = false;
+	if (ImGui::RadioButton("Fix", !update))
+		update = false;
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Over Lifetime", overLifetime))
-		overLifetime = true;
+	if (ImGui::RadioButton("Over Lifetime", update))
+		update = true;
 
-	if (!overLifetime)
+	if (!update)
 		App->gui->DrawColorBox(fixColor);
 	else
 		App->gui->DrawGradientBox(overLifetimeColor);
@@ -78,7 +77,7 @@ void ColorParticleNode::SaveExtraInfo(JSON_Value* node)
 	}
 	node->addValue("gradient", gradient);
 
-	node->addBool("overLifetime", overLifetime);
+	node->addBool("overLifetime", update);
 }
 
 void ColorParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
@@ -106,5 +105,5 @@ void ColorParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 		}
 	}
 
-	overLifetime = nodeDef->getBool("overLifetime");
+	update = nodeDef->getBool("overLifetime");
 }

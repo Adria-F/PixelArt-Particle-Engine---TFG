@@ -24,6 +24,7 @@ class DeathInstantiationParticleNode;
 class SpriteParticleNode;
 class LifetimeParticleNode;
 class TransformParticleNode;
+class BlendModeParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -71,6 +72,7 @@ public:
 			LifetimeParticleNode* lifetimeNode;
 			TransformParticleNode* rotationInit;
 			TransformParticleNode* rotationUpdate;
+			BlendModeParticleNode* blendMode;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -106,6 +108,7 @@ public:
 
 	void Update(float dt);
 	void UpdateParticles(float dt);
+	void SendParticlesToBuffer();
 	void DrawParticles();
 
 	void SpawnParticle();
@@ -163,6 +166,7 @@ public:
 	void Play();
 	void Pause();
 	void Stop();
+	void SendParticlesToBuffer();
 	void DrawParticles();
 
 	void AddEmitter(ParticleEmitter* emitter);

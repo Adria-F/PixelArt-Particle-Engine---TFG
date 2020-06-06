@@ -132,6 +132,7 @@
     <ClCompile Include="BaseMovementParticleNode.cpp" />
     <ClCompile Include="BaseTransformEmitterNode.cpp" />
     <ClCompile Include="BaseTransformParticleNode.cpp" />
+    <ClCompile Include="BlendModeParticleNode.cpp" />
     <ClCompile Include="CanvasNode.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorParticleNode.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="BaseShapeEmitterNode.h" />
     <ClInclude Include="BaseTransformEmitterNode.h" />
     <ClInclude Include="BaseTransformParticleNode.h" />
+    <ClInclude Include="BlendModeParticleNode.h" />
     <ClInclude Include="CanvasNode.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorParticleNode.h" />

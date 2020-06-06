@@ -2,6 +2,8 @@
 #include "ShapeEmitterNode.h"
 
 #include "ModuleParticles.h"
+#include "BaseTransformEmitterNode.h"
+#include "ModuleCamera.h"
 
 ShapeEmitterNode::ShapeEmitterNode(ParticleEmitter* emitter, const char* name, float2 position, float2 size) : EntityData(emitter), CanvasNode(name, EMITTER_SHAPE, position, size)
 {
@@ -105,6 +107,17 @@ vec ShapeEmitterNode::GetDirection() const
 	case QUAD_SHAPE:
 		ret = GetDirectionInQuad();
 		break;
+	}
+
+	if (App->camera->type == CAMERA_3D)
+	{
+		ret = emitter->baseTransform->rotation * ret;
+		ret = { ret.x*emitter->baseTransform->scale.x, ret.y*emitter->baseTransform->scale.y , ret.z*emitter->baseTransform->scale.z };
+	}
+	else
+	{
+		ret = Quat::FromEulerXYZ(0.0f, 0.0f, emitter->baseTransform->rotationEuler.z*DEGTORAD) * ret; //If 2D camera only use Z axis rotation
+		ret = { ret.x*emitter->baseTransform->scale.x, ret.y*emitter->baseTransform->scale.y , ret.z };
 	}
 
 	return ret;

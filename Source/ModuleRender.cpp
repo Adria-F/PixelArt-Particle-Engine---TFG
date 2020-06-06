@@ -6,6 +6,8 @@
 #include "Shader.h"
 #include "ModuleParticles.h"
 
+#include "BaseTransformParticleNode.h"
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 #pragma comment (lib, "Glew/libx86/glew32.lib") /* link Microsoft OpenGL lib   */
@@ -182,7 +184,9 @@ void ModuleRender::DrawScene(float* projectionMatrix, float* viewMatrix)
 
 	//Draw Particles
 	glEnable(GL_BLEND);
-	App->particles->DrawParticles();
+	App->particles->SendParticlesToBuffer();
+	//App->particles->DrawParticles();
+	DrawBuffer();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -210,6 +214,19 @@ void ModuleRender::DrawPixelArt(float2 viewportSize, uint pixelSize)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ModuleRender::DrawBuffer()
+{
+	int size = renderBuffer.size();
+	for (int i = 0; i < size; ++i)
+	{
+		Particle* p = renderBuffer.top();
+
+		p->Draw();
+
+		renderBuffer.pop();
+	}
 }
 
 uint ModuleRender::generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices)
@@ -324,4 +341,26 @@ void ModuleRender::GenerateExportFrameBuffer(int width, int height)
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ModuleRender::SetBlendMode(blendModeType mode)
+{
+	if (mode != blendMode)
+	{
+		blendMode = mode;
+		switch (mode)
+		{
+		case BLEND_NORMAL:
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+			break;
+		case BLEND_ADDITIVE:
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE);
+			break;
+		}
+	}
+}
+
+bool closerToCamera::operator()(Particle* Obj_1, Particle* Obj_2) const
+{
+	return (App->camera->position-Obj_1->baseTransform->globalPostion).LengthSq() < (App->camera->position - Obj_2->baseTransform->globalPostion).LengthSq();
 }

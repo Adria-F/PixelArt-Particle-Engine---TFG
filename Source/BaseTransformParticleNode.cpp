@@ -20,7 +20,7 @@ BaseTransformParticleNode::BaseTransformParticleNode(Particle* particle) : Entit
 void BaseTransformParticleNode::PrepareRender()
 {
 	float4x4 matrix;
-	float3 globalPostion = position;
+	globalPostion = position;
 
 	if (particle->makeGlobal == nullptr || !particle->makeGlobal->active) //Ignore emitter transform if make global node is active
 	{

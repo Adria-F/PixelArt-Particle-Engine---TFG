@@ -13,6 +13,7 @@ public:
 	~ColorParticleNode() {}
 
 	//Entity Data
+	void Init();
 	void Execute(float dt);
 
 	EntityData* Copy(Particle* particle) const;
@@ -26,8 +27,6 @@ public:
 
 	Color fixColor;
 	Gradient overLifetimeColor;
-
-	bool overLifetime = false;
 };
 
 #endif // !__COLORPARTICLE_NODE_H__

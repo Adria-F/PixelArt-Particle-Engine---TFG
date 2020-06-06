@@ -59,9 +59,8 @@ void Shader::sendMat4(const char* name, float* value) const
 
 void Shader::sendTexture(const char* name, uint texture) const
 {
-	//glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	//glUniform1ui(glGetUniformLocation(programID, name), 0);
+	if (texture != lastSentTexture) //To avoid sending same texture multiple times
+		glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void Shader::sendVec2(const char * name, float2 value) const

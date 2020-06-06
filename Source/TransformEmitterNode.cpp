@@ -18,11 +18,11 @@ void TransformEmitterNode::Execute(float dt)
 	{
 		emitter->baseTransform->position = position;
 		emitter->baseTransform->scale = scale;
-		emitter->baseTransform->rotation = rotation = Quat::FromEulerXYZ(rotationEuler.x, rotationEuler.y, rotationEuler.z);
+		emitter->baseTransform->rotationEuler = rotationEuler;
+		emitter->baseTransform->rotation = rotation = Quat::FromEulerXYZ(rotationEuler.x*DEGTORAD, rotationEuler.y*DEGTORAD, rotationEuler.z*DEGTORAD);
 
 		emitter->baseTransform->CalculateMatrix();
 		matrix = emitter->baseTransform->matrix; //Only if just one transform node applies
-		//matrix.Set(float4x4::FromTRS(position, rotation, scale));
 		changed = false;
 	}
 }
@@ -39,38 +39,18 @@ void TransformEmitterNode::DrawExtraInfo(float2 offset, int zoom)
 
 void TransformEmitterNode::DisplayConfig()
 {
-	//Position
-	ImGui::Text("Position"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X##posX", &position.x))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y##posY", &position.y))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z##posZ", &position.z))
-		changed = true;
-	
-	//Rotation
-	ImGui::Text("Rotation"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X##rotX", &rotationEuler.x))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y##rotY", &rotationEuler.y))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z##rotZ", &rotationEuler.z))
-		changed = true;
-	
-	//Scale
-	ImGui::Text("Scale"); ImGui::SameLine();
-	if (App->gui->DrawInputFloat("X##scaleX", &scale.x))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Y##scaleY", &scale.y))
-		changed = true;
-	ImGui::SameLine();
-	if (App->gui->DrawInputFloat("Z##scaleZ", &scale.z))
-		changed = true;
+	if (App->camera->type == CAMERA_3D)
+	{
+		changed |= App->gui->DrawInputFloat3("Position", position.ptr(), 75.0f);
+		changed |= App->gui->DrawInputFloat3("Rotation", rotationEuler.ptr(), 75.0f);
+		changed |= App->gui->DrawInputFloat3("Scale", scale.ptr(), 75.0f);
+	}
+	else
+	{
+		changed |= App->gui->DrawInputFloat2("Position", position.ptr(), 75.0f);
+		changed |= App->gui->DrawInputFloat("Rotation", &rotationEuler.z, 90.0f);
+		changed |= App->gui->DrawInputFloat2("Scale", scale.ptr(), 75.0f);
+	}
 }
 
 void TransformEmitterNode::SaveExtraInfo(JSON_Value* node)
@@ -83,6 +63,6 @@ void TransformEmitterNode::LoadExtraInfo(JSON_Value* nodeDef)
 	matrix = nodeDef->getTransform("matrix");
 
 	matrix.Decompose(position, rotation, scale);
-	rotationEuler = rotation.ToEulerXYZ();
+	rotationEuler = rotation.ToEulerXYZ()*RADTODEG;
 	changed = true;
 }

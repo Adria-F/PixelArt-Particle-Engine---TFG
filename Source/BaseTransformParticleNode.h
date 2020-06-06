@@ -25,6 +25,7 @@ public:
 	
 	bool billboard = true;
 
+	vec globalPostion = vec::zero;
 	vec position = vec::zero;
 	Quat rotation = Quat::identity;
 	vec scale = vec::one;

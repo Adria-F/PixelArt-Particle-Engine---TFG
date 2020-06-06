@@ -25,6 +25,10 @@ private:
 public:
 
 	uint programID;
+
+private:
+
+	uint lastSentTexture = 0;
 };
 
 #endif // !__SHADER_H__

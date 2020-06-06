@@ -21,6 +21,7 @@
 #include "SpriteParticleNode.h"
 #include "LifetimeParticleNode.h"
 #include "TransformParticleNode.h"
+#include "BlendModeParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -103,6 +104,14 @@ void ModuleParticles::Stop()
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->Stop();
+	}
+}
+
+void ModuleParticles::SendParticlesToBuffer()
+{
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
+	{
+		(*it_e)->SendParticlesToBuffer();
 	}
 }
 
@@ -210,7 +219,7 @@ void ParticleEmitter::Update(float dt)
 	if (inputParticle != nullptr)
 		inputParticle->Execute(dt);
 
-	if (playing && templateParticle != nullptr)
+	if (playing)
 	{
 		timeAlive += dt;
 
@@ -237,7 +246,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 {
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		if (!(*it_p)->baseTransform->billboard && App->camera->type == CAMERA_3D)
+		if ((*it_p)->baseTransform->billboard && App->camera->type == CAMERA_3D)
 			(*it_p)->baseTransform->LookCamera();
 		if (playing)
 			(*it_p)->Update(dt);
@@ -257,6 +266,14 @@ void ParticleEmitter::UpdateParticles(float dt)
 	}
 }
 
+void ParticleEmitter::SendParticlesToBuffer()
+{
+	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
+	{
+		App->render->renderBuffer.push((*it_p));
+	}
+}
+
 void ParticleEmitter::DrawParticles()
 {
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
@@ -267,10 +284,13 @@ void ParticleEmitter::DrawParticles()
 
 void ParticleEmitter::SpawnParticle()
 {
-	Particle* part = new Particle(this, templateParticle);
-	vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
-	part->baseMovement->direction = direction;
-	particles.push_back(part);
+	if (templateParticle != nullptr)
+	{
+		Particle* part = new Particle(this, templateParticle);
+		vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
+		part->baseMovement->direction = direction;
+		particles.push_back(part);
+	}
 }
 
 Particle* ParticleEmitter::SpawnParticle(Particle* particle)
@@ -311,6 +331,7 @@ void ParticleEmitter::OnNodeAdded(CanvasNode* node, bool update)
 	case EMITTER_SHAPE:
 		shape = (ShapeEmitterNode*)node;
 		shape->emitter = this;
+		break;
 	case EMITTER_TRANSFORM:
 		transform = (TransformEmitterNode*)node;
 		transform->emitter = this;
@@ -331,6 +352,7 @@ void ParticleEmitter::OnNodeRemoved(CanvasNode* node)
 		break;
 	case EMITTER_SHAPE:
 		shape = nullptr;
+		break;
 	case EMITTER_TRANSFORM:
 		transform = nullptr;
 		break;
@@ -417,6 +439,8 @@ void Particle::Draw()
 {
 	if (sprite == nullptr)
 		App->render->defaultShader->sendTexture("sprite", whiteSprite);
+	if (blendMode == nullptr)
+		App->render->SetBlendMode(BLEND_ADDITIVE);
 
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
@@ -484,6 +508,10 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 			rotationInit->update = false;
 		}
 		break;
+	case PARTICLE_BLENDMODE:
+		blendMode = (BlendModeParticleNode*)node;
+		blendMode->particle = this;
+		break;
 	};
 }
 
@@ -517,6 +545,9 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 			rotationInit = nullptr;
 		else if (rotationUpdate == node)
 			rotationUpdate = nullptr;
+		break;
+	case PARTICLE_BLENDMODE:
+		blendMode = nullptr;
 		break;
 	}
 }

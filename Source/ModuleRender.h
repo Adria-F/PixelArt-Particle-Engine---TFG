@@ -2,10 +2,24 @@
 #define __MODULERENDER_H__
 
 #include "Module.h"
+#include <queue>
+#include <vector>
 
 #define MAX_LIGHTS 8
 
 class Shader;
+class Particle;
+
+enum blendModeType
+{
+	BLEND_NORMAL,
+	BLEND_ADDITIVE
+};
+
+struct closerToCamera
+{
+	bool operator()(Particle* Obj_1, Particle* Obj_2)const;
+};
 
 class ModuleRender : public Module
 {
@@ -24,6 +38,7 @@ public:
 
 	void DrawScene(float* projectionMatrix, float* viewMatrix);
 	void DrawPixelArt(float2 viewportSize, uint pixelSize);
+	void DrawBuffer();
 
 	uint generateVAO(uint verticesSize, float* vertices, uint indicesSize, uint* indices);
 
@@ -31,6 +46,8 @@ public:
 	void GenerateFrameBuffer(int width, int height);
 
 	void GenerateExportFrameBuffer(int width, int height);
+
+	void SetBlendMode(blendModeType mode);
 
 public:
 	
@@ -50,6 +67,10 @@ public:
 	uint VAO = 0;
 
 	uint pixelSize = 10;
+
+	blendModeType blendMode = BLEND_ADDITIVE;
+
+	std::priority_queue<Particle*, std::vector<Particle*>, closerToCamera> renderBuffer;
 };
 
 #endif // !__MODULERENDER_H__

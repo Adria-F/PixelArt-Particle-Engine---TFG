@@ -283,6 +283,7 @@
     <ClCompile Include="TransformParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="BlendModeParticleNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -720,6 +721,7 @@
     <ClInclude Include="TransformParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="BlendModeParticleNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

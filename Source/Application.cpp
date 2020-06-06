@@ -95,6 +95,7 @@ void Application::PrepareUpdate()
 		AVG_FPS = TOTAL_FPS / FPS_COUNT;
 
 		std::string title = "Application Name | FPS:" + std::to_string((int)(1 / dt)) + " FPS_Avg:" + std::to_string(AVG_FPS);
+		title += " | Particle Count:" + std::to_string(App->particles->GetParticleCount());
 		SDL_SetWindowTitle(App->window->window, title.c_str());
 	}
 

@@ -16,6 +16,7 @@ void TransformEmitterNode::Execute(float dt)
 {
 	if (changed)
 	{
+		BROFILER_CATEGORY("TransformEmitterNode", Profiler::Color::DarkViolet);
 		emitter->baseTransform->position = position;
 		emitter->baseTransform->scale = scale;
 		emitter->baseTransform->rotationEuler = rotationEuler;

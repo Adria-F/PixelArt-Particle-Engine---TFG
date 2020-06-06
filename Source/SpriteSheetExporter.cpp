@@ -28,6 +28,8 @@ SpriteSheetExporter::~SpriteSheetExporter()
 
 void SpriteSheetExporter::CreateSpriteSheet()
 {
+	BROFILER_CATEGORY("Create SpriteSheet", Profiler::Color::Azure);
+
 	//Clear previous list
 	ClearFrameList();
 	App->textures->DeleteImage(spritesheet);
@@ -96,6 +98,8 @@ void SpriteSheetExporter::CreateSpriteSheet()
 
 void SpriteSheetExporter::ExportSpriteSheet(const char* path)
 {
+	BROFILER_CATEGORY("Export SpriteSheet", Profiler::Color::Azure);
+
 	if (spritesheet != 0)
 		App->textures->ExportImage(path, spritesheet);
 }

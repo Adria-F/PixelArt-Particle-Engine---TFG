@@ -5,7 +5,7 @@
 #include "Shader.h"
 #include "ModuleTextures.h"
 
-SpriteParticleNode::SpriteParticleNode(Particle * particle, const char * name, float2 position, float2 size) : EntityData(particle), CanvasNode(name, PARTICLE_SPRITE, position, size)
+SpriteParticleNode::SpriteParticleNode(Particle* particle, const char* name, float2 position, float2 size) : EntityData(particle), CanvasNode(name, PARTICLE_SPRITE, position, size)
 {
 	GL_id = App->textures->UseWhiteTexture();
 }
@@ -17,6 +17,7 @@ SpriteParticleNode::~SpriteParticleNode()
 
 void SpriteParticleNode::PrepareRender()
 {
+	BROFILER_CATEGORY("SpriteParticleNode", Profiler::Color::DarkKhaki);
 	App->render->defaultShader->sendTexture("sprite", GL_id);
 }
 

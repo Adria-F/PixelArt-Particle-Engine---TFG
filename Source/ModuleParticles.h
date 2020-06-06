@@ -169,6 +169,8 @@ public:
 	void SendParticlesToBuffer();
 	void DrawParticles();
 
+	int GetParticleCount() const;
+
 	void AddEmitter(ParticleEmitter* emitter);
 	void RemoveEmitter(ParticleEmitter* emitter);
 	ParticleEmitter* GetEmitter(int index) const;

@@ -60,6 +60,8 @@ void ModuleProjectManager::NewProject()
 
 void ModuleProjectManager::SaveProject(const char* path)
 {
+	BROFILER_CATEGORY("Save Project", Profiler::Color::Cyan);
+
 	JSON_File* projectFile = App->JSON_Manager->openWriteFile(path);
 
 	JSON_Value* settings = projectFile->createValue();
@@ -82,6 +84,8 @@ void ModuleProjectManager::SaveProject(const char* path)
 
 void ModuleProjectManager::LoadProject(const char* path)
 {
+	BROFILER_CATEGORY("Load Project", Profiler::Color::Cyan);
+
 	JSON_File* projectFile = App->JSON_Manager->openReadFile(path);
 	if (projectFile)
 	{

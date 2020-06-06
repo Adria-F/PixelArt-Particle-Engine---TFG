@@ -49,7 +49,7 @@ bool ModuleRender::Init()
 		LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 		//Use Vsync
-		if (SDL_GL_SetSwapInterval(1) < 0)
+		if (SDL_GL_SetSwapInterval(0) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Check for error
@@ -135,6 +135,8 @@ update_state ModuleRender::PreUpdate(float dt)
 
 update_state ModuleRender::PostUpdate(float dt)
 {
+	BROFILER_CATEGORY("ModuleRender Post-Update", Profiler::Color::Green);
+
 	//Draw Scene
 	DrawScene(App->camera->getProjectionMatrix(), App->camera->getViewMatrix());
 
@@ -144,6 +146,7 @@ update_state ModuleRender::PostUpdate(float dt)
 	// Draw GUI
 	App->gui->Draw(); 
 
+	BROFILER_CATEGORY("Swap Window", Profiler::Color::LightSeaGreen);
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
@@ -170,6 +173,8 @@ void ModuleRender::LoadSettings(JSON_Value* settings)
 
 void ModuleRender::DrawScene(float* projectionMatrix, float* viewMatrix)
 {
+	BROFILER_CATEGORY("Draw Scene", Profiler::Color::Purple);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, (App->gui->IsExportPanelActive())? exportFrameBuffer : frameBuffer);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT0);
@@ -193,6 +198,8 @@ void ModuleRender::DrawScene(float* projectionMatrix, float* viewMatrix)
 
 void ModuleRender::DrawPixelArt(float2 viewportSize, uint pixelSize)
 {
+	BROFILER_CATEGORY("Draw PixelArt", Profiler::Color::Turquoise);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, (App->gui->IsExportPanelActive())? exportFrameBuffer : frameBuffer);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT1);
@@ -218,6 +225,8 @@ void ModuleRender::DrawPixelArt(float2 viewportSize, uint pixelSize)
 
 void ModuleRender::DrawBuffer()
 {
+	BROFILER_CATEGORY("Draw Sorted Buffer", Profiler::Color::BurlyWood);
+
 	int size = renderBuffer.size();
 	for (int i = 0; i < size; ++i)
 	{

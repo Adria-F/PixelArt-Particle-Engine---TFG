@@ -70,6 +70,8 @@ bool ModuleGUI::Start()
 
 update_state ModuleGUI::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("ModuleGUI Pre-Update", Profiler::Color::Blue);
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -100,6 +102,8 @@ update_state ModuleGUI::PreUpdate(float dt)
 
 update_state ModuleGUI::Update(float dt)
 {	
+	BROFILER_CATEGORY("ModuleGUI Update", Profiler::Color::Blue);
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
@@ -246,6 +250,8 @@ void ModuleGUI::LoadSettings(JSON_Value* settings)
 
 void ModuleGUI::Draw()
 {
+	BROFILER_CATEGORY("Draw GUI", Profiler::Color::DeepPink);
+
 	for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
 	{
 		if ((*it_p)->IsActive())

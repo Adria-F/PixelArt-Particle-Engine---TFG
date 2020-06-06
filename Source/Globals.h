@@ -19,6 +19,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "Brofiler\Brofiler.h"
+
 typedef unsigned int uint;
 
 #include "Color.h"

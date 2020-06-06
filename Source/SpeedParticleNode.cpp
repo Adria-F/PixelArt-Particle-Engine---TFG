@@ -16,6 +16,8 @@ void SpeedParticleNode::Init()
 
 void SpeedParticleNode::Execute(float dt)
 {
+	BROFILER_CATEGORY("SpeedParticleNode", Profiler::Color::DarkGoldenRod);
+
 	particle->baseMovement->speed += speed*dt;
 }
 

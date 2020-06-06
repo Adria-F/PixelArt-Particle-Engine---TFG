@@ -46,6 +46,8 @@ bool ModuleCamera::Init()
 
 update_state ModuleCamera::Update(float dt)
 {
+	BROFILER_CATEGORY("ModuleCamera Update", Profiler::Color::Yellow);
+
 	if (App->gui->IsExportPanelActive() && dt >= 0.0f) //Do not update camera while exporting
 		return UPDATE_CONTINUE;
 

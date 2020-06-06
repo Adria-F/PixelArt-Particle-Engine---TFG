@@ -65,6 +65,8 @@ bool ModuleParticles::Start()
 
 update_state ModuleParticles::Update(float dt)
 {
+	BROFILER_CATEGORY("ModuleParticles Update", Profiler::Color::Orange);
+
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->Update(dt);
@@ -109,6 +111,8 @@ void ModuleParticles::Stop()
 
 void ModuleParticles::SendParticlesToBuffer()
 {
+	BROFILER_CATEGORY("Fill Render Buffer", Profiler::Color::LightSalmon);
+
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->SendParticlesToBuffer();
@@ -117,10 +121,24 @@ void ModuleParticles::SendParticlesToBuffer()
 
 void ModuleParticles::DrawParticles()
 {
+	BROFILER_CATEGORY("Draw Particles", Profiler::Color::Orange);
+
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->DrawParticles();
 	}
+}
+
+int ModuleParticles::GetParticleCount() const
+{
+	int ret = 0;
+
+	for (std::list<ParticleEmitter*>::const_iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
+	{
+		ret += (*it_e)->GetParticleCount();
+	}
+
+	return ret;
 }
 
 void ModuleParticles::AddEmitter(ParticleEmitter* emitter)
@@ -216,6 +234,8 @@ void ParticleEmitter::Stop()
 
 void ParticleEmitter::Update(float dt)
 {
+	BROFILER_CATEGORY("Update Emitter", Profiler::Color::LightGreen);
+
 	if (inputParticle != nullptr)
 		inputParticle->Execute(dt);
 
@@ -244,6 +264,8 @@ void ParticleEmitter::Update(float dt)
 
 void ParticleEmitter::UpdateParticles(float dt)
 {
+	BROFILER_CATEGORY("Update Particles", Profiler::Color::DarkRed);
+
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
 		if ((*it_p)->baseTransform->billboard && App->camera->type == CAMERA_3D)
@@ -442,12 +464,15 @@ void Particle::Draw()
 	if (blendMode == nullptr)
 		App->render->SetBlendMode(BLEND_ADDITIVE);
 
+	BROFILER_CATEGORY("Prepare Render", Profiler::Color::Brown);
+
 	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
 	{
 		if (data[i] != nullptr)
 			data[i]->PrepareRender();
 	}
 
+	BROFILER_CATEGORY("Draw Elements", Profiler::Color::Brown);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

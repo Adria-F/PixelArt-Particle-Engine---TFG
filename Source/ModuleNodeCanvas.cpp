@@ -45,6 +45,8 @@ bool ModuleNodeCanvas::Start()
 
 update_state ModuleNodeCanvas::Update(float dt)
 {	
+	BROFILER_CATEGORY("ModuleNodeCanvas Update", Profiler::Color::Red);
+
 	//Delete selected elements with 'supr'
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && canvasFocused)
 	{
@@ -69,6 +71,8 @@ update_state ModuleNodeCanvas::Update(float dt)
 
 update_state ModuleNodeCanvas::PostUpdate(float dt)
 {
+	BROFILER_CATEGORY("ModuleNodeCanvas Post-Update", Profiler::Color::Red);
+
 	//Connect requested nodes
 	if (connectionEnded)
 	{

@@ -41,6 +41,8 @@ bool ModuleInput::Init()
 
 update_state ModuleInput::PreUpdate(float dt)
 {
+	BROFILER_CATEGORY("ModuleInput Pre-Update", Profiler::Color::Magenta);
+
 	SDL_PumpEvents();
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
 	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);

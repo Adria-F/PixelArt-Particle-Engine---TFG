@@ -43,6 +43,8 @@ void TransformParticleNode::Init()
 
 void TransformParticleNode::Execute(float dt)
 {
+	BROFILER_CATEGORY("TransformParticleNode", Profiler::Color::LightGoldenRodYellow);
+
 	particle->baseTransform->position += vec(partPosition.x, partPosition.y, (App->camera->type == CAMERA_2D)? 0.0f : partPosition.z) * dt;
 
 	if (App->camera->type == CAMERA_2D || billboard)

@@ -21,6 +21,8 @@ EmissionEmitterNode::~EmissionEmitterNode()
 
 void EmissionEmitterNode::Execute(float dt)
 {
+	BROFILER_CATEGORY("EmissionEmitterNode", Profiler::Color::DarkViolet);
+
 	time += dt;
 
 	if (time >= duration)

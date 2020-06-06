@@ -18,6 +18,7 @@ void ColorParticleNode::Init()
 
 void ColorParticleNode::Execute(float dt)
 {
+	BROFILER_CATEGORY("ColorParticleNode", Profiler::Color::LightGray);
 
 	particle->baseColor->color = overLifetimeColor.GetColor(particle->GetLifePercent());
 }

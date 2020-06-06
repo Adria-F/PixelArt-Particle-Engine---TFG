@@ -10,6 +10,8 @@ BaseMovementParticleNode::BaseMovementParticleNode(Particle* particle) : EntityD
 
 void BaseMovementParticleNode::Execute(float dt)
 {
+	BROFILER_CATEGORY("BaseMovementParticleNode", Profiler::Color::LightPink);
+
 	//Change Base Transform
 	particle->baseTransform->position += direction * speed*dt;
 }

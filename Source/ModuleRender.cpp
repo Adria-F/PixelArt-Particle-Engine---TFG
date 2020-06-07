@@ -225,16 +225,37 @@ void ModuleRender::DrawPixelArt(float2 viewportSize, uint pixelSize)
 
 void ModuleRender::DrawBuffer()
 {
-	BROFILER_CATEGORY("Draw Sorted Buffer", Profiler::Color::BurlyWood);
+	BROFILER_CATEGORY("Draw Sorted Buffers", Profiler::Color::BurlyWood);
 
-	int size = renderBuffer.size();
+	int size = proximityBuffer.size();
 	for (int i = 0; i < size; ++i)
 	{
-		Particle* p = renderBuffer.top();
+		Particle* p = proximityBuffer.top();
 
 		p->Draw();
 
-		renderBuffer.pop();
+		proximityBuffer.pop();
+	}
+	for (std::map<int, SortingLayer>::iterator it_l = layers.begin(); it_l != layers.end(); ++it_l)
+	{
+		size = (*it_l).second.olderBuffer.size();
+		for (int i = 0; i < size; ++i)
+		{
+			Particle* p = (*it_l).second.olderBuffer.top();
+
+			p->Draw();
+
+			(*it_l).second.olderBuffer.pop();
+		}
+		size = (*it_l).second.youngerBuffer.size();
+		for (int i = 0; i < size; ++i)
+		{
+			Particle* p = (*it_l).second.youngerBuffer.top();
+
+			p->Draw();
+
+			(*it_l).second.youngerBuffer.pop();
+		}
 	}
 }
 
@@ -372,4 +393,14 @@ void ModuleRender::SetBlendMode(blendModeType mode)
 bool closerToCamera::operator()(Particle* Obj_1, Particle* Obj_2) const
 {
 	return (App->camera->position-Obj_1->baseTransform->globalPostion).LengthSq() < (App->camera->position - Obj_2->baseTransform->globalPostion).LengthSq();
+}
+
+bool older::operator()(Particle* Obj_1, Particle* Obj_2) const
+{
+	return Obj_1->timeAlive > Obj_2->timeAlive;
+}
+
+bool younger::operator()(Particle* Obj_1, Particle* Obj_2) const
+{
+	return Obj_1->timeAlive < Obj_2->timeAlive;
 }

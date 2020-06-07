@@ -27,6 +27,7 @@ class SpriteParticleNode;
 class LifetimeParticleNode;
 class TransformParticleNode;
 class BlendModeParticleNode;
+class SortingParticleNode;
 
 //Emitter ---------------------
 class ParticleEmitter;
@@ -78,6 +79,7 @@ public:
 			TransformParticleNode* transformInit;
 			TransformParticleNode* transformUpdate;
 			BlendModeParticleNode* blendMode;
+			SortingParticleNode* sorting;
 
 			//Base nodes last as other nodes can modify their information
 			BaseTransformParticleNode* baseTransform;
@@ -96,9 +98,6 @@ public:
 	//Particle
 	bool toDestroy = false;
 	bool alive = false;
-
-private:
-
 	float timeAlive = 0.0f;
 };
 

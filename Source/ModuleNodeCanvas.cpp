@@ -17,6 +17,7 @@
 #include "LifetimeParticleNode.h"
 #include "TransformParticleNode.h"
 #include "BlendModeParticleNode.h"
+#include "SortingParticleNode.h"
 
 #include "EmissionEmitterNode.h"
 #include "ShapeEmitterNode.h"
@@ -226,7 +227,7 @@ std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(nodeType nodeContainer) 
 		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_TRANSFORM };
 		break;
 	case PARTICLE_NODE_BOX_RENDER:
-		ret = { PARTICLE_COLOR, PARTICLE_BLENDMODE };
+		ret = { PARTICLE_COLOR, PARTICLE_BLENDMODE, PARTICLE_SORTING };
 		break;
 	case EMITTER_NODE_BOX_INIT:
 		ret = { EMITTER_SHAPE, EMITTER_TRANSFORM };
@@ -317,6 +318,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContai
 		case PARTICLE_BLENDMODE:
 			nodeList.insert(std::pair<std::string, nodeType>("Blend Mode", nodes[i]));
 			break;
+		case PARTICLE_SORTING:
+			nodeList.insert(std::pair<std::string, nodeType>("Sorting", nodes[i]));
+			break;
 		case EMITTER:
 			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
 			break;
@@ -370,6 +374,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		break;
 	case PARTICLE_BLENDMODE:
 		node = new BlendModeParticleNode(nullptr, name, spawnPos);
+		break;
+	case PARTICLE_SORTING:
+		node = new SortingParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
 		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);

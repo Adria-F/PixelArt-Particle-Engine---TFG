@@ -22,6 +22,7 @@
 #include "LifetimeParticleNode.h"
 #include "TransformParticleNode.h"
 #include "BlendModeParticleNode.h"
+#include "SortingParticleNode.h"
 
 //Include all emitter data nodes
 #include "BaseTransformEmitterNode.h"
@@ -322,7 +323,19 @@ void ParticleEmitter::SendParticlesToBuffer()
 {
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		App->render->renderBuffer.push((*it_p));
+		if (App->camera->type == CAMERA_3D)
+			App->render->proximityBuffer.push((*it_p));
+		else
+		{
+			if ((*it_p)->sorting == nullptr || (*it_p)->sorting->type == SORT_OLDER)
+			{
+				App->render->layers[((*it_p)->sorting)? (*it_p)->sorting->priority : 0].olderBuffer.push((*it_p));
+			}
+			else
+			{
+				App->render->layers[(*it_p)->sorting->priority].youngerBuffer.push((*it_p));
+			}
+		}
 	}
 }
 
@@ -616,6 +629,10 @@ void Particle::OnNodeAdded(CanvasNode* node, bool update)
 		blendMode = (BlendModeParticleNode*)node;
 		blendMode->particle = this;
 		break;
+	case PARTICLE_SORTING:
+		sorting = (SortingParticleNode*)node;
+		sorting->particle = this;
+		break;
 	};
 }
 
@@ -652,6 +669,9 @@ void Particle::OnNodeRemoved(CanvasNode* node)
 		break;
 	case PARTICLE_BLENDMODE:
 		blendMode = nullptr;
+		break;
+	case PARTICLE_SORTING:
+		sorting = nullptr;
 		break;
 	}
 }

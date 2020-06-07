@@ -20,6 +20,23 @@ struct closerToCamera
 {
 	bool operator()(Particle* Obj_1, Particle* Obj_2)const;
 };
+struct older
+{
+	bool operator()(Particle* Obj_1, Particle* Obj_2)const;
+};
+struct younger
+{
+	bool operator()(Particle* Obj_1, Particle* Obj_2)const;
+};
+
+struct SortingLayer
+{
+	void PushOlder(Particle* particle) { olderBuffer.push(particle); }
+	void PushYounger(Particle* particle) { youngerBuffer.push(particle); }
+
+	std::priority_queue<Particle*, std::vector<Particle*>, older> olderBuffer;
+	std::priority_queue<Particle*, std::vector<Particle*>, younger> youngerBuffer;
+};
 
 class ModuleRender : public Module
 {
@@ -70,7 +87,8 @@ public:
 
 	blendModeType blendMode = BLEND_ADDITIVE;
 
-	std::priority_queue<Particle*, std::vector<Particle*>, closerToCamera> renderBuffer;
+	std::priority_queue<Particle*, std::vector<Particle*>, closerToCamera> proximityBuffer;
+	std::map<int, SortingLayer> layers;
 };
 
 #endif // !__MODULERENDER_H__

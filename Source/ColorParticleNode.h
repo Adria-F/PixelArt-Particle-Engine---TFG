@@ -26,6 +26,7 @@ public:
 public:
 
 	Color fixColor;
+	bool randomColor = false;
 	Gradient overLifetimeColor;
 };
 

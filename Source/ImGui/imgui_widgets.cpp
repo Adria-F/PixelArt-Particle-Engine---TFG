@@ -4493,7 +4493,7 @@ bool ImGui::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flag
     return value_changed;
 }
 
-bool ImGui::AlphaEdit(const char * label, float * alpha, ImGuiColorEditFlags flags)
+bool ImGui::AlphaEdit(const char* label, float* alpha, ImGuiColorEditFlags flags)
 {
 	ImGuiWindow* window = GetCurrentWindow();
 	if (window->SkipItems)
@@ -4528,8 +4528,6 @@ bool ImGui::AlphaEdit(const char * label, float * alpha, ImGuiColorEditFlags fla
 		OpenPopup("picker");
 		SetNextWindowPos(window->DC.LastItemRect.GetBL() + ImVec2(-1, style.ItemSpacing.y));
 	}
-	if (!(flags & ImGuiColorEditFlags_NoOptions))
-		OpenPopupOnItemClick("context");
 
 	SetNextWindowSizeConstraints({ 0.0f,0.0f }, { 100.0f, 178.0f });
 	if (BeginPopup("picker", ImGuiWindowFlags_NoScrollbar))

@@ -447,6 +447,31 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 		if (ImGui::IsItemClicked(0) && !ImGui::IsPopupOpen("picker"))
 			movingColorKey = percent;
 
+		//Remove Keys
+		if (ImGui::IsItemClicked(1))
+			ImGui::OpenPopup(("##colorKeyConfig"+std::to_string(percent)).c_str());
+		if (ImGui::BeginPopup(("##colorKeyConfig" + std::to_string(percent)).c_str(), ImGuiWindowFlags_NoMove))
+		{
+			if (gradient.colorList.size() <= 1)
+			{
+				ImGui::Text("Remove");
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::BeginTooltip();
+					ImGui::Text("Cannot remove last key");
+					ImGui::EndTooltip();
+				}
+			}
+			else
+			{
+				if (ImGui::Selectable("Remove"))
+				{
+					it_c = gradient.colorList.erase(it_c);
+				}
+			}
+			ImGui::EndPopup();
+		}
+
 		count++;
 	}
 	///Alpha
@@ -466,6 +491,31 @@ void ModuleGUI::DrawGradientBox(Gradient& gradient)
 
 		if (ImGui::IsItemClicked(0) && !ImGui::IsPopupOpen("picker"))
 			movingAlphaKey = percent;
+
+		//Remove Keys
+		if (ImGui::IsItemClicked(1))
+			ImGui::OpenPopup(("##alphaKeyConfig" + std::to_string(percent)).c_str());
+		if (ImGui::BeginPopup(("##alphaKeyConfig" + std::to_string(percent)).c_str(), ImGuiWindowFlags_NoMove))
+		{
+			if (gradient.alphaList.size() <= 1)
+			{
+				ImGui::Text("Remove");
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::BeginTooltip();
+					ImGui::Text("Cannot remove last key");
+					ImGui::EndTooltip();
+				}
+			}
+			else
+			{
+				if (ImGui::Selectable("Remove"))
+				{
+					it_c = gradient.alphaList.erase(it_c);
+				}
+			}
+			ImGui::EndPopup();
+		}
 
 		count++;
 	}

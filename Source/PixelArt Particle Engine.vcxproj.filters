@@ -283,8 +283,12 @@
     <ClCompile Include="TransformParticleNode.cpp">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="BlendModeParticleNode.cpp" />
-    <ClCompile Include="SortingParticleNode.cpp" />
+    <ClCompile Include="BlendModeParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="SortingParticleNode.cpp">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -722,8 +726,12 @@
     <ClInclude Include="TransformParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="BlendModeParticleNode.h" />
-    <ClInclude Include="SortingParticleNode.h" />
+    <ClInclude Include="SortingParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendModeParticleNode.h">
+      <Filter>Sources\Nodes\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">

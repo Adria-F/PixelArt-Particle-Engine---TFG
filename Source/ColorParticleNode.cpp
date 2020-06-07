@@ -7,13 +7,18 @@
 
 ColorParticleNode::ColorParticleNode(Particle* particle, const char* name, float2 position, float2 size): EntityData(particle), CanvasNode(name, PARTICLE_COLOR, position, size)
 {
-	update = true;
+	update = false;
 	fixColor = White;
 }
 
 void ColorParticleNode::Init()
 {
-	particle->baseColor->color = fixColor;
+	if (randomColor)
+	{
+		particle->baseColor->color = overLifetimeColor.GetColor(GET_RANDOM());
+	}
+	else
+		particle->baseColor->color = fixColor;
 }
 
 void ColorParticleNode::Execute(float dt)
@@ -28,6 +33,7 @@ EntityData* ColorParticleNode::Copy(Particle* particle) const
 	ColorParticleNode* ret = new ColorParticleNode(particle, name.c_str(), position, size);
 
 	ret->fixColor = fixColor;
+	ret->randomColor = randomColor;
 	ret->overLifetimeColor = overLifetimeColor;
 
 	ret->update = update;
@@ -44,7 +50,14 @@ void ColorParticleNode::DisplayConfig()
 		update = true;
 
 	if (!update)
-		App->gui->DrawColorBox(fixColor);
+	{
+		if (randomColor)
+			App->gui->DrawGradientBox(overLifetimeColor);
+		else
+			App->gui->DrawColorBox(fixColor);
+		ImGui::SameLine(max(ImGui::GetWindowContentRegionWidth() - 70.0f, 300.0f));
+		ImGui::Checkbox("Random", &randomColor);
+	}
 	else
 		App->gui->DrawGradientBox(overLifetimeColor);
 }
@@ -52,6 +65,7 @@ void ColorParticleNode::DisplayConfig()
 void ColorParticleNode::SaveExtraInfo(JSON_Value* node)
 {
 	node->addVector4("color", fixColor.Get());
+	node->addBool("randomColor", randomColor);
 
 	//Save gradient
 	JSON_Value* gradient = node->createValue();
@@ -85,6 +99,7 @@ void ColorParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	float4 color = nodeDef->getVector4("color");
 	fixColor.Set(color.x, color.y, color.z, color.w);
+	randomColor = nodeDef->getUint("randomColor");
 
 	overLifetimeColor.RemoveAllKeys(); //First remove the default keys
 	JSON_Value* gradient = nodeDef->getValue("gradient");

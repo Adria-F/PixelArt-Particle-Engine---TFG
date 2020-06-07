@@ -74,6 +74,14 @@ void SpriteParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 	std::string spriteName = nodeDef->getString("sprite");
 
 	spriteUID = App->textures->GetTextureUID(spriteName.c_str());
-	GL_id = App->textures->UseTexture(spriteUID);
-	currentSprite = spriteName;
+	if (spriteUID == 0) //Sprite not found. Either the file has been removed or was using WhiteTexture
+	{
+		GL_id = App->textures->UseWhiteTexture();
+		currentSprite = "None";
+	}
+	else
+	{
+		GL_id = App->textures->UseTexture(spriteUID);
+		currentSprite = spriteName;
+	}
 }

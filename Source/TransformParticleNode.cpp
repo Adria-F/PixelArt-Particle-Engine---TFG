@@ -3,6 +3,8 @@
 
 #include "ModuleParticles.h"
 #include "BaseTransformParticleNode.h"
+#include "BaseMovementParticleNode.h"
+#include "BaseTransformEmitterNode.h"
 #include "ModuleCamera.h"
 #include "ModuleGUI.h"
 
@@ -16,21 +18,42 @@ void TransformParticleNode::Init()
 
 	if (App->camera->type == CAMERA_2D || billboard)
 	{
-		float angle = rotation.z;
-		if (randomRot)
-			angle = Lerp(randRotation1.z, randRotation2.z, GET_RANDOM());
-		particle->baseTransform->rotation = Quat::FromEulerXYZ(0.0f, 0.0f, DEGTORAD*angle);
+		if (faceDirection)
+		{
+			float directionAngle = vec::unitY.AngleBetweenNorm(particle->baseMovement->direction);
+			if (particle->baseMovement->direction.x > 0.0f)
+				directionAngle *= -1.0f;
+			particle->baseTransform->rotation = Quat::FromEulerXYZ(0.0f, 0.0f, directionAngle);
+		}
+		else
+		{
+			float angle = rotation.z;
+			if (randomRot)
+				angle = Lerp(randRotation1.z, randRotation2.z, GET_RANDOM());
+			particle->baseTransform->rotation = Quat::FromEulerXYZ(0.0f, 0.0f, DEGTORAD*angle);
+		}
 	}
 	else
 	{
-		vec rot = rotation;
-		if (randomRot)
+		if (faceDirection)
 		{
-			rot.x = Lerp(randRotation1.x, randRotation2.x, GET_RANDOM());
-			rot.y = Lerp(randRotation1.y, randRotation2.y, GET_RANDOM());
-			rot.z = Lerp(randRotation1.z, randRotation2.z, GET_RANDOM());
+			Quat emitterRot = particle->emitter->baseTransform->rotation;
+			vec front = emitterRot * vec::unitZ;
+			vec up = emitterRot * vec::unitY;
+			float directionAngle = up.AngleBetween(particle->baseMovement->direction);
+			particle->baseTransform->rotation = emitterRot * Quat::RotateAxisAngle(front, directionAngle);
 		}
-		particle->baseTransform->rotation = Quat::FromEulerXYZ(DEGTORAD*rot.x, DEGTORAD*rot.y, DEGTORAD*rot.z);
+		else
+		{
+			vec rot = rotation;
+			if (randomRot)
+			{
+				rot.x = Lerp(randRotation1.x, randRotation2.x, GET_RANDOM());
+				rot.y = Lerp(randRotation1.y, randRotation2.y, GET_RANDOM());
+				rot.z = Lerp(randRotation1.z, randRotation2.z, GET_RANDOM());
+			}
+			particle->baseTransform->rotation = Quat::FromEulerXYZ(DEGTORAD*rot.x, DEGTORAD*rot.y, DEGTORAD*rot.z);
+		}
 	}
 	float2 scl = scale;
 	if (randomScale)
@@ -73,6 +96,7 @@ EntityData* TransformParticleNode::Copy(Particle* particle) const
 	ret->randPosition2 = randPosition2;
 	ret->randomPos = randomPos;
 
+	ret->faceDirection = faceDirection;
 	ret->rotation = rotation;
 	ret->randRotation1 = randRotation1;
 	ret->randRotation2 = randRotation2;
@@ -133,19 +157,30 @@ void TransformParticleNode::DisplayConfig()
 		}
 		ImGui::Separator();
 
+		ImGui::Text("Rotation:"); ImGui::SameLine();
+		if (ImGui::RadioButton("Angle", !faceDirection))
+			faceDirection = false;
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Face Direction", faceDirection))
+			faceDirection = true;
+
 		if (App->camera->type == CAMERA_3D)
 		{			
-			if (billboard)
-				App->gui->DrawInputFloatRandomOption("Rotation:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
-			else
-				App->gui->DrawInputFloat3RandomOption("Rotation:", rotation.ptr(), randRotation1.ptr(), randRotation2.ptr(), &randomRot, 75.0f);
+			if (!faceDirection)
+			{
+				if (billboard)
+					App->gui->DrawInputFloatRandomOption("Angle:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
+				else
+					App->gui->DrawInputFloat3RandomOption("Angles:", rotation.ptr(), randRotation1.ptr(), randRotation2.ptr(), &randomRot, 75.0f);
+			}
 			ImGui::Text("Billboard:"); ImGui::SameLine(100.0f); ImGui::Checkbox("##billboard", &billboard);
 			ImGui::Separator();
 			App->gui->DrawInputFloat2RandomOption("Scale:", scale.ptr(), randScale1.ptr(), randScale2.ptr(), &randomScale, 75.0f);
 		}
 		else
 		{
-			App->gui->DrawInputFloatRandomOption("Rotation:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
+			if (!faceDirection)
+				App->gui->DrawInputFloatRandomOption("Angle:", &rotation.z, &randRotation1.z, &randRotation2.z, &randomRot, 75.0f);
 			ImGui::Separator();
 			App->gui->DrawInputFloat2RandomOption("Scale:", scale.ptr(), randScale1.ptr(), randScale2.ptr(), &randomScale, 75.0f);
 		}
@@ -164,6 +199,7 @@ void TransformParticleNode::SaveExtraInfo(JSON_Value* node)
 	node->addVector3("randPosition2", randPosition2);
 	node->addBool("randomPos", randomPos);
 
+	node->addBool("faceDirection", faceDirection);
 	node->addVector3("rotation", rotation);
 	node->addVector3("randRotation1", randRotation1);
 	node->addVector3("randRotation2", randRotation2);
@@ -187,6 +223,7 @@ void TransformParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 	randPosition2 = nodeDef->getVector3("randPosition2");
 	randomPos = nodeDef->getBool("randomPos");
 
+	faceDirection = nodeDef->getBool("faceDirection");
 	rotation = nodeDef->getVector3("rotation");
 	randRotation1 = nodeDef->getVector3("randRotation1");
 	randRotation2 = nodeDef->getVector3("randRotation2");

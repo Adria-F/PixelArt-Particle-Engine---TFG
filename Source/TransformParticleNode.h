@@ -37,6 +37,7 @@ public:
 	vec randPosition2 = vec::zero;
 	bool randomPos = false;
 
+	bool faceDirection = false;
 	vec rotation = vec::zero;
 	vec randRotation1 = vec::zero;
 	vec randRotation2 = vec::zero;

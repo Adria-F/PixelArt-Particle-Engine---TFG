@@ -360,6 +360,8 @@ void ParticleEmitter::SpawnParticle()
 			if (part->transformInit != nullptr)
 			{
 				part->transformInit->SetSpawnPoint(direction);
+				if (part->transformInit->faceDirection)
+					part->transformInit->Init();
 			}
 			particles.push_back(part);
 		}

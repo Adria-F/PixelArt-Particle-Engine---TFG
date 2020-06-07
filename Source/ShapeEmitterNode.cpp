@@ -43,48 +43,55 @@ void ShapeEmitterNode::DisplayConfig()
 	case CONE_SHAPE:
 		ImGui::InputFloat("Radius", &radius, 0.1f);
 		ImGui::InputFloat("Height", &height, 0.1f);
+		DrawDirectionOptions();
 		break;
 	case SPHERE_SHAPE:
 		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
-		ImGui::InputFloat("Radius", &radius, 0.1f);
+		ImGui::InputFloat("Radius", &radius, 0.1f);		
 		break;
 	case BOX_SHAPE:
 		ImGui::InputFloat3("Box Size", boxSize.ptr());
 		break;
 	case CIRCLE_SHAPE:
-		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);
-		if (ImGui::BeginCombo("Direction", currentDirection.c_str()))
-		{
-			if (ImGui::Selectable("Random", direction == RANDOM_DIRECTION))
-			{
-				direction = RANDOM_DIRECTION;
-				currentDirection = "Random";
-			}
-			if (ImGui::Selectable("Loop", direction == LOOP_DIRECTION))
-			{
-				direction = LOOP_DIRECTION;
-				currentDirection = "Loop";
-			}
-			if (ImGui::Selectable("Ping-Pong", direction == PING_PONG))
-			{
-				direction = PING_PONG;
-				currentDirection = "Ping-Pong";
-			}
-
-			ImGui::EndCombo();
-		}
-		if (direction == LOOP_DIRECTION || direction == PING_PONG)
-		{
-			ImGui::InputFloat("Speed", &speed);
-			ImGui::DragInt("Phase", &phase, 1.0f, 0, angle);
-			if (phase > angle)
-				phase = angle;
-		}
+		ImGui::DragInt("Angle", &angle, 1.0f, 1, 360);		
 		ImGui::InputFloat("Radius", &radius, 0.1f);
+		DrawDirectionOptions();
 		break;
 	case QUAD_SHAPE:
 		ImGui::InputFloat2("Quad Size", boxSize.ptr());
 		break;
+	}
+}
+
+void ShapeEmitterNode::DrawDirectionOptions()
+{
+	ImGui::Text("Direction Options:");
+	if (ImGui::BeginCombo("", currentDirection.c_str()))
+	{
+		if (ImGui::Selectable("Random", direction == RANDOM_DIRECTION))
+		{
+			direction = RANDOM_DIRECTION;
+			currentDirection = "Random";
+		}
+		if (ImGui::Selectable("Loop", direction == LOOP_DIRECTION))
+		{
+			direction = LOOP_DIRECTION;
+			currentDirection = "Loop";
+		}
+		if (ImGui::Selectable("Ping-Pong", direction == PING_PONG))
+		{
+			direction = PING_PONG;
+			currentDirection = "Ping-Pong";
+		}
+
+		ImGui::EndCombo();
+	}
+	if (direction == LOOP_DIRECTION || direction == PING_PONG)
+	{
+		ImGui::InputFloat("Speed", &speed);
+		ImGui::DragInt("Phase", &phase, 1.0f, 0, angle);
+		if (phase > angle)
+			phase = angle;
 	}
 }
 
@@ -104,7 +111,7 @@ vec ShapeEmitterNode::GetDirection() const
 		ret = GetDirectionInBox();
 		break;
 	case CIRCLE_SHAPE:
-		ret = GetDirectionInCircle();
+		ret = GetDirectionInCircle(angle, radius);
 		break;
 	case QUAD_SHAPE:
 		ret = GetDirectionInQuad();
@@ -127,13 +134,15 @@ vec ShapeEmitterNode::GetDirection() const
 
 vec ShapeEmitterNode::GetDirectionInCone() const
 {
-	float degrees = 2.0*PI * GET_RANDOM();
-	float x = Cos(degrees)* radius*GET_RANDOM();
-	float z = Sin(degrees)* radius*GET_RANDOM();
+	vec point = GetDirectionInCircle(360, radius); //Point on the top circle
+	switch (direction)
+	{
+	case RANDOM_DIRECTION:
+		point *= GET_RANDOM();
+		break;
+	}
 
-	vec point = vec(x, height, z);
-
-	return point;
+	return vec(point.x, height, point.y);
 }
 
 vec ShapeEmitterNode::GetDirectionInSphere() const
@@ -146,7 +155,7 @@ vec ShapeEmitterNode::GetDirectionInBox() const
 	return vec(0.0f,1.0f,0.0f); //TODO
 }
 
-vec ShapeEmitterNode::GetDirectionInCircle() const
+vec ShapeEmitterNode::GetDirectionInCircle(int angle, float radius) const
 {
 	float factor = 0.0f; //A number between -1 and 1
 	switch (direction)

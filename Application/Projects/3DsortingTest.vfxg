@@ -5,8 +5,8 @@
             "Node Configuration": {},
             "Node Canvas": {
                 "scrolling": [
-                    375.7071533203125,
-                    -281.1036376953125
+                    205.7071533203125,
+                    -322.1036376953125
                 ],
                 "zoom": 80
             },
@@ -15,21 +15,21 @@
         },
         "cameraType": 1,
         "position": [
-            3.3731489181518556,
-            2.119962215423584,
-            6.327282428741455
+            2.055534839630127,
+            3.9156665802001955,
+            -10.554932594299317
         ],
         "reference": [
-            2.6840577125549318,
-            5.269809722900391,
-            -7.443013668060303
+            -1.706085443496704,
+            8.023033142089844,
+            2.448367118835449
         ],
         "orthographicPosition": [
-            -0.15999995172023774,
-            -0.607499897480011,
+            -0.1474999487400055,
+            -0.6699996590614319,
             0.4999999403953552
         ],
-        "pixelSize": 12
+        "pixelSize": 10
     },
     "project": [
         {
@@ -37,12 +37,12 @@
             "uid": 514635903,
             "type": 1,
             "position": [
-                647.0,
+                644.5000610351563,
                 416.0
             ],
             "size": [
-                235.0,
-                426.0
+                237.49993896484376,
+                561.5000610351563
             ],
             "interactable": false,
             "movable": true,
@@ -63,7 +63,7 @@
             ],
             "size": [
                 195.0,
-                108.0
+                218.0
             ],
             "interactable": true,
             "movable": true,
@@ -95,13 +95,53 @@
             "sprite": "circle"
         },
         {
+            "name": "Speed",
+            "uid": 4000359776,
+            "type": 3,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "speed": 10.0
+        },
+        {
+            "name": "Lifetime",
+            "uid": 787534174,
+            "type": 7,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "lifetime": 1.0,
+            "randLifetime1": 3.0,
+            "randLifetime2": 5.0,
+            "random": false
+        },
+        {
             "name": "Particle Update",
             "uid": 153914106,
             "type": 34,
             "parent": 514635903,
             "position": [
-                667.0,
-                564.0
+                665.7500610351563,
+                686.5
             ],
             "size": [
                 195.0,
@@ -124,8 +164,8 @@
             "type": 35,
             "parent": 514635903,
             "position": [
-                667.0,
-                659.0
+                664.5000610351563,
+                794.5000610351563
             ],
             "size": [
                 195.0,
@@ -164,6 +204,7 @@
                 0.0,
                 1.0
             ],
+            "randomColor": false,
             "gradient": [
                 {
                     "type": 0,
@@ -297,10 +338,11 @@
             "currentShape": "Cone",
             "radius": 3.0,
             "height": 5.0,
-            "angle": 45.0,
-            "direction": 2,
+            "angle": 90.0,
+            "direction": 1,
             "speed": 1.0,
-            "currentDirection": "Ping-Pong",
+            "phase": 0.0,
+            "currentDirection": "Loop",
             "boxSize": [
                 1.0,
                 1.0,
@@ -408,7 +450,7 @@
             ],
             "size": [
                 235.0,
-                426.0
+                536.0
             ],
             "interactable": false,
             "movable": true,
@@ -429,7 +471,7 @@
             ],
             "size": [
                 195.0,
-                108.0
+                218.0
             ],
             "interactable": true,
             "movable": true,
@@ -461,13 +503,53 @@
             "sprite": "circle"
         },
         {
+            "name": "Speed",
+            "uid": 2688899542,
+            "type": 3,
+            "parent": 1802220426,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "speed": 10.0
+        },
+        {
+            "name": "Lifetime",
+            "uid": 2468918857,
+            "type": 7,
+            "parent": 1802220426,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "lifetime": 1.0,
+            "randLifetime1": 3.0,
+            "randLifetime2": 5.0,
+            "random": false
+        },
+        {
             "name": "Particle Update",
             "uid": 1133493446,
             "type": 34,
             "parent": 3220797859,
             "position": [
                 664.1160888671875,
-                1103.1295166015626
+                1213.1295166015626
             ],
             "size": [
                 195.0,
@@ -491,7 +573,7 @@
             "parent": 3220797859,
             "position": [
                 664.1160888671875,
-                1198.1295166015626
+                1308.1295166015626
             ],
             "size": [
                 195.0,
@@ -548,6 +630,7 @@
                 1.0,
                 1.0
             ],
+            "randomColor": false,
             "gradient": [
                 {
                     "type": 0,
@@ -595,7 +678,7 @@
             ],
             "size": [
                 235.00003051757813,
-                459.0
+                514.0
             ],
             "interactable": false,
             "movable": true,
@@ -612,7 +695,7 @@
             ],
             "size": [
                 195.0,
-                163.0
+                108.0
             ],
             "interactable": true,
             "movable": true,
@@ -623,41 +706,6 @@
                 {
                     "connectedNode": 3527761562
                 }
-            ]
-        },
-        {
-            "name": "Transform",
-            "uid": 2486714393,
-            "type": 19,
-            "parent": 3495386446,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "matrix": [
-                1.0,
-                0.0,
-                0.0,
-                6.084414005279541,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0,
-                0.0,
-                0.0,
-                0.0,
-                0.0,
-                1.0
             ]
         },
         {
@@ -681,9 +729,10 @@
             "radius": 3.0,
             "height": 5.0,
             "angle": 360.0,
-            "direction": 0,
+            "direction": 1,
             "speed": 1.0,
-            "currentDirection": "Random",
+            "phase": 180.0,
+            "currentDirection": "Loop",
             "boxSize": [
                 1.0,
                 1.0,
@@ -697,7 +746,7 @@
             "parent": 3330207934,
             "position": [
                 342.8660583496094,
-                999.3795166015625
+                1054.3795166015626
             ],
             "size": [
                 195.0,
@@ -743,7 +792,7 @@
             "parent": 3330207934,
             "position": [
                 342.8660583496094,
-                1127.3795166015626
+                1182.3795166015626
             ],
             "size": [
                 195.0,

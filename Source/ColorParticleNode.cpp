@@ -99,7 +99,7 @@ void ColorParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	float4 color = nodeDef->getVector4("color");
 	fixColor.Set(color.x, color.y, color.z, color.w);
-	randomColor = nodeDef->getUint("randomColor");
+	randomColor = nodeDef->getBool("randomColor");
 
 	overLifetimeColor.RemoveAllKeys(); //First remove the default keys
 	JSON_Value* gradient = nodeDef->getValue("gradient");

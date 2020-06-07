@@ -35,6 +35,7 @@ public:
 	~ShapeEmitterNode() {}
 
 	void DisplayConfig();
+	void DrawDirectionOptions();
 
 	vec GetDirection() const;
 
@@ -47,7 +48,7 @@ private:
 	vec GetDirectionInSphere() const;
 	vec GetDirectionInBox() const;
 
-	vec GetDirectionInCircle() const;
+	vec GetDirectionInCircle(int angle, float radius) const;
 	vec GetDirectionInQuad() const;
 
 public:

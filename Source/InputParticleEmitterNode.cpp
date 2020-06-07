@@ -24,6 +24,7 @@ bool InputParticleEmitterNode::OnConnection(NodeConnection* connection)
 	if (connection->type == NODE_OUTPUT && connection->node->type == PARTICLE)
 	{
 		inputParticle = (Particle*)connection->node;
+		inputParticle->emitter = emitter;
 		emitter->SetTemplate(inputParticle);
 		ret = true;
 	}
@@ -33,6 +34,7 @@ bool InputParticleEmitterNode::OnConnection(NodeConnection* connection)
 
 void InputParticleEmitterNode::OnDisconnection(NodeConnection* connection)
 {
+	inputParticle->emitter = nullptr;
 	inputParticle = nullptr;
 	emitter->SetTemplate(nullptr);
 }

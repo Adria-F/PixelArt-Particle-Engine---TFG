@@ -53,12 +53,6 @@ void BaseTransformParticleNode::LookCamera()
 	rotMat.SetCol(2, front);*/
 	//set new rotation quaternion
 	rotation = rotMat.ToQuat();
-
-	if (randomizeRotation) //Set if custom initial rotation
-	{
-		vec front = (App->camera->position - position).Normalized();
-		rotation = Quat::RotateAxisAngle(front, angleZ * DEGTORAD)*rotation;
-	}
 }
 
 EntityData* BaseTransformParticleNode::Copy(Particle* particle) const
@@ -68,46 +62,5 @@ EntityData* BaseTransformParticleNode::Copy(Particle* particle) const
 	ret->rotation = rotation;
 	ret->scale = scale;
 
-	ret->randomizeRotation = randomizeRotation;
-	ret->randomizeScale = randomizeScale;
-
-	ret->randRotation1 = randRotation1;
-	ret->randRotation2 = randRotation2;
-	
-	ret->randScaleX1 = randScaleX1;
-	ret->randScaleX2 = randScaleX2;
-	ret->randScaleY1 = randScaleY1;
-	ret->randScaleY2 = randScaleY2;
-
-	if (randomizeRotation)
-		ret->RandomizeRotation();
-
-	if (randomizeScale)
-		ret->RandomizeScale();
-
 	return ret;
-}
-
-void BaseTransformParticleNode::SetRandomScale(bool random)
-{
-	randomizeScale = random;
-}
-
-void BaseTransformParticleNode::SetRandomRotation(bool random)
-{
-	randomizeRotation = random;
-}
-
-void BaseTransformParticleNode::RandomizeScale()
-{
-	scale.x = Lerp(randScaleX1, randScaleX2, GET_RANDOM());
-	scale.y = Lerp(randScaleY1, randScaleY2, GET_RANDOM());
-}
-
-void BaseTransformParticleNode::RandomizeRotation()
-{
-	angleZ = Lerp(randRotation1, randRotation2, GET_RANDOM());
-
-	vec front = (App->camera->position - position).Normalized();
-	rotation = Quat::RotateAxisAngle(front, angleZ * DEGTORAD)*rotation;
 }

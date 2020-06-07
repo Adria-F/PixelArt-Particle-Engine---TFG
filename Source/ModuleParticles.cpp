@@ -34,6 +34,7 @@
 
 ModuleParticles::ModuleParticles(bool start_enabled) : Module(start_enabled)
 {
+	particles = std::vector<Particle>(MAX_PARTICLES);
 }
 
 ModuleParticles::~ModuleParticles()
@@ -129,6 +130,35 @@ void ModuleParticles::DrawParticles()
 	}
 }
 
+Particle* ModuleParticles::GetParticle()
+{
+	Particle* ret = nullptr;
+
+	for (int i = lastSpawnedParticle+1; i < MAX_PARTICLES; ++i)
+	{
+		if (!particles[i].alive)
+		{
+			ret = &particles[i];
+			lastSpawnedParticle = i;
+			break;
+		}
+	}
+	if (ret == nullptr)
+	{
+		for (int i = 0; i < lastSpawnedParticle+1; ++i)
+		{
+			if (!particles[i].alive)
+			{
+				ret = &particles[i];
+				lastSpawnedParticle = i;
+				break;
+			}
+		}
+	}
+
+	return ret;
+}
+
 int ModuleParticles::GetParticleCount() const
 {
 	int ret = 0;
@@ -192,7 +222,7 @@ ParticleEmitter::~ParticleEmitter()
 {
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		RELEASE((*it_p));
+		(*it_p)->alive = false;
 	}
 	particles.clear();
 }
@@ -227,7 +257,7 @@ void ParticleEmitter::Stop()
 	//Delete all particles
 	for (std::list<Particle*>::iterator it_p = particles.begin(); it_p != particles.end(); ++it_p)
 	{
-		RELEASE((*it_p));
+		(*it_p)->alive = false;
 	}
 	particles.clear();
 }
@@ -280,7 +310,7 @@ void ParticleEmitter::UpdateParticles(float dt)
 	{
 		if ((*it_p)->toDestroy)
 		{
-			RELEASE((*it_p));
+			(*it_p)->alive = false; //Set particle as dead (not using)
 			it_p = particles.erase(it_p);
 		}
 		else
@@ -308,21 +338,29 @@ void ParticleEmitter::SpawnParticle()
 {
 	if (templateParticle != nullptr)
 	{
-		Particle* part = new Particle(this, templateParticle);
-		vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
-		part->baseMovement->direction = direction.Normalized();
-		if (part->transformInit != nullptr)
+		Particle* part = App->particles->GetParticle();
+		if (part != nullptr)
 		{
-			part->transformInit->SetSpawnPoint(direction);
+			part->Initialize(templateParticle);
+			vec direction = (shape == nullptr) ? baseShape->GetDirection() : shape->GetDirection();
+			part->baseMovement->direction = direction.Normalized();
+			if (part->transformInit != nullptr)
+			{
+				part->transformInit->SetSpawnPoint(direction);
+			}
+			particles.push_back(part);
 		}
-		particles.push_back(part);
 	}
 }
 
-Particle* ParticleEmitter::SpawnParticle(Particle* particle)
+Particle* ParticleEmitter::SpawnParticle(Particle* particle) //Used by Death Instantiate
 {
-	Particle* ret = new Particle(this, particle);
-	particles.push_back(ret);
+	Particle* ret = App->particles->GetParticle();
+	if (ret != nullptr)
+	{
+		ret->Initialize(templateParticle);
+		particles.push_back(ret);
+	}
 	return ret;
 }
 
@@ -436,6 +474,14 @@ Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitte
 	whiteSprite = App->textures->UseWhiteTexture();
 }
 
+Particle::Particle()
+{
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	{
+		data[i] = nullptr;
+	}
+}
+
 Particle::~Particle()
 {
 	if (boxes.size() == 0) //If it has NodeBoxes means that it's managed from canvas, so data will be deleted from there as nodes (template particle)
@@ -445,6 +491,35 @@ Particle::~Particle()
 			RELEASE(data[i]);
 		}
 	}
+}
+
+void Particle::Initialize(Particle* templateParticle)
+{
+	toDestroy = false;
+	alive = true;
+	timeAlive = 0.0f;
+
+	emitter = templateParticle->emitter;
+
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	{
+		RELEASE(data[i]);
+		if (templateParticle->data[i] != nullptr)
+		{
+			data[i] = templateParticle->data[i]->Copy(this);
+		}
+	}
+
+	for (int i = 0; i < MAX_ENTITY_DATA; ++i)
+	{
+		if (data[i] != nullptr && !data[i]->update)
+			data[i]->Init(); //Initialize when this node does not update (must be called only once)
+	}
+
+	if (lifetimeNode == nullptr)
+		lifeTime = templateParticle->lifeTime;
+
+	whiteSprite = App->textures->UseWhiteTexture();
 }
 
 void Particle::Update(float dt)

@@ -139,6 +139,7 @@ public:
 
 	float2 titleSize;
 
+	//Canvas Node
 	bool toDelete = false;
 	bool hoveringElement = false;
 	bool interactable = true;

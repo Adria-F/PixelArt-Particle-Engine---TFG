@@ -8,6 +8,8 @@
 
 #include "NodeGroup.h"
 
+#define MAX_PARTICLES 1000
+
 class EntityData;
 
 // Particle ------------------
@@ -43,7 +45,10 @@ public:
 
 	Particle(const char* name, float2 position = { 0.0f,0.0f }, float2 size = { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, bool empty = false);
 	Particle(ParticleEmitter* emitter, Particle* templateParticle);
+	Particle();
 	~Particle();
+
+	void Initialize(Particle* templateParticle);
 
 	void Update(float dt);
 	void Draw();
@@ -88,7 +93,9 @@ public:
 
 	uint whiteSprite = 0;
 
+	//Particle
 	bool toDestroy = false;
+	bool alive = false;
 
 private:
 
@@ -169,6 +176,7 @@ public:
 	void SendParticlesToBuffer();
 	void DrawParticles();
 
+	Particle* GetParticle();
 	int GetParticleCount() const;
 
 	void AddEmitter(ParticleEmitter* emitter);
@@ -181,6 +189,9 @@ private:
 	uint rectangleVAO;
 
 	std::list<ParticleEmitter*> emitters;
+	std::vector<Particle> particles;
+
+	int lastSpawnedParticle = 0;
 };
 
 #endif // !__MODULEPARTICLES_H__

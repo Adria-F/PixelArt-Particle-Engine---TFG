@@ -24,6 +24,11 @@ void PanelExportSpritesheet::SetFlags()
 
 void PanelExportSpritesheet::DrawContent()
 {	
+	if (App->gui->mouseOnExportScene && ImGui::IsMouseClicked(2))
+		App->gui->clickedScene = true;
+	if (!ImGui::IsMouseDown(2))
+		App->gui->clickedScene = false;
+	
 	// To detect changes that require extra operations
 	bool cameraChanged = false;
 
@@ -146,6 +151,7 @@ void PanelExportSpritesheet::DrawContent()
 		if (newPath.length() > 0)
 			path = newPath;
 	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Export"))
 	{

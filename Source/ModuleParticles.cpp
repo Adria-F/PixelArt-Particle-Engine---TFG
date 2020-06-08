@@ -145,6 +145,26 @@ void ModuleParticles::DrawParticles()
 	}
 }
 
+bool ModuleParticles::IsPlaying()
+{
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
+	{
+		if ((*it_e)->Playing())
+			return true;
+	}
+	return false;
+}
+
+bool ModuleParticles::IsFinished()
+{
+	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
+	{
+		if (!(*it_e)->Stopped())
+			return false;
+	}
+	return true;
+}
+
 Particle* ModuleParticles::GetParticle()
 {
 	Particle* ret = nullptr;
@@ -279,6 +299,7 @@ void ParticleEmitter::Stop()
 	playing = false;
 	restarted = true;
 	timeAlive = 0.0f;
+	finished = false;
 
 	if (emission != nullptr)
 		emission->Stop();
@@ -291,9 +312,36 @@ void ParticleEmitter::Stop()
 	particles.clear();
 }
 
+void ParticleEmitter::Finish()
+{
+	finished = true;
+}
+
+bool ParticleEmitter::Playing() const
+{
+	return playing;
+}
+
+bool ParticleEmitter::Stopped() const
+{
+	return particles.size() == 0;
+}
+
+bool ParticleEmitter::Finished() const
+{
+	return finished;
+}
+
 void ParticleEmitter::Update(float dt)
 {
 	BROFILER_CATEGORY("Update Emitter", Profiler::Color::LightGreen);
+
+	if (finished)
+	{
+		if (App->particles->IsFinished())
+			Stop();
+		return;
+	}
 
 	if (inputParticle != nullptr)
 		inputParticle->Execute(dt);

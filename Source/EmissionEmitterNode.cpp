@@ -30,7 +30,10 @@ void EmissionEmitterNode::Execute(float dt)
 		if (loop)
 			Stop(); //To reset all timers
 		else
+		{
+			emitter->Finish();
 			return;
+		}			
 	}
 
 	lastEmit += dt;

@@ -111,6 +111,11 @@ public:
 	void Play();
 	void Pause();
 	void Stop();
+	void Finish();
+
+	bool Playing() const;
+	bool Stopped() const;
+	bool Finished() const;
 
 	void Update(float dt);
 	void UpdateParticles(float dt);
@@ -157,6 +162,7 @@ private:
 	float lastEmit = 0.0f;
 	bool playing = true;
 	bool restarted = false;
+	bool finished = false;
 };
 
 class ModuleParticles : public Module
@@ -177,6 +183,9 @@ public:
 	void Stop();
 	void SendParticlesToBuffer();
 	void DrawParticles();
+
+	bool IsPlaying();
+	bool IsFinished();
 
 	Particle* GetParticle();
 	int GetParticleCount() const;

@@ -11,7 +11,7 @@ public:
 
 	Panel(const char* name, bool startActive = true): name(name), active(startActive)
 	{
-		flags = ImGuiWindowFlags_None;
+		flags = ImGuiWindowFlags_NoCollapse;
 	}
 	~Panel() {}
 

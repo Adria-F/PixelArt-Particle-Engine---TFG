@@ -35,6 +35,10 @@ void PanelPixelArt::DrawContent()
 	ImGui::Image((ImTextureID)App->render->pixelartTexture, { imageSize.x, imageSize.y }, { 0,1 }, { 1,0 });
 
 	ImGui::SetCursorScreenPos({ ImGui::GetCursorScreenPos().x , ImGui::GetWindowPos().y + ImGui::GetWindowSize().y-20.0f });
+
+	App->gui->DrawPlayMenu();
+	ImGui::SameLine();
+
 	ImGui::Text("Pixel Size:"); ImGui::SameLine();
 	static int pixelSize = App->render->pixelSize;
 	ImGui::PushItemWidth(100.0f);

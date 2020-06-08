@@ -40,6 +40,8 @@ public:
 	bool IsExportPanelActive() const;
 	void ResetCanvas();
 
+	void DrawPlayMenu();
+
 	void DrawColorBox(Color& color);
 	void DrawGradientBox(Gradient& gradient);
 

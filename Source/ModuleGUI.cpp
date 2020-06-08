@@ -201,6 +201,19 @@ update_state ModuleGUI::Update(float dt)
 
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Windows"))
+		{
+			for (std::list<Panel*>::iterator it_p = panels.begin(); it_p != panels.end(); ++it_p)
+			{
+				if ((*it_p) == panelExport)
+					continue;
+
+				if (ImGui::MenuItem((*it_p)->GetName(), nullptr, (*it_p)->IsActive()))
+					(*it_p)->ToggleActive();
+			}
+
+			ImGui::EndMenu();
+		}
 
 		ImGui::EndMainMenuBar();
 	}
@@ -332,6 +345,29 @@ bool ModuleGUI::IsExportPanelActive() const
 void ModuleGUI::ResetCanvas()
 {
 	panelCanvas->Reset();
+}
+
+void ModuleGUI::DrawPlayMenu()
+{
+	if (App->particles->IsPlaying())
+	{
+		if (ImGui::Button("||"))
+		{
+			App->particles->Pause();
+		}
+	}
+	else
+	{
+		if (ImGui::ArrowButton("play", ImGuiDir_Right))
+		{
+			App->particles->Play();
+		}
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("[]"))
+	{
+		App->particles->Stop();
+	}
 }
 
 void ModuleGUI::DrawColorBox(Color& color)

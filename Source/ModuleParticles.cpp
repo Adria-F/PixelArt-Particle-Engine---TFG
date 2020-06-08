@@ -87,6 +87,20 @@ bool ModuleParticles::CleanUp()
 	return true;
 }
 
+void ModuleParticles::SaveSettings(JSON_Value* settings)
+{
+	settings->addInt("maxParticles", particles.size());
+}
+
+void ModuleParticles::LoadSettings(JSON_Value* settings)
+{
+	int maxParticles = settings->getInt("maxParticles");
+	if (maxParticles == 0)
+		maxParticles = MAX_PARTICLES;
+	if (maxParticles != particles.size())
+		ResizeParticlePool(maxParticles);
+}
+
 void ModuleParticles::Play()
 {
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
@@ -135,7 +149,7 @@ Particle* ModuleParticles::GetParticle()
 {
 	Particle* ret = nullptr;
 
-	for (int i = lastSpawnedParticle+1; i < MAX_PARTICLES; ++i)
+	for (int i = lastSpawnedParticle+1; i < particles.size(); ++i)
 	{
 		if (!particles[i].alive)
 		{
@@ -195,6 +209,20 @@ ParticleEmitter* ModuleParticles::GetEmitter(int index) const
 void ModuleParticles::ClearAll()
 {
 	emitters.clear();
+}
+
+int ModuleParticles::GetParticlePoolSize() const
+{
+	return particles.size();
+}
+
+void ModuleParticles::ResizeParticlePool(int newSize)
+{
+	Stop(); //All existing particles must be deleted as they will be allocated in another place on memory (avoid dangling pointers)
+	particles.clear();
+	particles = std::vector<Particle>(newSize);
+	lastSpawnedParticle = 0;
+	Play();
 }
 
 // ---------------------- PARTICLE EMITTER --------------------------

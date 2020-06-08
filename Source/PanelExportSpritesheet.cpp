@@ -162,6 +162,12 @@ void PanelExportSpritesheet::DrawContent()
 			ToggleActive();
 		}
 	}
+	/*if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::Text("Exporting is disabled in this test build");
+		ImGui::EndTooltip();
+	}*/
 }
 
 void PanelExportSpritesheet::RefreshSpriteSheet()

@@ -159,6 +159,15 @@ update_state ModuleGUI::Update(float dt)
 			{
 				App->particles->Stop();
 			}
+			if (ImGui::BeginMenu("Max Particles"))
+			{
+				static int maxParticles = App->particles->GetParticlePoolSize();
+				if (ImGui::InputInt("", &maxParticles, 0, 0, ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					App->particles->ResizeParticlePool(maxParticles);
+				}
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenu();
 		}

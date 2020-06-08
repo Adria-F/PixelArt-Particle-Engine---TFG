@@ -169,6 +169,9 @@ public:
 	update_state Update(float dt);
 	bool CleanUp();
 
+	void SaveSettings(JSON_Value* settings);
+	void LoadSettings(JSON_Value* settings);
+
 	void Play();
 	void Pause();
 	void Stop();
@@ -182,6 +185,9 @@ public:
 	void RemoveEmitter(ParticleEmitter* emitter);
 	ParticleEmitter* GetEmitter(int index) const;
 	void ClearAll();
+
+	int GetParticlePoolSize() const;
+	void ResizeParticlePool(int newSize);
 
 private:
 

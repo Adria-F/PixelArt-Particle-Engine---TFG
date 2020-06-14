@@ -54,7 +54,7 @@ void CanvasNode::Draw(float2 offset, int zoom)
 	}
 
 	gridPosition = position*(zoom/100.0f) + offset;
-	float2 scaledSize = size * (zoom/100.0f);
+	scaledSize = size * (zoom/100.0f);
 
 	draw_list->AddRectFilled({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, backgroundColor, 4.0f);
 	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, borderColor, 4.0f, 15, thickness);
@@ -102,13 +102,13 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 	if (interactable)
 	{
 		ImGui::PushID(UID);
-		float2 scaledSize = size * (zoom / 100.0f);
-
+		
 		//Node hovering //& linking
 		ImGui::SetCursorScreenPos({ gridPosition.x, gridPosition.y });
 		ImGui::BeginGroup();
 		ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
-		if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection && !hoveringElement)
+		scaledSize = size * (zoom / 100.0f);
+		if (selectable && ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection && !hoveringElement)
 		{
 			isHovered = true;
 
@@ -133,7 +133,6 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 		if (movable)
 		{
 			//Dragging
-			static bool dragging = false;
 			if (ImGui::IsItemClicked() /*&& !hoveringConfigMenu*/)
 			{
 				clickOffset = { ImGui::GetMousePos().x - position.x*(zoom / 100.0f), ImGui::GetMousePos().y - position.y*(zoom / 100.0f) };
@@ -143,7 +142,7 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 			{
 				dragging = false;
 			}
-			if (App->nodeCanvas->selectedNode == this && dragging && ImGui::IsMouseDragging(0))
+			if (dragging && ImGui::IsMouseDragging(0))
 			{
 				position = { ImGui::GetMousePos().x - clickOffset.x, ImGui::GetMousePos().y - clickOffset.y };
 				position /= (zoom / 100.0f);

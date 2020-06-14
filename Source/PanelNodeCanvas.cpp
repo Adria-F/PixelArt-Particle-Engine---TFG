@@ -88,6 +88,22 @@ void PanelNodeCanvas::DrawContent()
 	if ((midClicked && ImGui::IsMouseDragging(2, 0.0f) || (ImGui::IsMouseDown(0) && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)))
 		scrolling = { scrolling.x + ImGui::GetIO().MouseDelta.x, scrolling.y + ImGui::GetIO().MouseDelta.y };
 	
+	//Draw empty canvas hint
+	if (App->nodeCanvas->nodes.size() == 0)
+	{
+		ImGui::PushFont(App->gui->GetFont(MAX_ZOOM * 100, CANVAS_FONT_SIZE));
+		
+		static const ImVec2 textSize = ImGui::CalcTextSize("Right-click");
+		
+		ImGui::SetCursorPos({ ImGui::GetWindowContentRegionWidth()*0.5f - textSize.x*0.5f, ImGui::GetWindowHeight()*0.5f - textSize.y*0.5f});
+		ImGui::TextColored({ 0.5f,0.5f,0.5f,1.0 }, "Right-click");
+
+		ImGui::SetCursorPos({ ImGui::GetWindowContentRegionWidth()*0.5f - textSize.x*0.5f - 15.0f, ImGui::GetWindowHeight()*0.5f + textSize.y*0.5f });
+		ImGui::TextColored({ 0.5f,0.5f,0.5f,1.0 }, "to add nodes");
+
+		ImGui::PopFont();
+	}
+
 	//Draw content
 	CanvasNode* newHoveredNode = nullptr;
 	CanvasNode* newSelectedNode = nullptr;
@@ -134,7 +150,7 @@ void PanelNodeCanvas::DrawContent()
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##addNode"))
 	{
-		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), CANVAS);
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), nullptr);
 		if (createdNode != nullptr)
 			App->nodeCanvas->nodes.push_back(createdNode);
 

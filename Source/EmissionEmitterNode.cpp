@@ -80,7 +80,17 @@ void EmissionEmitterNode::Stop()
 void EmissionEmitterNode::DisplayConfig()
 {
 	App->gui->DrawInputFloat("Duration", &duration);
-	ImGui::Checkbox("Loop", &loop);
+	if (ImGui::Checkbox("Loop", &loop))
+	{
+		if (loop)
+		{
+			if (emitter->Finished() || emitter->Stopped())
+			{
+				emitter->Stop();
+				emitter->Play();
+			}
+		}
+	}
 	App->gui->DrawInputFloat("Frequency", &frequency);
 
 	ImGui::NewLine();

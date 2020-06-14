@@ -211,39 +211,69 @@ void ModuleNodeCanvas::DrawGuizmo()
 	}
 }
 
-std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(nodeType nodeContainer) const
+std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(NodeBox* nodeContainer) const
 {
 	std::vector<nodeType> ret;
 
-	switch (nodeContainer)
+	if (nodeContainer == nullptr) //Called from the canvas
 	{
-	case CANVAS:
 		ret = { PARTICLE, EMITTER };
-		break;
-	case PARTICLE_NODE_BOX_INIT:
-		ret = { PARTICLE_SPEED, PARTICLE_MAKEGLOBAL, PARTICLE_SPRITE, PARTICLE_LIFETIME, PARTICLE_TRANSFORM };
-		break;
-	case PARTICLE_NODE_BOX_UPDATE:
-		ret = { PARTICLE_DEATHINSTANTIATION, PARTICLE_SPEED, PARTICLE_TRANSFORM };
-		break;
-	case PARTICLE_NODE_BOX_RENDER:
-		ret = { PARTICLE_COLOR, PARTICLE_BLENDMODE, PARTICLE_SORTING };
-		break;
-	case EMITTER_NODE_BOX_INIT:
-		ret = { EMITTER_SHAPE, EMITTER_TRANSFORM };
-		break;
-	case EMITTER_NODE_BOX_INPUT:
-		ret = { EMITTER_INPUTPARTICLE };
-		break;
-	case EMITTER_NODE_BOX_UPDATE:
-		ret = { EMITTER_EMISSION };
-		break;
+		return ret;
+	}
+
+	if (nodeContainer->parentGroup)
+	{
+		switch (nodeContainer->type)
+		{
+		case PARTICLE_NODE_BOX_INIT:
+			if (!((Particle*)nodeContainer->parentGroup)->speedInit)
+				ret.push_back(PARTICLE_SPEED);
+			if (!((Particle*)nodeContainer->parentGroup)->makeGlobal)
+				ret.push_back(PARTICLE_MAKEGLOBAL);
+			if (!((Particle*)nodeContainer->parentGroup)->sprite)
+				ret.push_back(PARTICLE_SPRITE);
+			if (!((Particle*)nodeContainer->parentGroup)->lifetimeNode)
+				ret.push_back(PARTICLE_LIFETIME);
+			if (!((Particle*)nodeContainer->parentGroup)->transformInit)
+				ret.push_back(PARTICLE_TRANSFORM);
+			break;
+		case PARTICLE_NODE_BOX_UPDATE:
+			if (!((Particle*)nodeContainer->parentGroup)->deathInstantiation)
+				ret.push_back(PARTICLE_DEATHINSTANTIATION);
+			if (!((Particle*)nodeContainer->parentGroup)->speedUpdate)
+				ret.push_back(PARTICLE_SPEED);
+			if (!((Particle*)nodeContainer->parentGroup)->transformUpdate)
+				ret.push_back(PARTICLE_TRANSFORM);
+			break;
+		case PARTICLE_NODE_BOX_RENDER:
+			if (!((Particle*)nodeContainer->parentGroup)->color)
+				ret.push_back(PARTICLE_COLOR);
+			if (!((Particle*)nodeContainer->parentGroup)->blendMode)
+				ret.push_back(PARTICLE_BLENDMODE);
+			if (!((Particle*)nodeContainer->parentGroup)->sorting)
+				ret.push_back(PARTICLE_SORTING);
+			break;
+		case EMITTER_NODE_BOX_INIT:
+			if (!((ParticleEmitter*)nodeContainer->parentGroup)->shape)
+				ret.push_back(EMITTER_SHAPE);
+			if (!((ParticleEmitter*)nodeContainer->parentGroup)->transform)
+				ret.push_back(EMITTER_TRANSFORM);
+			break;
+		case EMITTER_NODE_BOX_INPUT:
+			if (!((ParticleEmitter*)nodeContainer->parentGroup)->inputParticle)
+				ret.push_back(EMITTER_INPUTPARTICLE);
+			break;
+		case EMITTER_NODE_BOX_UPDATE:
+			if (!((ParticleEmitter*)nodeContainer->parentGroup)->emission)
+				ret.push_back(EMITTER_EMISSION);
+			break;
+		}
 	}
 
 	return ret;
 }
 
-CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, nodeType nodeContainer)
+CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, NodeBox* nodeContainer)
 {
 	drawingNodeList = true;
 	std::map<std::string, int> nodes = RequestNodeList(nodeContainer);
@@ -281,7 +311,7 @@ CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, nodeType nodeContain
 	return ret;
 }
 
-std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContainer) const
+std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(NodeBox* nodeContainer) const
 {
 	std::map<std::string, int> nodeList;
 
@@ -292,7 +322,7 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContai
 		switch (nodes[i])
 		{
 		case PARTICLE:
-			nodeList.insert(std::pair<std::string, nodeType>("Particle", nodes[i]));
+			nodeList.insert(std::pair<std::string, nodeType>("Empty Particle", nodes[i]));
 			break;
 		case PARTICLE_COLOR:
 			nodeList.insert(std::pair<std::string, nodeType>("Color", nodes[i]));
@@ -322,7 +352,7 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(nodeType nodeContai
 			nodeList.insert(std::pair<std::string, nodeType>("Sorting", nodes[i]));
 			break;
 		case EMITTER:
-			nodeList.insert(std::pair<std::string, nodeType>("Emitter", nodes[i]));
+			nodeList.insert(std::pair<std::string, nodeType>("Empty Emitter", nodes[i]));
 			break;
 		case EMITTER_EMISSION:
 			nodeList.insert(std::pair<std::string, nodeType>("Emission", nodes[i]));
@@ -349,7 +379,7 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 	switch (type)
 	{
 	case PARTICLE:
-		node = new Particle(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
+		node = new Particle("Particle", spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		break;
 	case PARTICLE_COLOR:
 		node = new ColorParticleNode(nullptr, name, spawnPos);
@@ -379,7 +409,7 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		node = new SortingParticleNode(nullptr, name, spawnPos);
 		break;
 	case EMITTER:
-		node = new ParticleEmitter(name, spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
+		node = new ParticleEmitter("Emitter", spawnPos, { NODE_DEFAULT_WIDTH, NODE_DEFAULT_HEIGHT }, empty);
 		App->particles->AddEmitter((ParticleEmitter*)node);
 		break;
 	case EMITTER_EMISSION:

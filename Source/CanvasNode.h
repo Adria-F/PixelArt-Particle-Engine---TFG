@@ -136,6 +136,7 @@ public:
 	std::list<NodeConnection*> connections;
 
 	float2 gridPosition;
+	float2 scaledSize;
 	float2 clickOffset;
 
 	float2 titleSize;
@@ -144,7 +145,10 @@ public:
 	bool toDelete = false;
 	bool hoveringElement = false;
 	bool interactable = true;
+	bool selectable = true;
 	bool movable = true;
+
+	bool dragging = false;
 };
 
 #endif // !__CANVASNODE_H__

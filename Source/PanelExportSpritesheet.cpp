@@ -215,7 +215,9 @@ void PanelExportSpritesheet::RefreshSpriteSheet()
 	exporter->frameSize = frameSize;
 	exporter->pixelSize = pixelSize;
 
+	App->textures->exporting = true;
 	exporter->CreateSpriteSheet();
+	App->textures->exporting = false;
 }
 
 void PanelExportSpritesheet::OnOpen()

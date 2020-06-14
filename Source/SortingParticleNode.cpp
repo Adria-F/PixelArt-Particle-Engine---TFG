@@ -21,7 +21,7 @@ void SortingParticleNode::DrawExtraInfo(float2 offset, int zoom)
 {
 	if (App->camera->type == CAMERA_3D)
 	{
-		float2 scaledSize = size * (zoom / 100.0f);
+		scaledSize = size * (zoom / 100.0f);
 		ImGui::SetCursorScreenPos({ gridPosition.x + NODE_PADDING * (zoom / 100.0f), gridPosition.y + scaledSize.y - 17.0f*(zoom / 100.0f) });
 		ImGui::TextColored({ 120.0f,0.0f,0.0f,1.0f }, "Inactive in 3D mode");
 	}

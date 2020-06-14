@@ -60,6 +60,7 @@ public:
 	virtual void OnNodeRemoved(CanvasNode* node) {}
 	void AddNodes();
 	
+	void MoveChildren(float2 amount);
 	void CalcRect();
 
 	void SaveChildNodes(JSON_Value* project);
@@ -67,6 +68,8 @@ public:
 public:
 
 	std::list<NodeBox*> boxes;
+
+	float2 prevPos;
 };
 
 #endif // !__NODEGROUP_H__

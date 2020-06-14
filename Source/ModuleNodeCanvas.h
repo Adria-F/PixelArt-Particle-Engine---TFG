@@ -6,6 +6,7 @@
 
 class CanvasNode;
 class NodeConnection;
+class NodeBox;
 
 enum connectionState;
 enum nodeType;
@@ -24,9 +25,9 @@ public:
 
 	void DrawGuizmo();
 
-	std::vector<nodeType> GetAllowedNodes(nodeType nodeContainer) const;
-	CanvasNode* DrawNodeList(float2 spawnPos, nodeType nodeContainer);
-	std::map<std::string, int> RequestNodeList(nodeType nodeContainer) const;
+	std::vector<nodeType> GetAllowedNodes(NodeBox* nodeContainer) const;
+	CanvasNode* DrawNodeList(float2 spawnPos, NodeBox* nodeContainer);
+	std::map<std::string, int> RequestNodeList(NodeBox* nodeContainer) const;
 	CanvasNode* CreateNode(const char* name, nodeType type, float2 spawnPos, bool empty = false) const;
 
 	void StartConnection(NodeConnection* connection);

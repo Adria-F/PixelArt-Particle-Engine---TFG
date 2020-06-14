@@ -6,7 +6,8 @@
 
 NodeGroup::NodeGroup(const char* name, float2 position, nodeType type) : CanvasNode(name, type, position)
 {
-	interactable = false;
+	prevPos = position;
+	selectable = false;
 
 	titleSize.x += NODE_PADDING * 2.0f;
 	titleSize.y += NODE_PADDING;
@@ -30,9 +31,12 @@ void NodeGroup::Draw(float2 offset, int zoom)
 	ImU32 backgroundColor = IM_COL32(45, 45, 50, 255);
 	float thickness = 3.0f;
 
+	if (prevPos.x != position.x || prevPos.y != position.y)
+		MoveChildren(position - prevPos);
 	CalcRect();
+	prevPos = position;
 	gridPosition = position * (zoom / 100.0f) + offset;
-	float2 scaledSize = size * (zoom / 100.0f);
+	scaledSize = size * (zoom / 100.0f);
 
 	float2 scaledTitleSize = titleSize * (zoom / 100.0f);
 	float2 titlePos = { gridPosition.x + scaledSize.x*0.5f - scaledTitleSize.x*0.5f, gridPosition.y - scaledTitleSize.y };
@@ -65,6 +69,10 @@ void NodeGroup::Draw(float2 offset, int zoom)
 	{
 		(*it_c)->Draw(zoom);
 	}
+
+	gridPosition = titlePos;
+	scaledSize = { titleSize.x, titleSize.y + NODE_PADDING };
+	scaledSize = scaledSize * (zoom / 100.0f);
 
 	ImGui::EndGroup();
 }
@@ -189,6 +197,14 @@ void NodeGroup::AddNodes()
 	}
 }
 
+void NodeGroup::MoveChildren(float2 amount)
+{
+	for (std::list<NodeBox*>::iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
+	{
+		(*it_b)->position += amount;
+	}
+}
+
 void NodeGroup::CalcRect()
 {
 	float2 topLeft = float2::inf;
@@ -262,7 +278,7 @@ void NodeBox::Draw(float2 offset, int zoom)
 	}
 
 	gridPosition = position* (zoom / 100.0f) + offset;
-	float2 scaledSize = size * (zoom / 100.0f);
+	scaledSize = size * (zoom / 100.0f);
 
 	draw_list->AddRectFilled({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, backgroundColor, 4.0f);
 	draw_list->AddRect({ gridPosition.x, gridPosition.y }, { gridPosition.x + scaledSize.x, gridPosition.y + scaledSize.y }, borderColor, 4.0f, 15, thickness);
@@ -364,7 +380,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	//Handle node addition
 	ImGui::SetCursorScreenPos(cursorPos);
 	ImGui::PushID(UID);
-	float2 scaledSize = { NODE_DEFAULT_WIDTH, NODE_BOX_ADD_BUTTON_HEIGHT };
+	scaledSize = { NODE_DEFAULT_WIDTH, NODE_BOX_ADD_BUTTON_HEIGHT };
 	scaledSize *= (zoom / 100.0f);
 
 	//Block hovering and pop up
@@ -384,7 +400,7 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##node list"))
 	{
-		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, type);
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList({ 0.0f,0.0f }, this);
 		if (createdNode != nullptr)
 		{
 			InsertNode(createdNode);

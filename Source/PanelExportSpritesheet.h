@@ -32,6 +32,7 @@ public:
 public:
 
 	SpriteSheetExporter* exporter = nullptr;
+	bool exporting = false;
 
 	std::string path;
 

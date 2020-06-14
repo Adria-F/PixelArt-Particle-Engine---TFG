@@ -71,6 +71,8 @@ public:
 	std::map<uint, Texture*> textures;
 
 	Texture* whiteTexture = nullptr;
+
+	bool exporting = false;
 };
 
 #endif // !__MODULETEXTURES_H__

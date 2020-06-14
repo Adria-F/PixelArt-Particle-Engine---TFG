@@ -69,6 +69,12 @@ update_state ModuleParticles::Update(float dt)
 {
 	BROFILER_CATEGORY("ModuleParticles Update", Profiler::Color::Orange);
 
+	if ((App->gui->IsExportPanelActive() && !App->textures->exporting) && IsFinished())
+	{
+		Stop();
+		Play();
+	}
+
 	for (std::list<ParticleEmitter*>::iterator it_e = emitters.begin(); it_e != emitters.end(); ++it_e)
 	{
 		(*it_e)->Update(dt);

@@ -5,8 +5,8 @@
             "Node Configuration": {},
             "Node Canvas": {
                 "scrolling": [
-                    -18.67041015625,
-                    67.05484008789063
+                    83.32958984375,
+                    30.054840087890626
                 ],
                 "zoom": 100
             },
@@ -25,10 +25,11 @@
             0.0
         ],
         "orthographicPosition": [
-            0.0025000241585075857,
-            -0.7924997210502625,
-            0.3999999761581421
+            -0.0074999756179749969,
+            -0.6174998879432678,
+            0.29999998211860659
         ],
+        "maxParticles": 1000,
         "pixelSize": 12
     },
     "project": [
@@ -51,6 +52,114 @@
                     "connectedNode": 821225142
                 }
             ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 3697828537,
+            "type": 33,
+            "parent": 829634683,
+            "position": [
+                660.3731689453125,
+                263.281494140625
+            ],
+            "size": [
+                195.0,
+                163.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 3487695317
+                }
+            ]
+        },
+        {
+            "name": "Sprite",
+            "uid": 32393905,
+            "type": 6,
+            "parent": 3697828537,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "circle"
+        },
+        {
+            "name": "Transform",
+            "uid": 2370622214,
+            "type": 8,
+            "parent": 3697828537,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "billboard": true,
+            "spawnPoint": 0,
+            "partPosition": [
+                -107374176.0,
+                -107374176.0,
+                -107374176.0
+            ],
+            "randPosition1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomPos": false,
+            "faceDirection": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomRot": false,
+            "scale": [
+                5.0,
+                5.0
+            ],
+            "randScale1": [
+                1.0,
+                1.0
+            ],
+            "randScale2": [
+                1.0,
+                1.0
+            ],
+            "randomScale": false
         },
         {
             "name": "Particle Update",
@@ -94,6 +203,7 @@
             "connections": [],
             "update": true,
             "billboard": true,
+            "spawnPoint": 0,
             "partPosition": [
                 0.0,
                 1.0,
@@ -110,6 +220,7 @@
                 0.0
             ],
             "randomPos": false,
+            "faceDirection": false,
             "rotation": [
                 0.0,
                 0.0,
@@ -186,6 +297,7 @@
                 1.0,
                 1.0
             ],
+            "randomColor": false,
             "gradient": [
                 {
                     "type": 0,
@@ -301,112 +413,6 @@
             "overLifetime": true
         },
         {
-            "name": "Particle Set Up",
-            "uid": 3697828537,
-            "type": 33,
-            "parent": 829634683,
-            "position": [
-                660.3731689453125,
-                263.281494140625
-            ],
-            "size": [
-                195.0,
-                163.0
-            ],
-            "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 0
-                },
-                {
-                    "connectedNode": 3487695317
-                }
-            ]
-        },
-        {
-            "name": "Sprite",
-            "uid": 32393905,
-            "type": 6,
-            "parent": 3697828537,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "sprite": "circle"
-        },
-        {
-            "name": "Transform",
-            "uid": 2370622214,
-            "type": 8,
-            "parent": 3697828537,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "update": false,
-            "billboard": true,
-            "partPosition": [
-                -107374176.0,
-                -107374176.0,
-                -107374176.0
-            ],
-            "randPosition1": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "randPosition2": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "randomPos": false,
-            "rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "randRotation1": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "randRotation2": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "randomRot": false,
-            "scale": [
-                5.0,
-                5.0
-            ],
-            "randScale1": [
-                1.0,
-                1.0
-            ],
-            "randScale2": [
-                1.0,
-                1.0
-            ],
-            "randomScale": false
-        },
-        {
             "name": "Emitter",
             "uid": 2460926719,
             "type": 16,
@@ -469,6 +475,7 @@
             "angle": 45.0,
             "direction": 2,
             "speed": 1.2999999523162842,
+            "phase": 0.0,
             "currentDirection": "Ping-Pong",
             "boxSize": [
                 1.0,

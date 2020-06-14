@@ -5,10 +5,10 @@
             "Node Configuration": {},
             "Node Canvas": {
                 "scrolling": [
-                    205.7071533203125,
-                    -322.1036376953125
+                    185.1339111328125,
+                    -348.379638671875
                 ],
-                "zoom": 80
+                "zoom": 100
             },
             "PixelArt": {},
             "Export Spritesheet": {}
@@ -29,6 +29,7 @@
             -0.6699996590614319,
             0.4999999403953552
         ],
+        "maxParticles": 1000,
         "pixelSize": 10
     },
     "project": [
@@ -37,12 +38,12 @@
             "uid": 514635903,
             "type": 1,
             "position": [
-                644.5000610351563,
-                416.0
+                190.50006103515626,
+                375.5000305175781
             ],
             "size": [
-                237.49993896484376,
-                561.5000610351563
+                237.0,
+                446.2500305175781
             ],
             "interactable": false,
             "movable": true,
@@ -58,8 +59,8 @@
             "type": 33,
             "parent": 514635903,
             "position": [
-                667.0,
-                436.0
+                212.50006103515626,
+                395.5000305175781
             ],
             "size": [
                 195.0,
@@ -72,7 +73,7 @@
                     "connectedNode": 0
                 },
                 {
-                    "connectedNode": 153914106
+                    "connectedNode": 1604969215
                 }
             ]
         },
@@ -92,26 +93,7 @@
             "interactable": true,
             "movable": false,
             "connections": [],
-            "sprite": "circle"
-        },
-        {
-            "name": "Speed",
-            "uid": 4000359776,
-            "type": 3,
-            "parent": 3539777882,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "update": false,
-            "speed": 10.0
+            "sprite": "blob"
         },
         {
             "name": "Lifetime",
@@ -135,28 +117,23 @@
             "random": false
         },
         {
-            "name": "Particle Update",
-            "uid": 153914106,
-            "type": 34,
-            "parent": 514635903,
+            "name": "Speed",
+            "uid": 4000359776,
+            "type": 3,
+            "parent": 3539777882,
             "position": [
-                665.7500610351563,
-                686.5
+                0.0,
+                0.0
             ],
             "size": [
-                195.0,
-                75.0
+                185.0,
+                50.0
             ],
             "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 3539777882
-                },
-                {
-                    "connectedNode": 1604969215
-                }
-            ]
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "speed": 10.0
         },
         {
             "name": "Particle Render",
@@ -164,8 +141,8 @@
             "type": 35,
             "parent": 514635903,
             "position": [
-                664.5000610351563,
-                794.5000610351563
+                210.50006103515626,
+                638.7500610351563
             ],
             "size": [
                 195.0,
@@ -175,7 +152,7 @@
             "movable": true,
             "connections": [
                 {
-                    "connectedNode": 153914106
+                    "connectedNode": 3539777882
                 },
                 {
                     "connectedNode": 0
@@ -283,12 +260,12 @@
             "uid": 2676632914,
             "type": 16,
             "position": [
-                267.0,
-                249.0
+                -158.0,
+                376.5
             ],
             "size": [
                 235.0,
-                404.0
+                426.5
             ],
             "interactable": false,
             "movable": true,
@@ -300,8 +277,8 @@
             "type": 41,
             "parent": 2676632914,
             "position": [
-                287.0,
-                269.0
+                -138.0,
+                396.5
             ],
             "size": [
                 195.0,
@@ -355,8 +332,8 @@
             "type": 42,
             "parent": 2676632914,
             "position": [
-                287.0,
-                397.0
+                -138.0,
+                535.75
             ],
             "size": [
                 195.0,
@@ -401,8 +378,8 @@
             "type": 43,
             "parent": 2676632914,
             "position": [
-                287.0,
-                525.0
+                -138.0,
+                675.0
             ],
             "size": [
                 195.0,
@@ -445,12 +422,12 @@
             "uid": 3220797859,
             "type": 1,
             "position": [
-                644.1160888671875,
-                955.1295166015625
+                629.1161499023438,
+                820.1295166015625
             ],
             "size": [
-                235.0,
-                536.0
+                235.5,
+                446.7501220703125
             ],
             "interactable": false,
             "movable": true,
@@ -466,8 +443,8 @@
             "type": 33,
             "parent": 3220797859,
             "position": [
-                664.1160888671875,
-                975.1295166015625
+                649.6161499023438,
+                840.1295166015625
             ],
             "size": [
                 195.0,
@@ -480,46 +457,9 @@
                     "connectedNode": 0
                 },
                 {
-                    "connectedNode": 1133493446
+                    "connectedNode": 2804339953
                 }
             ]
-        },
-        {
-            "name": "Sprite",
-            "uid": 3892378165,
-            "type": 6,
-            "parent": 1802220426,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "sprite": "circle"
-        },
-        {
-            "name": "Speed",
-            "uid": 2688899542,
-            "type": 3,
-            "parent": 1802220426,
-            "position": [
-                0.0,
-                0.0
-            ],
-            "size": [
-                185.0,
-                50.0
-            ],
-            "interactable": true,
-            "movable": false,
-            "connections": [],
-            "update": false,
-            "speed": 10.0
         },
         {
             "name": "Lifetime",
@@ -543,28 +483,41 @@
             "random": false
         },
         {
-            "name": "Particle Update",
-            "uid": 1133493446,
-            "type": 34,
-            "parent": 3220797859,
+            "name": "Speed",
+            "uid": 2688899542,
+            "type": 3,
+            "parent": 1802220426,
             "position": [
-                664.1160888671875,
-                1213.1295166015626
+                0.0,
+                0.0
             ],
             "size": [
-                195.0,
-                75.0
+                185.0,
+                50.0
             ],
             "interactable": true,
-            "movable": true,
-            "connections": [
-                {
-                    "connectedNode": 1802220426
-                },
-                {
-                    "connectedNode": 2804339953
-                }
-            ]
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "speed": 10.0
+        },
+        {
+            "name": "Sprite",
+            "uid": 3892378165,
+            "type": 6,
+            "parent": 1802220426,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "blob"
         },
         {
             "name": "Particle Render",
@@ -572,8 +525,8 @@
             "type": 35,
             "parent": 3220797859,
             "position": [
-                664.1160888671875,
-                1308.1295166015626
+                649.1161499023438,
+                1083.879638671875
             ],
             "size": [
                 195.0,
@@ -583,7 +536,7 @@
             "movable": true,
             "connections": [
                 {
-                    "connectedNode": 1133493446
+                    "connectedNode": 1802220426
                 },
                 {
                     "connectedNode": 0
@@ -673,12 +626,12 @@
             "uid": 3330207934,
             "type": 16,
             "position": [
-                322.8660583496094,
-                796.3795166015625
+                286.8660583496094,
+                861.8795166015625
             ],
             "size": [
-                235.00003051757813,
-                514.0
+                236.25003051757813,
+                414.0
             ],
             "interactable": false,
             "movable": true,
@@ -690,8 +643,8 @@
             "type": 41,
             "parent": 3330207934,
             "position": [
-                342.8660583496094,
-                816.3795166015625
+                308.1160583496094,
+                881.8795166015625
             ],
             "size": [
                 195.0,
@@ -745,8 +698,8 @@
             "type": 42,
             "parent": 3330207934,
             "position": [
-                342.8660583496094,
-                1054.3795166015626
+                308.1160583496094,
+                1012.6295166015625
             ],
             "size": [
                 195.0,
@@ -791,8 +744,8 @@
             "type": 43,
             "parent": 3330207934,
             "position": [
-                342.8660583496094,
-                1182.3795166015626
+                306.8660583496094,
+                1147.8795166015626
             ],
             "size": [
                 195.0,

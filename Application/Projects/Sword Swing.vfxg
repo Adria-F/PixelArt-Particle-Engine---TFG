@@ -1,0 +1,959 @@
+{
+    "settings": {
+        "panels": {
+            "Scene": {},
+            "Node Configuration": {},
+            "Node Canvas": {
+                "scrolling": [
+                    -260.1444091796875,
+                    -151.43865966796876
+                ],
+                "zoom": 100
+            },
+            "PixelArt": {},
+            "Export Spritesheet": {}
+        },
+        "cameraType": 0,
+        "position": [
+            0.0,
+            10.0,
+            10.0
+        ],
+        "reference": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "orthographicPosition": [
+            0.04999995604157448,
+            -1.0124998092651368,
+            0.3999999463558197
+        ],
+        "maxParticles": 5000,
+        "pixelSize": 5
+    },
+    "project": [
+        {
+            "name": "Emitter",
+            "uid": 94086391,
+            "type": 16,
+            "position": [
+                898.1444091796875,
+                271.43865966796877
+            ],
+            "size": [
+                235.0,
+                404.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": []
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 2240609831,
+            "type": 41,
+            "parent": 94086391,
+            "position": [
+                918.1444091796875,
+                291.43865966796877
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 311035718
+                }
+            ]
+        },
+        {
+            "name": "Shape",
+            "uid": 2663270890,
+            "type": 18,
+            "parent": 2240609831,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "shape": 16,
+            "currentShape": "Circle",
+            "radius": 7.5,
+            "height": 5.0,
+            "angle": 90.0,
+            "direction": 0,
+            "speed": 1.0,
+            "phase": 90.0,
+            "currentDirection": "Random",
+            "boxSize": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 311035718,
+            "type": 42,
+            "parent": 94086391,
+            "position": [
+                918.1444091796875,
+                419.43865966796877
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2240609831
+                },
+                {
+                    "connectedNode": 3759924173
+                }
+            ]
+        },
+        {
+            "name": "Input Particle",
+            "uid": 132836767,
+            "type": 20,
+            "parent": 311035718,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 1165264553
+                }
+            ],
+            "particle": 1165264553
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 3759924173,
+            "type": 43,
+            "parent": 94086391,
+            "position": [
+                918.1444091796875,
+                547.4386596679688
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 311035718
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Emission",
+            "uid": 1662099794,
+            "type": 17,
+            "parent": 3759924173,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "frequency": 0.0,
+            "duration": 0.6000000238418579,
+            "loop": false,
+            "bursts": [
+                {
+                    "start": 0.15000000596046449,
+                    "amount": 10,
+                    "repeat": 0.15000000596046449
+                }
+            ]
+        },
+        {
+            "name": "Particle",
+            "uid": 514635903,
+            "type": 1,
+            "position": [
+                574.0,
+                199.0
+            ],
+            "size": [
+                236.0,
+                501.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 2736753820
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 3539777882,
+            "type": 33,
+            "parent": 514635903,
+            "position": [
+                595.0,
+                219.0
+            ],
+            "size": [
+                195.0,
+                273.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 1604969215
+                }
+            ]
+        },
+        {
+            "name": "Sprite",
+            "uid": 465726926,
+            "type": 6,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "swing"
+        },
+        {
+            "name": "Lifetime",
+            "uid": 891062359,
+            "type": 7,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "lifetime": 0.20000000298023225,
+            "randLifetime1": 3.0,
+            "randLifetime2": 5.0,
+            "random": false
+        },
+        {
+            "name": "Speed",
+            "uid": 1069997049,
+            "type": 3,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "speed": 0.0
+        },
+        {
+            "name": "Transform",
+            "uid": 1304434635,
+            "type": 8,
+            "parent": 3539777882,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "billboard": true,
+            "spawnPoint": 1,
+            "partPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomPos": false,
+            "faceDirection": true,
+            "rotation": [
+                0.0,
+                0.0,
+                10.0
+            ],
+            "randRotation1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomRot": false,
+            "scale": [
+                3.0,
+                6.0
+            ],
+            "randScale1": [
+                1.0,
+                1.0
+            ],
+            "randScale2": [
+                1.0,
+                1.0
+            ],
+            "randomScale": false
+        },
+        {
+            "name": "Particle Render",
+            "uid": 1604969215,
+            "type": 35,
+            "parent": 514635903,
+            "position": [
+                594.0,
+                517.0
+            ],
+            "size": [
+                195.0,
+                163.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3539777882
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Color",
+            "uid": 676366223,
+            "type": 2,
+            "parent": 1604969215,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "randomColor": false,
+            "gradient": [
+                {
+                    "type": 0,
+                    "percent": 0.0,
+                    "color": [
+                        0.28921568393707278,
+                        0.8536620736122131,
+                        1.0
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 0.9866666793823242,
+                    "color": [
+                        1.0,
+                        0.999994695186615,
+                        0.9999899864196777
+                    ]
+                },
+                {
+                    "type": 1,
+                    "percent": 0.0,
+                    "alpha": 0.4968944191932678
+                },
+                {
+                    "type": 1,
+                    "percent": 0.5133333206176758,
+                    "alpha": 0.0
+                }
+            ],
+            "overLifetime": true
+        },
+        {
+            "name": "Blend Mode",
+            "uid": 2030073464,
+            "type": 9,
+            "parent": 1604969215,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "blendMode": 0
+        },
+        {
+            "name": "Particle",
+            "uid": 1165264553,
+            "type": 1,
+            "position": [
+                1232.1444091796876,
+                357.43865966796877
+            ],
+            "size": [
+                235.0,
+                514.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 132836767
+                }
+            ]
+        },
+        {
+            "name": "Particle Set Up",
+            "uid": 1561748421,
+            "type": 33,
+            "parent": 1165264553,
+            "position": [
+                1252.1444091796876,
+                377.43865966796877
+            ],
+            "size": [
+                195.0,
+                218.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 3562942401
+                }
+            ]
+        },
+        {
+            "name": "Lifetime",
+            "uid": 1337073116,
+            "type": 7,
+            "parent": 1561748421,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "lifetime": 0.5,
+            "randLifetime1": 3.0,
+            "randLifetime2": 5.0,
+            "random": false
+        },
+        {
+            "name": "Sprite",
+            "uid": 1352392058,
+            "type": 6,
+            "parent": 1561748421,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "sprite": "spark"
+        },
+        {
+            "name": "Transform",
+            "uid": 3726943136,
+            "type": 8,
+            "parent": 1561748421,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": false,
+            "billboard": true,
+            "spawnPoint": 1,
+            "partPosition": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomPos": false,
+            "faceDirection": false,
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation2": [
+                0.0,
+                0.0,
+                180.0
+            ],
+            "randomRot": true,
+            "scale": [
+                0.5,
+                0.5
+            ],
+            "randScale1": [
+                0.5,
+                0.5
+            ],
+            "randScale2": [
+                1.0,
+                1.0
+            ],
+            "randomScale": true
+        },
+        {
+            "name": "Particle Update",
+            "uid": 3562942401,
+            "type": 34,
+            "parent": 1165264553,
+            "position": [
+                1252.1444091796876,
+                615.4386596679688
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 1561748421
+                },
+                {
+                    "connectedNode": 632072809
+                }
+            ]
+        },
+        {
+            "name": "Transform",
+            "uid": 3433559389,
+            "type": 8,
+            "parent": 3562942401,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "update": true,
+            "billboard": true,
+            "spawnPoint": 0,
+            "partPosition": [
+                -1.0,
+                1.0,
+                0.0
+            ],
+            "randPosition1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randPosition2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomPos": false,
+            "faceDirection": false,
+            "rotation": [
+                0.0,
+                0.0,
+                120.0
+            ],
+            "randRotation1": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randRotation2": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "randomRot": false,
+            "scale": [
+                1.0,
+                1.0
+            ],
+            "randScale1": [
+                1.0,
+                1.0
+            ],
+            "randScale2": [
+                1.0,
+                1.0
+            ],
+            "randomScale": false
+        },
+        {
+            "name": "Particle Render",
+            "uid": 632072809,
+            "type": 35,
+            "parent": 1165264553,
+            "position": [
+                1252.1444091796876,
+                743.4386596679688
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3562942401
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Color",
+            "uid": 1980190739,
+            "type": 2,
+            "parent": 632072809,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "randomColor": true,
+            "gradient": [
+                {
+                    "type": 0,
+                    "percent": 0.0,
+                    "color": [
+                        0.0,
+                        0.8333333134651184,
+                        0.39215683937072756
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 0.5133333206176758,
+                    "color": [
+                        0.0,
+                        0.8809590339660645,
+                        1.0
+                    ]
+                },
+                {
+                    "type": 0,
+                    "percent": 1.0,
+                    "color": [
+                        0.9999895095825195,
+                        0.0,
+                        1.0
+                    ]
+                },
+                {
+                    "type": 1,
+                    "percent": 0.0,
+                    "alpha": 1.0
+                },
+                {
+                    "type": 1,
+                    "percent": 1.0,
+                    "alpha": 1.0
+                }
+            ],
+            "overLifetime": false
+        },
+        {
+            "name": "Emitter",
+            "uid": 2676632914,
+            "type": 16,
+            "position": [
+                267.0,
+                249.0
+            ],
+            "size": [
+                235.0,
+                404.0
+            ],
+            "interactable": false,
+            "movable": true,
+            "connections": []
+        },
+        {
+            "name": "Emitter SetUp",
+            "uid": 903654204,
+            "type": 41,
+            "parent": 2676632914,
+            "position": [
+                287.0,
+                269.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 0
+                },
+                {
+                    "connectedNode": 3730422198
+                }
+            ]
+        },
+        {
+            "name": "Shape",
+            "uid": 1630681820,
+            "type": 18,
+            "parent": 903654204,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "shape": 16,
+            "currentShape": "Circle",
+            "radius": 5.0,
+            "height": 5.0,
+            "angle": 90.0,
+            "direction": 2,
+            "speed": 3.0,
+            "phase": 90.0,
+            "currentDirection": "Ping-Pong",
+            "boxSize": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "name": "Emitting Particle",
+            "uid": 3730422198,
+            "type": 42,
+            "parent": 2676632914,
+            "position": [
+                287.0,
+                397.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 903654204
+                },
+                {
+                    "connectedNode": 3198055688
+                }
+            ]
+        },
+        {
+            "name": "Input Particle",
+            "uid": 2736753820,
+            "type": 20,
+            "parent": 3730422198,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [
+                {
+                    "connectedNode": 514635903
+                }
+            ],
+            "particle": 514635903
+        },
+        {
+            "name": "Emitter Update",
+            "uid": 3198055688,
+            "type": 43,
+            "parent": 2676632914,
+            "position": [
+                287.0,
+                525.0
+            ],
+            "size": [
+                195.0,
+                108.0
+            ],
+            "interactable": true,
+            "movable": true,
+            "connections": [
+                {
+                    "connectedNode": 3730422198
+                },
+                {
+                    "connectedNode": 0
+                }
+            ]
+        },
+        {
+            "name": "Emission",
+            "uid": 3763189359,
+            "type": 17,
+            "parent": 3198055688,
+            "position": [
+                0.0,
+                0.0
+            ],
+            "size": [
+                185.0,
+                50.0
+            ],
+            "interactable": true,
+            "movable": false,
+            "connections": [],
+            "frequency": 0.0010000000474974514,
+            "duration": 0.4000000059604645,
+            "loop": false,
+            "bursts": []
+        }
+    ]
+}

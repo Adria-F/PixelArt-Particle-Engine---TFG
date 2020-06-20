@@ -349,24 +349,52 @@ void ModuleGUI::ResetCanvas()
 
 void ModuleGUI::DrawPlayMenu()
 {
-	if (App->particles->IsPlaying())
+	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::Button("||"))
+		static ImDrawList* drawList = ImGui::GetWindowDrawList();
+		static ImVec2 padding = { 4.6f,4.5f };
+		static ImVec2 button = { 19.0f,19.0f };
+		static ImVec2 quad = { 10.0f,10.0f };
+
+		if (App->particles->IsPlaying())
 		{
-			App->particles->Pause();
+			ImVec2 pos = ImGui::GetCursorScreenPos();
+
+			if (ImGui::Button("##pause", button))
+			{
+				App->particles->Pause();
+			}
+
+			drawList->AddLine({ pos.x + padding.x*1.3f, pos.y + padding.y}, { pos.x + padding.x*1.3f, pos.y + padding.y + quad.y }, IM_COL32(255, 255, 255, 255), 2.0f);
+			drawList->AddLine({ pos.x + padding.x*1.3f + quad.x*0.6f, pos.y + padding.y }, { pos.x + padding.x*1.3f + quad.x*0.6f, pos.y + padding.y + quad.y }, IM_COL32(255, 255, 255, 255), 2.0f);
 		}
-	}
-	else
-	{
-		if (ImGui::ArrowButton("play", ImGuiDir_Right))
+		else
 		{
-			App->particles->Play();
+			ImVec2 pos = ImGui::GetCursorScreenPos();
+
+			if (ImGui::Button("##play", button))
+			{
+				App->particles->Play();
+			}
+
+			ImVec2 pointA = { pos.x + padding.x, pos.y + padding.y };
+			ImVec2 pointB = { pos.x + padding.x + quad.x, pos.y + padding.y + quad.y / 2.0f };
+			ImVec2 pointC = { pos.x + padding.x, pos.y + padding.y + quad.y};
+
+			drawList->AddTriangleFilled(pointA, pointB, pointC, IM_COL32(255, 255, 255, 255));
 		}
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("[]"))
-	{
-		App->particles->Stop();
+		ImGui::SameLine();
+
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+
+		if (ImGui::Button("##stop", button))
+		{
+			App->particles->Stop();
+		}
+		
+		drawList->AddRectFilled({ pos.x + padding.x, pos.y + padding.y }, { pos.x + padding.x + quad.x, pos.y + padding.y + quad.y }, IM_COL32(255, 255, 255, 255));
+
+		ImGui::EndMenuBar();
 	}
 }
 

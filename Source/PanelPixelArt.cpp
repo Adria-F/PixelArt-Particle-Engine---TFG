@@ -10,7 +10,7 @@ PanelPixelArt::PanelPixelArt(const char* name): Panel(name)
 
 void PanelPixelArt::SetFlags()
 {
-	flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+	flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar;
 }
 
 void PanelPixelArt::DrawContent()
@@ -34,11 +34,9 @@ void PanelPixelArt::DrawContent()
 	ImGui::SetCursorPos({ (size.x - imageSize.x) / 2, (size.y - imageSize.y) / 2 });
 	ImGui::Image((ImTextureID)App->render->pixelartTexture, { imageSize.x, imageSize.y }, { 0,1 }, { 1,0 });
 
-	ImGui::SetCursorScreenPos({ ImGui::GetCursorScreenPos().x , ImGui::GetWindowPos().y + ImGui::GetWindowSize().y-20.0f });
-
 	App->gui->DrawPlayMenu();
-	ImGui::SameLine();
 
+	ImGui::SetCursorScreenPos({ ImGui::GetCursorScreenPos().x , ImGui::GetWindowPos().y + ImGui::GetWindowSize().y - 20.0f });
 	ImGui::Text("Pixel Size:"); ImGui::SameLine();
 	static int pixelSize = App->render->pixelSize;
 	ImGui::PushItemWidth(100.0f);

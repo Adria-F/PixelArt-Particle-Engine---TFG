@@ -4,8 +4,6 @@
 #include "Module.h"
 #include <string>
 
-class ResourceMaterial;
-
 struct Texture
 {
 	Texture(const char* path);

@@ -39,11 +39,6 @@ ModuleCamera::~ModuleCamera()
 {
 }
 
-bool ModuleCamera::Init()
-{
-	return true;
-}
-
 update_state ModuleCamera::Update(float dt)
 {
 	BROFILER_CATEGORY("ModuleCamera Update", Profiler::Color::Yellow);
@@ -106,11 +101,6 @@ update_state ModuleCamera::Update(float dt)
 	}
 
 	return UPDATE_CONTINUE;
-}
-
-bool ModuleCamera::CleanUp()
-{
-	return true;
 }
 
 void ModuleCamera::SaveSettings(JSON_Value* settings)

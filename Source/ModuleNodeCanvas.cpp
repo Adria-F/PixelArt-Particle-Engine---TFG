@@ -217,7 +217,7 @@ std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(NodeBox* nodeContainer) 
 
 	if (nodeContainer == nullptr) //Called from the canvas
 	{
-		ret = { PARTICLE, EMITTER };
+		ret = { PARTICLE_SYSTEM, PARTICLE, EMITTER };
 		return ret;
 	}
 
@@ -366,6 +366,9 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(NodeBox* nodeContai
 		case EMITTER_INPUTPARTICLE:
 			nodeList.insert(std::pair<std::string, nodeType>("Input Particle", nodes[i]));
 			break;
+		case PARTICLE_SYSTEM:
+			nodeList.insert(std::pair<std::string, nodeType>("Particle System", nodes[i]));
+			break;
 		}
 	}
 
@@ -431,6 +434,9 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 	case EMITTER_NODE_BOX_INPUT:
 	case EMITTER_NODE_BOX_UPDATE:
 		node = new NodeBox(name, type, spawnPos, { NODE_DEFAULT_WIDTH + NODE_BOX_PADDING * 2.0f, NODE_BOX_MIN_HEIGHT }, nullptr);
+		break;
+	case PARTICLE_SYSTEM:
+		//TODO create emitter and particle and connect them
 		break;
 	}
 

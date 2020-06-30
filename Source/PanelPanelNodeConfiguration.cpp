@@ -19,6 +19,11 @@ PanelNodeConfiguration::PanelNodeConfiguration(const char* name): Panel(name)
 {
 }
 
+void PanelNodeConfiguration::SetFlags()
+{
+	flags = ImGuiWindowFlags_None;
+}
+
 void PanelNodeConfiguration::DrawContent()
 {
 	if (App->nodeCanvas->selectedNode == nullptr)

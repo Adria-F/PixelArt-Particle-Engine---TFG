@@ -221,11 +221,6 @@ update_state ModuleGUI::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_state ModuleGUI::PostUpdate(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
 bool ModuleGUI::CleanUp()
 {
 	ImGui_ImplSDL2_Shutdown();

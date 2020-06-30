@@ -22,7 +22,6 @@ public:
 	bool Start();
 	update_state PreUpdate(float dt);
 	update_state Update(float dt);
-	update_state PostUpdate(float dt);
 	bool CleanUp();
 
 	void SaveSettings(JSON_Value* settings);

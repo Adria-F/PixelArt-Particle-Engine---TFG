@@ -11,8 +11,6 @@ public:
 	~ModuleProjectManager();
 
 	bool Start();
-	update_state Update(float dt);
-	bool CleanUp();
 
 	void NewProject();
 	void SaveProject(const char* path);

@@ -27,16 +27,6 @@ bool ModuleProjectManager::Start()
 	return true;
 }
 
-update_state ModuleProjectManager::Update(float dt)
-{
-	return update_state::UPDATE_CONTINUE;
-}
-
-bool ModuleProjectManager::CleanUp()
-{
-	return true;
-}
-
 void ModuleProjectManager::NewProject()
 {
 	for (std::list<CanvasNode*>::iterator it_n = App->nodeCanvas->nodes.begin(); it_n != App->nodeCanvas->nodes.end(); ++it_n)

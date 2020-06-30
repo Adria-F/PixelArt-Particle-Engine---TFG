@@ -17,9 +17,7 @@ public:
 	ModuleCamera(bool start_enabled = true);
 	~ModuleCamera();
 
-	bool Init();
 	update_state Update(float dt);
-	bool CleanUp();
 
 	void SaveSettings(JSON_Value* settings);
 	void LoadSettings(JSON_Value* settings);

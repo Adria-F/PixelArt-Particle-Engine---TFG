@@ -10,6 +10,7 @@ public:
 	PanelNodeConfiguration(const char* name);
 	~PanelNodeConfiguration() {}
 
+	void SetFlags();
 	void DrawContent();
 };
 

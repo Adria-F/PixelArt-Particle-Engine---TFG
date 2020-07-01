@@ -211,7 +211,7 @@ void ModuleNodeCanvas::DrawGuizmo()
 	}
 }
 
-std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(NodeBox* nodeContainer) const
+std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(CanvasNode* nodeContainer) const
 {
 	std::vector<nodeType> ret;
 
@@ -221,59 +221,82 @@ std::vector<nodeType> ModuleNodeCanvas::GetAllowedNodes(NodeBox* nodeContainer) 
 		return ret;
 	}
 
-	if (nodeContainer->parentGroup)
+	NodeBox* box = nullptr;
+	if (nodeContainer->type > NODE_BOXES_START)
+		box = (NodeBox*)nodeContainer;
+
+	switch (nodeContainer->type)
 	{
-		switch (nodeContainer->type)
+	case PARTICLE:
 		{
-		case PARTICLE_NODE_BOX_INIT:
-			if (!((Particle*)nodeContainer->parentGroup)->speedInit)
-				ret.push_back(PARTICLE_SPEED);
-			if (!((Particle*)nodeContainer->parentGroup)->makeGlobal)
-				ret.push_back(PARTICLE_MAKEGLOBAL);
-			if (!((Particle*)nodeContainer->parentGroup)->sprite)
-				ret.push_back(PARTICLE_SPRITE);
-			if (!((Particle*)nodeContainer->parentGroup)->lifetimeNode)
-				ret.push_back(PARTICLE_LIFETIME);
-			if (!((Particle*)nodeContainer->parentGroup)->transformInit)
-				ret.push_back(PARTICLE_TRANSFORM);
-			break;
-		case PARTICLE_NODE_BOX_UPDATE:
-			if (!((Particle*)nodeContainer->parentGroup)->deathInstantiation)
-				ret.push_back(PARTICLE_DEATHINSTANTIATION);
-			if (!((Particle*)nodeContainer->parentGroup)->speedUpdate)
-				ret.push_back(PARTICLE_SPEED);
-			if (!((Particle*)nodeContainer->parentGroup)->transformUpdate)
-				ret.push_back(PARTICLE_TRANSFORM);
-			break;
-		case PARTICLE_NODE_BOX_RENDER:
-			if (!((Particle*)nodeContainer->parentGroup)->color)
-				ret.push_back(PARTICLE_COLOR);
-			if (!((Particle*)nodeContainer->parentGroup)->blendMode)
-				ret.push_back(PARTICLE_BLENDMODE);
-			if (!((Particle*)nodeContainer->parentGroup)->sorting)
-				ret.push_back(PARTICLE_SORTING);
-			break;
-		case EMITTER_NODE_BOX_INIT:
-			if (!((ParticleEmitter*)nodeContainer->parentGroup)->shape)
-				ret.push_back(EMITTER_SHAPE);
-			if (!((ParticleEmitter*)nodeContainer->parentGroup)->transform)
-				ret.push_back(EMITTER_TRANSFORM);
-			break;
-		case EMITTER_NODE_BOX_INPUT:
-			if (!((ParticleEmitter*)nodeContainer->parentGroup)->inputParticle)
-				ret.push_back(EMITTER_INPUTPARTICLE);
-			break;
-		case EMITTER_NODE_BOX_UPDATE:
-			if (!((ParticleEmitter*)nodeContainer->parentGroup)->emission)
-				ret.push_back(EMITTER_EMISSION);
-			break;
+		NodeGroup* particle = (NodeGroup*)nodeContainer;
+		if (!particle->HasBox(PARTICLE_NODE_BOX_INIT))
+			ret.push_back(PARTICLE_NODE_BOX_INIT);
+		if (!particle->HasBox(PARTICLE_NODE_BOX_UPDATE))
+			ret.push_back(PARTICLE_NODE_BOX_UPDATE);
+		if (!particle->HasBox(PARTICLE_NODE_BOX_RENDER))
+			ret.push_back(PARTICLE_NODE_BOX_RENDER);
 		}
+		break;
+	case EMITTER:
+		{
+		NodeGroup* emitter = (NodeGroup*)nodeContainer;
+		if (!emitter->HasBox(EMITTER_NODE_BOX_INIT))
+			ret.push_back(EMITTER_NODE_BOX_INIT);
+		if (!emitter->HasBox(EMITTER_NODE_BOX_UPDATE))
+			ret.push_back(EMITTER_NODE_BOX_UPDATE);
+		if (!emitter->HasBox(EMITTER_NODE_BOX_INPUT))
+			ret.push_back(EMITTER_NODE_BOX_INPUT);
+		}
+		break;
+	case PARTICLE_NODE_BOX_INIT:
+		if (!((Particle*)box->parentGroup)->speedInit)
+			ret.push_back(PARTICLE_SPEED);
+		if (!((Particle*)box->parentGroup)->makeGlobal)
+			ret.push_back(PARTICLE_MAKEGLOBAL);
+		if (!((Particle*)box->parentGroup)->sprite)
+			ret.push_back(PARTICLE_SPRITE);
+		if (!((Particle*)box->parentGroup)->lifetimeNode)
+			ret.push_back(PARTICLE_LIFETIME);
+		if (!((Particle*)box->parentGroup)->transformInit)
+			ret.push_back(PARTICLE_TRANSFORM);
+		break;
+	case PARTICLE_NODE_BOX_UPDATE:
+		if (!((Particle*)box->parentGroup)->deathInstantiation)
+			ret.push_back(PARTICLE_DEATHINSTANTIATION);
+		if (!((Particle*)box->parentGroup)->speedUpdate)
+			ret.push_back(PARTICLE_SPEED);
+		if (!((Particle*)box->parentGroup)->transformUpdate)
+			ret.push_back(PARTICLE_TRANSFORM);
+		break;
+	case PARTICLE_NODE_BOX_RENDER:
+		if (!((Particle*)box->parentGroup)->color)
+			ret.push_back(PARTICLE_COLOR);
+		if (!((Particle*)box->parentGroup)->blendMode)
+			ret.push_back(PARTICLE_BLENDMODE);
+		if (!((Particle*)box->parentGroup)->sorting)
+			ret.push_back(PARTICLE_SORTING);
+		break;
+	case EMITTER_NODE_BOX_INIT:
+		if (!((ParticleEmitter*)box->parentGroup)->shape)
+			ret.push_back(EMITTER_SHAPE);
+		if (!((ParticleEmitter*)box->parentGroup)->transform)
+			ret.push_back(EMITTER_TRANSFORM);
+		break;
+	case EMITTER_NODE_BOX_INPUT:
+		if (!((ParticleEmitter*)box->parentGroup)->inputParticle)
+			ret.push_back(EMITTER_INPUTPARTICLE);
+		break;
+	case EMITTER_NODE_BOX_UPDATE:
+		if (!((ParticleEmitter*)box->parentGroup)->emission)
+			ret.push_back(EMITTER_EMISSION);
+		break;
 	}
 
 	return ret;
 }
 
-CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, NodeBox* nodeContainer)
+CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, CanvasNode* nodeContainer)
 {
 	drawingNodeList = true;
 	std::map<std::string, int> nodes = RequestNodeList(nodeContainer);
@@ -311,7 +334,7 @@ CanvasNode* ModuleNodeCanvas::DrawNodeList(float2 spawnPos, NodeBox* nodeContain
 	return ret;
 }
 
-std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(NodeBox* nodeContainer) const
+std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(CanvasNode* nodeContainer) const
 {
 	std::map<std::string, int> nodeList;
 
@@ -368,6 +391,24 @@ std::map<std::string, int> ModuleNodeCanvas::RequestNodeList(NodeBox* nodeContai
 			break;
 		case PARTICLE_SYSTEM:
 			nodeList.insert(std::pair<std::string, nodeType>("Particle System", nodes[i]));
+			break;
+		case PARTICLE_NODE_BOX_INIT:
+			nodeList.insert(std::pair<std::string, nodeType>("Particle SetUp", nodes[i]));
+			break;
+		case PARTICLE_NODE_BOX_UPDATE:
+			nodeList.insert(std::pair<std::string, nodeType>("Particle Update", nodes[i]));
+			break;
+		case PARTICLE_NODE_BOX_RENDER:
+			nodeList.insert(std::pair<std::string, nodeType>("Particle Render", nodes[i]));
+			break;
+		case EMITTER_NODE_BOX_INIT:
+			nodeList.insert(std::pair<std::string, nodeType>("Emitter SetUp", nodes[i]));
+			break;
+		case EMITTER_NODE_BOX_UPDATE:
+			nodeList.insert(std::pair<std::string, nodeType>("Emitter Update", nodes[i]));
+			break;
+		case EMITTER_NODE_BOX_INPUT:
+			nodeList.insert(std::pair<std::string, nodeType>("Input Particle", nodes[i]));
 			break;
 		}
 	}
@@ -436,7 +477,26 @@ CanvasNode* ModuleNodeCanvas::CreateNode(const char* name, nodeType type, float2
 		node = new NodeBox(name, type, spawnPos, { NODE_DEFAULT_WIDTH + NODE_BOX_PADDING * 2.0f, NODE_BOX_MIN_HEIGHT }, nullptr);
 		break;
 	case PARTICLE_SYSTEM:
-		//TODO create emitter and particle and connect them
+		//Create emitter
+		ParticleEmitter* emitter = new ParticleEmitter("Emitter", spawnPos);
+		App->particles->AddEmitter(emitter);
+		//Create particle
+		Particle* particle = new Particle("Particle", { spawnPos.x + NODE_DEFAULT_WIDTH + NODE_BOX_PADDING * 2.0f + BOX_CONTAINER_MARGIN * 2.0f + 20.0f, spawnPos.y });
+		//Create input node
+		InputParticleEmitterNode* input = new InputParticleEmitterNode(nullptr, "Input Particle", { 0.0f,0.0f });
+		//Insert input node
+		for (std::list<NodeBox*>::iterator box = emitter->boxes.begin(); box != emitter->boxes.end(); ++box)
+		{
+			if ((*box)->type == EMITTER_NODE_BOX_INPUT)
+			{
+				(*box)->InsertNode(input);
+			}
+		}
+		//Connect input node
+		particle->output->SetConnection(input->particleIn);
+		input->particleIn->SetConnection(particle->output);
+		//Return particle to add emitter and particle to the canvas
+		node = particle;
 		break;
 	}
 

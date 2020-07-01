@@ -81,6 +81,7 @@ bool NodeGroup::ElementLogic(float2 offset, int zoom)
 {
 	CanvasNode* newHoveredNode = nullptr;
 	CanvasNode* newSelectedNode = nullptr;
+	bool boxHovered = false;
 	for (std::list<NodeBox*>::iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
 	{
 		if ((*it_b)->toDelete)
@@ -99,12 +100,14 @@ bool NodeGroup::ElementLogic(float2 offset, int zoom)
 
 		if ((*it_b)->Logic(offset, zoom))
 		{
+			boxHovered = true;
 			newHoveredNode = (*it_b);
 			if (ImGui::IsMouseClicked(0))
 			{
 				newSelectedNode = (*it_b);
 			}
 		}
+		boxHovered |= (*it_b)->hoveringElement;
 	}
 	if (newHoveredNode != nullptr)
 		App->nodeCanvas->newHoveredNode = newHoveredNode;
@@ -117,6 +120,42 @@ bool NodeGroup::ElementLogic(float2 offset, int zoom)
 		App->nodeCanvas->selectedNode = newSelectedNode;
 		App->nodeCanvas->selectedConnection = nullptr; //Deselect connection
 	}
+
+	//Add nodes
+	float2 pos = position * (zoom / 100.0f) + offset;
+	float2 scale = size * (zoom / 100.0f);
+	ImGui::SetCursorScreenPos({ pos.x, pos.y });
+	ImGui::PushID(UID);
+
+	//pop up message
+	ImGui::BeginGroup();
+	ImGui::InvisibleButton("add node", { scale.x, scale.y });
+	static float2 mousePos = { 0.0f,0.0f };
+	if (ImGui::IsItemHovered() && !boxHovered)
+	{
+		if (ImGui::IsMouseClicked(1))
+		{
+			mousePos = { ImGui::GetMousePos().x, ImGui::GetMousePos().y };
+			ImGui::OpenPopup("##node list");
+		}
+	}
+
+	//Right click pop up
+	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
+	if (ImGui::BeginPopup("##node list"))
+	{
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), this);
+		if (createdNode != nullptr)
+		{
+			InsertNode(createdNode);
+		}
+
+		ImGui::EndPopup();
+	}
+	ImGui::PopStyleVar();
+
+	ImGui::EndGroup();
+	ImGui::PopID();
 
 	return newHoveredNode != nullptr;
 }
@@ -166,6 +205,20 @@ void NodeGroup::RemoveBox(NodeBox* box, bool keepInList)
 	{
 		OnNodeRemoved((*it_n));
 	}
+}
+
+bool NodeGroup::HasBox(nodeType type) const
+{
+	if (type > NODE_BOXES_START) //Make sure it is a box
+	{
+		for (std::list<NodeBox*>::const_iterator it_b = boxes.begin(); it_b != boxes.end(); ++it_b)
+		{
+			if ((*it_b)->type == type)
+				return true;
+		}
+	}
+
+	return false;
 }
 
 void NodeGroup::RepositionBoxes(NodeBox* resizedBox, float prevBottom)
@@ -483,7 +536,7 @@ bool NodeBox::OnConnection(NodeConnection* connection)
 
 void NodeBox::OnDisconnection(NodeConnection* connection)
 {
-	if (connection->type == NODE_OUTPUT && parentGroup)
+	/*if (connection->type == NODE_OUTPUT && parentGroup)
 	{
 		parentGroup->boxes.remove(this);
 		App->nodeCanvas->nodes.push_back(this);
@@ -494,7 +547,7 @@ void NodeBox::OnDisconnection(NodeConnection* connection)
 		{
 			bottomConnection->connected->node->OnDisconnection(bottomConnection);
 		}
-	}
+	}*/
 }
 
 void NodeBox::SaveChildNodes(JSON_Value* project)

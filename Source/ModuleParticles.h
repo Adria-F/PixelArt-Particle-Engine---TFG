@@ -90,6 +90,7 @@ public:
 	};
 
 	ParticleEmitter* emitter = nullptr;
+	NodeConnection* output = nullptr;
 
 	float lifeTime = 5.0f;
 

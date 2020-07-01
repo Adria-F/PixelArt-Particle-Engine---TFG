@@ -108,9 +108,10 @@ bool CanvasNode::Logic(float2 offset, int zoom)
 		ImGui::BeginGroup();
 		ImGui::InvisibleButton("node", { scaledSize.x, scaledSize.y });
 		scaledSize = size * (zoom / 100.0f);
-		if (selectable && ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection && !hoveringElement)
+		if (ImGui::IsItemHovered() /*&& !hoveringConfigMenu*/ && !hoveringConnection && !hoveringElement)
 		{
-			isHovered = true;
+			if (selectable)
+				isHovered = true;
 
 			if (ImGui::IsMouseClicked(1))
 			{

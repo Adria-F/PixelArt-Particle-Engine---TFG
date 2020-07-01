@@ -18,7 +18,8 @@ void DeathInstantiationParticleNode::Execute(float dt)
 	{
 		Particle* instance = particle->emitter->SpawnParticle(instantiateParticle);
 		//Change particle direction...
-		instance->baseTransform->position = particle->baseTransform->position;
+		if (instance != nullptr) //It will be null if particle limit has been reach
+			instance->baseTransform->position = particle->baseTransform->position;
 	}
 }
 

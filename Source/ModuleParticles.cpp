@@ -455,8 +455,9 @@ Particle* ParticleEmitter::SpawnParticle(Particle* particle) //Used by Death Ins
 	Particle* ret = App->particles->GetParticle();
 	if (ret != nullptr)
 	{
-		ret->Initialize(templateParticle);
-		particles.push_back(ret);
+		ret->Initialize(particle);
+		ret->emitter = this;
+		particles.push_front(ret);
 	}
 	return ret;
 }
@@ -544,8 +545,8 @@ Particle::Particle(const char* name, float2 position, float2 size, bool empty): 
 		AddNodeBox("Particle Render", PARTICLE_NODE_BOX_RENDER);
 	}
 
-	NodeConnection* particleOut = new NodeConnection(this, NODE_OUTPUT, { -CONNECTIONTRIANGLE_SIZE*0.5f, 25.0f }, TRIANGLE, ImGuiDir_Left);
-	connections.push_back(particleOut);
+	output = new NodeConnection(this, NODE_OUTPUT, { -CONNECTIONTRIANGLE_SIZE*0.5f, 25.0f }, TRIANGLE, ImGuiDir_Left);
+	connections.push_back(output);
 }
 
 Particle::Particle(ParticleEmitter* emitter, Particle* templateParticle): emitter(emitter)

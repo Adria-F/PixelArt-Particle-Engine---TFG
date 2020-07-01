@@ -53,6 +53,7 @@ public:
 	NodeBox* AddNodeBox(const char* name, nodeType type);
 	void InsertNode(CanvasNode* node);
 	void RemoveBox(NodeBox* box, bool keepInList = false);
+	bool HasBox(nodeType type) const;
 
 	void RepositionBoxes(NodeBox* resizedBox, float prevBottom);
 

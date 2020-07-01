@@ -152,7 +152,13 @@ void PanelNodeCanvas::DrawContent()
 	{
 		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), nullptr);
 		if (createdNode != nullptr)
+		{			
+			if (createdNode->type == PARTICLE && ((Particle*)createdNode)->emitter) //If has emitter just after created means is a particle system
+			{
+				App->nodeCanvas->nodes.push_back(((Particle*)createdNode)->emitter); //So add the emitter too
+			}
 			App->nodeCanvas->nodes.push_back(createdNode);
+		}
 
 		ImGui::EndPopup();
 	}

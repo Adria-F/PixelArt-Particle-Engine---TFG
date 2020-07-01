@@ -38,6 +38,7 @@ public:
 
 	bool IsExportPanelActive() const;
 	void ResetCanvas();
+	float4 GetCanvasRegion() const;
 
 	void DrawPlayMenu();
 

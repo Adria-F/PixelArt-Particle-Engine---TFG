@@ -23,6 +23,7 @@ public:
 			OnClose();
 
 		//Check for resize
+		position = { ImGui::GetWindowPos().x, ImGui::GetWindowPos().y };
 		ImVec2 wSize = ImGui::GetWindowSize();
 		if (wSize.x != size.x || wSize.y != size.y)
 		{
@@ -39,9 +40,11 @@ public:
 	virtual void DrawContent() {}
 	virtual void OnResize() {}
 
-	const char* GetName() { return name.c_str(); }
-	float2 GetSize() { return size; }
-	bool IsActive() { return active; }
+	const char* GetName() { return name.c_str(); } const
+	float2 GetSize() { return size; } const
+	float2 GetPosition() { return position; } const
+	float4 GetRegion() { return float4(position.x, position.y, size.x, size.y); } const
+	bool IsActive() { return active; } const
 	void ToggleActive() { active = !active; if (active) OnOpen(); else OnClose(); }
 
 	virtual void OnOpen() {}
@@ -54,7 +57,7 @@ protected:
 
 	std::string name;
 
-	//float2 position;
+	float2 position;
 	float2 size;
 
 	bool active = true;

@@ -12,6 +12,11 @@ public:
 
 	void SetFlags();
 	void DrawContent();
+
+public:
+
+	bool collapsed = false;
+	float2 openedPosition = { math::inf, math::inf };
 };
 
 #endif // !__PANEL_NODECONFIGURATION_H__

@@ -342,6 +342,11 @@ void ModuleGUI::ResetCanvas()
 	panelCanvas->Reset();
 }
 
+float4 ModuleGUI::GetCanvasRegion() const
+{
+	return panelCanvas->GetRegion();
+}
+
 void ModuleGUI::DrawPlayMenu()
 {
 	if (ImGui::BeginMenuBar())

@@ -4,6 +4,7 @@
 #include "ModuleRender.h"
 #include "Shader.h"
 #include "ModuleTextures.h"
+#include "ModuleProjectManager.h"
 
 SpriteParticleNode::SpriteParticleNode(Particle* particle, const char* name, float2 position, float2 size) : EntityData(particle), CanvasNode(name, PARTICLE_SPRITE, position, size)
 {
@@ -37,6 +38,14 @@ void SpriteParticleNode::DisplayConfig()
 {
 	if (ImGui::BeginCombo("Sprite", currentSprite.c_str()))
 	{
+		if (ImGui::Selectable("Import sprite..."))
+		{
+			std::string texture = App->projectManager->OpenFileDialog("", "");
+			if (texture.length() > 0)
+			{
+				App->textures->ImportTexture(texture.c_str());
+			}
+		}
 		if (ImGui::Selectable("None"))
 		{
 			if (spriteUID != 0)
@@ -60,8 +69,15 @@ void SpriteParticleNode::DisplayConfig()
 		ImGui::EndCombo();
 	}
 
-	float size = min(ImGui::GetWindowContentRegionWidth(), 256.0f);
-	ImGui::Image((ImTextureID)GL_id, { size, size }, { 0,1 }, { 1,0 });
+	float2 textureSize;
+	textureSize.x = min(ImGui::GetWindowContentRegionWidth(), 256.0f);
+	textureSize.y = min(textureSize.x, ImGui::GetWindowSize().y-ImGui::GetCursorPosY()-15.0f);
+	if (textureSize.y < textureSize.x)
+	{
+		textureSize.x = textureSize.y;
+	}
+	textureSize = Clamp(textureSize, 32.0f, 256.0f);
+	ImGui::Image((ImTextureID)GL_id, { textureSize.x, textureSize.y }, { 0,1 }, { 1,0 });
 }
 
 void SpriteParticleNode::SaveExtraInfo(JSON_Value* node)

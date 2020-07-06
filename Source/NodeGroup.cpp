@@ -443,13 +443,13 @@ bool NodeBox::ElementLogic(float2 offset, int zoom)
 	{
 		addBlockHovered = true;
 
-		if (ImGui::IsMouseClicked(1))
+		if (ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1))
 		{
 			ImGui::OpenPopup("##node list");
 		}
 	}
 
-	//Right click pop up
+	//Left/Right click pop up
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##node list"))
 	{

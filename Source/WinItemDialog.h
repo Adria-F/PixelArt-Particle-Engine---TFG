@@ -89,7 +89,7 @@ std::string saveFileWID(const char* extensionHint, const char* extension)
 			wchar_t wtextB[20];
 			mbstowcs(wtextB, text.c_str(), text.length() + 1);//Plus null
 			LPCWSTR b = wtextB;
-			static COMDLG_FILTERSPEC rgSpec[] =
+			COMDLG_FILTERSPEC rgSpec[] =
 			{
 				{ a, b }
 			};

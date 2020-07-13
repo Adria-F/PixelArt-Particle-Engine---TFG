@@ -47,6 +47,9 @@
     <Filter Include="Sources\Tools\RapidJSON">
       <UniqueIdentifier>{6a2947c0-acd4-47f7-807a-8b275dbc0b6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{5d064dcf-aa64-4eaa-86ae-486655eeeb09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -732,6 +735,9 @@
     <ClInclude Include="BlendModeParticleNode.h">
       <Filter>Sources\Nodes\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MathGeoLib\Math\Matrix.inl">
@@ -749,5 +755,15 @@
     <None Include="..\Application\Shaders\pixelart.vs">
       <Filter>Sources\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PixelArt Particle Engine.rc">
+      <Filter>Sources\Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Application\icon.ico">
+      <Filter>Sources\Resources</Filter>
+    </Image>
   </ItemGroup>
 </Project>

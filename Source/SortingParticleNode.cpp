@@ -58,7 +58,7 @@ void SortingParticleNode::SaveExtraInfo(JSON_Value* node)
 	node->addInt("priority", priority);
 }
 
-void SortingParticleNode::LoadeExtraInfo(JSON_Value* nodeDef)
+void SortingParticleNode::LoadExtraInfo(JSON_Value* nodeDef)
 {
 	type = (sortingType)nodeDef->getUint("sortType");
 	priority = nodeDef->getInt("priority");

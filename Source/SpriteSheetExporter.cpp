@@ -112,3 +112,17 @@ void SpriteSheetExporter::ClearFrameList()
 	}
 	frames.clear();
 }
+
+void SpriteSheetExporter::UpdateCamera()
+{
+	camera->type = App->camera->type;
+
+	camera->position = App->camera->position;
+	camera->reference = App->camera->reference;
+	camera->perspectiveFrustum.pos = camera->position;
+	camera->LookAt(camera->reference);
+
+	camera->orthographicFrustum.pos = App->camera->orthographicFrustum.pos;
+	camera->orthographicFrustum.orthographicWidth = App->camera->orthographicFrustum.orthographicWidth;
+	camera->orthographicFrustum.orthographicHeight = App->camera->orthographicFrustum.orthographicHeight;
+}

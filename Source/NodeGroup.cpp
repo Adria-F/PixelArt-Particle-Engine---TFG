@@ -144,7 +144,10 @@ bool NodeGroup::ElementLogic(float2 offset, int zoom)
 	ImGui::PushStyleVar(ImGuiStyleVar_::ImGuiStyleVar_WindowPadding, { 5,5 });
 	if (ImGui::BeginPopup("##node list"))
 	{
-		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList((mousePos - offset) / (zoom / 100.0f), this);
+		float2 nodePos = (mousePos - offset) / (zoom / 100.0f);
+		if (boxes.empty())
+			nodePos = position + float2(BOX_CONTAINER_MARGIN, BOX_CONTAINER_MARGIN);
+		CanvasNode* createdNode = App->nodeCanvas->DrawNodeList(nodePos, this);
 		if (createdNode != nullptr)
 		{
 			InsertNode(createdNode);
@@ -277,8 +280,14 @@ void NodeGroup::CalcRect()
 	topLeft -= {BOX_CONTAINER_MARGIN, BOX_CONTAINER_MARGIN};
 	bottomRight += {BOX_CONTAINER_MARGIN, BOX_CONTAINER_MARGIN};
 
-	position = topLeft;
-	size = bottomRight - topLeft;
+	if (topLeft.x < float2::inf.x)
+		position = topLeft;
+	if (topLeft.x < float2::inf.x && bottomRight.x > -float2::inf.x)
+		size = bottomRight - topLeft;
+	else
+	{
+		size = { NODE_DEFAULT_WIDTH + BOX_CONTAINER_MARGIN*2.0f + NODE_BOX_PADDING*2.0f, NODE_DEFAULT_HEIGHT+ BOX_CONTAINER_MARGIN*2.0f };
+	}
 }
 
 void NodeGroup::SaveChildNodes(JSON_Value* project)

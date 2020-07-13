@@ -20,6 +20,8 @@ public:
 
 	void ClearFrameList();
 
+	void UpdateCamera();
+
 public:
 
 	uint spritesheet = 0;

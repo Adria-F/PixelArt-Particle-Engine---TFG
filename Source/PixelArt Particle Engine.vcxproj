@@ -346,6 +346,7 @@
     <ClInclude Include="rapidjson\stream.h" />
     <ClInclude Include="rapidjson\stringbuffer.h" />
     <ClInclude Include="rapidjson\writer.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SortingParticleNode.h" />
     <ClInclude Include="TransformParticleNode.h" />
     <ClInclude Include="Shader.h" />
@@ -363,6 +364,12 @@
     <None Include="..\Application\Shaders\pixelart.fs" />
     <None Include="..\Application\Shaders\pixelart.vs" />
     <None Include="MathGeoLib\Math\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PixelArt Particle Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Application\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

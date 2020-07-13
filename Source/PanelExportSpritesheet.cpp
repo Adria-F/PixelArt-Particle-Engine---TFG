@@ -222,6 +222,7 @@ void PanelExportSpritesheet::RefreshSpriteSheet()
 
 void PanelExportSpritesheet::OnOpen()
 {
+	exporter->UpdateCamera();
 	exporter->camera->OnResize(frameSize.x, frameSize.y);
 	App->render->GenerateExportFrameBuffer(frameSize.x, frameSize.y);
 }

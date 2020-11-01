@@ -5,7 +5,7 @@ This application is part of the TFG developed by ![Adrià Ferrer](https://github
 
 You can download the latest release ![HERE](https://github.com/Adria-F/PixelArt-Particle-Engine---TFG/releases/latest)
 
-You can read the whole process documentation ![HERE](https://drive.google.com/file/d/1s1XRhtV9ijxEpVRNXkStbyp7R39amLG3/view?usp=sharing)
+You can read the whole process documentation ![HERE](https://drive.google.com/file/d/1s1XRhtV9ijxEpVRNXkStbyp7R39amLG3/view)
 
 It consists in a tool for designing and creating visual effects in pixel art syle. Ready for use in cinematics or videogames.
 
